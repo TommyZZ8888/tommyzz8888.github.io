@@ -1805,9 +1805,9 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;/h1&gt;&lt;h2 id=&#34;操作系统&#34;&gt;操作系统
 &lt;/h2&gt;&lt;p&gt;操作系统（Operation System），是管理计算机硬件与软件资源的计算机程序，同时也是计算机系统的内核与基石。操作系统需要处理管理与配置内存、决定系统资源供需的优先次序、控制输入设备与输出设备、操作网络与管理文件系统等基本事务，操作系统也提供一个让用户与系统交互的操作界面&lt;/p&gt;
 &lt;p&gt;操作系统作为接口的示意图：&lt;/p&gt;
-&lt;img src=&#34;../img/tool/linux/操作系统.png&#34; style=&#34;zoom:80%;&#34; /&gt;
+&lt;img src=&#34;../../../assets/img/tool/linux/操作系统.png&#34; style=&#34;zoom:80%;&#34; /&gt;
 &lt;p&gt;移动设备操作系统：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e7%a7%bb%e5%8a%a8%e8%ae%be%e5%a4%87%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e7%a7%bb%e5%8a%a8%e8%ae%be%e5%a4%87%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f.png&#34;
 	
 	
 	
@@ -1819,7 +1819,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;h2 id=&#34;linux系统&#34;&gt;Linux系统
 &lt;/h2&gt;&lt;h3 id=&#34;系统介绍&#34;&gt;系统介绍
 &lt;/h3&gt;&lt;p&gt;从内到位依次是硬件 → 内核层 → Shell 层 → 应用层 → 用户
-&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/Linux%e7%b3%bb%e7%bb%9f.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/Linux%e7%b3%bb%e7%bb%9f.png&#34;
 	
 	
 	
@@ -1834,7 +1834,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;hr&gt;
 &lt;h3 id=&#34;文件系统&#34;&gt;文件系统
 &lt;/h3&gt;&lt;p&gt;Linux 文件系统目录结构和熟知的 windows 系统有较大区别，没有各种盘符的概念。根目录只有一个/，采用层级式的树状目录结构。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/Linux%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/Linux%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f.png&#34;
 	
 	
 	
@@ -1849,7 +1849,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;/h2&gt;&lt;h3 id=&#34;设置ip&#34;&gt;设置IP
 &lt;/h3&gt;&lt;h4 id=&#34;nat&#34;&gt;NAT
 &lt;/h4&gt;&lt;p&gt;首先设置虚拟机中 NAT 模式的选项，打开 VMware，点击编辑下的虚拟网络编辑器，设置 NAT 参数
-&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e9%85%8d%e7%bd%aeNAT.jpg&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e9%85%8d%e7%bd%aeNAT.jpg&#34;
 	
 	
 	
@@ -1858,7 +1858,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;：VMware Network Adapter VMnet8 保证是启用状态&lt;/p&gt;
-&lt;p&gt;​	&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e6%9c%ac%e5%9c%b0%e4%b8%bb%e6%9c%ba%e7%bd%91%e7%bb%9c%e8%bf%9e%e6%8e%a5.jpg&#34;
+&lt;p&gt;​	&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e6%9c%ac%e5%9c%b0%e4%b8%bb%e6%9c%ba%e7%bd%91%e7%bb%9c%e8%bf%9e%e6%8e%a5.jpg&#34;
 	
 	
 	
@@ -1945,7 +1945,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;ul&gt;
 &lt;li&gt;【虚拟机】&amp;ndash;【设置】&amp;ndash;【添加】&lt;/li&gt;
 &lt;li&gt;
-&lt;img src=&#34;../img/tool/linux/两块NAT网卡.jpg&#34; style=&#34;zoom:80%;&#34; /&gt;
+&lt;img src=&#34;../../../assets/img/tool/linux/两块NAT网卡.jpg&#34; style=&#34;zoom:80%;&#34; /&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
@@ -1954,7 +1954,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;h3 id=&#34;远程登陆&#34;&gt;远程登陆
 &lt;/h3&gt;&lt;p&gt;&lt;strong&gt;服务器维护工作&lt;/strong&gt; 都是在 远程 通过 SSH 客户端 来完成的， 并没有图形界面， 所有的维护工作都需要通过命令来完成，Linux 服务器需要安装 SSH 相关服务&lt;/p&gt;
 &lt;p&gt;首先执行 sudo apt-get install openssh-server 指令，接下来用 xshell 连接&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e8%bf%9c%e7%a8%8b%e8%bf%9e%e6%8e%a5Linux.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e8%bf%9c%e7%a8%8b%e8%bf%9e%e6%8e%a5Linux.png&#34;
 	
 	
 	
@@ -2179,7 +2179,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;code&gt;top -Hp 进程 id&lt;/code&gt;：分析该进程内各线程的 CPU 使用情况&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/top%e5%91%bd%e4%bb%a4.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/top%e5%91%bd%e4%bb%a4.png&#34;
 	
 	
 	
@@ -2509,7 +2509,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;h3 id=&#34;文件属性&#34;&gt;文件属性
 &lt;/h3&gt;&lt;h4 id=&#34;基本属性&#34;&gt;基本属性
 &lt;/h4&gt;&lt;p&gt;Linux 系统是一种典型的多用户系统，不同的用户处于不同的地位，拥有不同的权限。为了保护系统的安全性，Linux系统对不同的用户访问同一文件（包括目录文件）的权限做了不同的规定&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e7%94%a8%e6%88%b7%e7%9b%ae%e5%bd%95%e4%b8%8b%e7%9a%84%e6%96%87%e4%bb%b6.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e7%94%a8%e6%88%b7%e7%9b%ae%e5%bd%95%e4%b8%8b%e7%9a%84%e6%96%87%e4%bb%b6.png&#34;
 	
 	
 	
@@ -2526,7 +2526,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;li&gt;若是 c 则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;接下来的字符，以三个为一组，均为[rwx] 的三个参数组合。其中，[ r ]代表可读(read)、[ w ]代表可写(write)、[ x ]代表可执行(execute)。 要注意的是，这三个权限的位置不会改变，如果没有权限，就会出现[ - ]。&lt;/p&gt;
-&lt;img src=&#34;../img/tool/linux/文件权限.png&#34; style=&#34;zoom: 50%;&#34; /&gt;
+&lt;img src=&#34;../../../assets/img/tool/linux/文件权限.png&#34; style=&#34;zoom: 50%;&#34; /&gt;
 &lt;p&gt;从左至右用 0-9 这些数字来表示：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;第 0 位确定文件类型&lt;/li&gt;
@@ -2541,7 +2541,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;li&gt;文件的【属主】有一套【读写执行权限rwx】&lt;/li&gt;
 &lt;li&gt;文件的【属组】有一套【读写执行权限rwx】&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e5%88%97%e5%87%ba%e7%9b%ae%e5%bd%95%e6%96%87%e4%bb%b6.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e5%88%97%e5%87%ba%e7%9b%ae%e5%bd%95%e6%96%87%e4%bb%b6.png&#34;
 	
 	
 	
@@ -2602,7 +2602,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;/ul&gt;
 &lt;p&gt;表示为：&lt;code&gt;chmod -R 770 文件名&lt;/code&gt;&lt;/p&gt;
 &lt;h5 id=&#34;符号权限&#34;&gt;符号权限
-&lt;/h5&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e6%9d%83%e9%99%90%e7%ac%a6%e5%8f%b7%e8%a1%a8.png&#34;
+&lt;/h5&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e6%9d%83%e9%99%90%e7%ac%a6%e5%8f%b7%e8%a1%a8.png&#34;
 	
 	
 	
@@ -3488,7 +3488,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;下次再使用 vim 编辑文件时，会看到以下屏幕信息：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/vim%e5%bc%82%e5%b8%b8.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/vim%e5%bc%82%e5%b8%b8.png&#34;
 	
 	
 	
@@ -3515,7 +3515,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;li&gt;-s：默认是实体链接，加 -s 为符号链接&lt;/li&gt;
 &lt;li&gt;-f：如果目标文件存在时，先删除目标文件&lt;/li&gt;
 &lt;/ul&gt;
-&lt;img src=&#34;../img/tool/linux/文件链接.png&#34; style=&#34;zoom: 80%;&#34; /&gt;
+&lt;img src=&#34;../../../assets/img/tool/linux/文件链接.png&#34; style=&#34;zoom: 80%;&#34; /&gt;
 &lt;p&gt;&lt;strong&gt;实体链接&lt;/strong&gt;：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;在目录下创建一个条目，记录着文件名与 inode 编号，这个 inode 就是源文件的 inode&lt;/li&gt;
@@ -3740,7 +3740,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;ping -c 2 www.baidu.com&lt;/code&gt;
-&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/ping%e7%99%be%e5%ba%a6.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/ping%e7%99%be%e5%ba%a6.png&#34;
 	
 	
 	
@@ -3798,7 +3798,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;lsblk&lt;/code&gt;：以树状列出所有块设备
-&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e5%8f%af%e7%94%a8%e5%9d%97%e8%ae%be%e5%a4%87.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e5%8f%af%e7%94%a8%e5%9d%97%e8%ae%be%e5%a4%87.png&#34;
 	
 	
 	
@@ -3816,7 +3816,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;lsblk -f&lt;/code&gt;：不会列出所有空设备
-&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e4%b8%8d%e5%8c%85%e5%90%ab%e7%a9%ba%e8%ae%be%e5%a4%87.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e4%b8%8d%e5%8c%85%e5%90%ab%e7%a9%ba%e8%ae%be%e5%a4%87.png&#34;
 	
 	
 	
@@ -3839,7 +3839,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;li&gt;-h 使用人类可读的格式(预设值是不加这个选项的&amp;hellip;)&lt;/li&gt;
 &lt;li&gt;&amp;ndash;total 计算所有的数据之和&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e7%a3%81%e7%9b%98%e7%ae%a1%e7%90%86.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e7%a3%81%e7%9b%98%e7%ae%a1%e7%90%86.png&#34;
 	
 	
 	
@@ -3881,7 +3881,7 @@ Ubuntu的iso镜像文件包含bootfs和rootfs，而docker的Ubuntu镜像复用�
 &lt;li&gt;
 &lt;p&gt;开始挂载
 &lt;code&gt;mount -t auto /dev/cdrom /mnt/cdrom&lt;/code&gt;：通过挂载点的方式查看上面的【ISO文件内容】
-&lt;img src=&#34;https://tommyzz8888.github.io/img/tool/linux/%e6%8c%82%e8%bd%bd%e6%88%90%e5%8a%9f.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/assets/img/tool/linux/%e6%8c%82%e8%bd%bd%e6%88%90%e5%8a%9f.png&#34;
 	
 	
 	

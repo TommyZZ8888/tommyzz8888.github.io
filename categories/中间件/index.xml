@@ -610,7 +610,7 @@
 &lt;/h3&gt;&lt;p&gt;​	kafka是一个分布式的基于发布/订阅模式的消息队列（message queue），主要应用于大数据实时处理领域。&lt;/p&gt;
 &lt;h3 id=&#34;12-消息队列&#34;&gt;1.2 消息队列
 &lt;/h3&gt;&lt;h5 id=&#34;121-传统消息队列的应用场景&#34;&gt;1.2.1 传统消息队列的应用场景
-&lt;/h5&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cmiddleware%5ckafka%5c%e6%b6%88%e6%81%af%e9%98%9f%e5%88%97%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af.png&#34;
+&lt;/h5&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/middleware/kafka/%e6%b6%88%e6%81%af%e9%98%9f%e5%88%97%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af.png&#34;
 	
 	
 	

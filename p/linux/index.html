@@ -487,9 +487,9 @@
 </h1><h2 id="操作系统">操作系统
 </h2><p>操作系统（Operation System），是管理计算机硬件与软件资源的计算机程序，同时也是计算机系统的内核与基石。操作系统需要处理管理与配置内存、决定系统资源供需的优先次序、控制输入设备与输出设备、操作网络与管理文件系统等基本事务，操作系统也提供一个让用户与系统交互的操作界面</p>
 <p>操作系统作为接口的示意图：</p>
-<img src="../img/tool/linux/操作系统.png" style="zoom:80%;" />
+<img src="../../../assets/img/tool/linux/操作系统.png" style="zoom:80%;" />
 <p>移动设备操作系统：</p>
-<p><img src="/img/tool/linux/%e7%a7%bb%e5%8a%a8%e8%ae%be%e5%a4%87%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f.png"
+<p><img src="/assets/img/tool/linux/%e7%a7%bb%e5%8a%a8%e8%ae%be%e5%a4%87%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f.png"
 	
 	
 	
@@ -501,7 +501,7 @@
 <h2 id="linux系统">Linux系统
 </h2><h3 id="系统介绍">系统介绍
 </h3><p>从内到位依次是硬件 → 内核层 → Shell 层 → 应用层 → 用户
-<img src="/img/tool/linux/Linux%e7%b3%bb%e7%bb%9f.png"
+<img src="/assets/img/tool/linux/Linux%e7%b3%bb%e7%bb%9f.png"
 	
 	
 	
@@ -516,7 +516,7 @@
 <hr>
 <h3 id="文件系统">文件系统
 </h3><p>Linux 文件系统目录结构和熟知的 windows 系统有较大区别，没有各种盘符的概念。根目录只有一个/，采用层级式的树状目录结构。</p>
-<p><img src="/img/tool/linux/Linux%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f.png"
+<p><img src="/assets/img/tool/linux/Linux%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f.png"
 	
 	
 	
@@ -531,7 +531,7 @@
 </h2><h3 id="设置ip">设置IP
 </h3><h4 id="nat">NAT
 </h4><p>首先设置虚拟机中 NAT 模式的选项，打开 VMware，点击编辑下的虚拟网络编辑器，设置 NAT 参数
-<img src="/img/tool/linux/%e9%85%8d%e7%bd%aeNAT.jpg"
+<img src="/assets/img/tool/linux/%e9%85%8d%e7%bd%aeNAT.jpg"
 	
 	
 	
@@ -540,7 +540,7 @@
 	
 ></p>
 <p><strong>注意</strong>：VMware Network Adapter VMnet8 保证是启用状态</p>
-<p>​	<img src="/img/tool/linux/%e6%9c%ac%e5%9c%b0%e4%b8%bb%e6%9c%ba%e7%bd%91%e7%bb%9c%e8%bf%9e%e6%8e%a5.jpg"
+<p>​	<img src="/assets/img/tool/linux/%e6%9c%ac%e5%9c%b0%e4%b8%bb%e6%9c%ba%e7%bd%91%e7%bb%9c%e8%bf%9e%e6%8e%a5.jpg"
 	
 	
 	
@@ -627,7 +627,7 @@
 <ul>
 <li>【虚拟机】&ndash;【设置】&ndash;【添加】</li>
 <li>
-<img src="../img/tool/linux/两块NAT网卡.jpg" style="zoom:80%;" />
+<img src="../../../assets/img/tool/linux/两块NAT网卡.jpg" style="zoom:80%;" />
 </li>
 </ul>
 </li>
@@ -636,7 +636,7 @@
 <h3 id="远程登陆">远程登陆
 </h3><p><strong>服务器维护工作</strong> 都是在 远程 通过 SSH 客户端 来完成的， 并没有图形界面， 所有的维护工作都需要通过命令来完成，Linux 服务器需要安装 SSH 相关服务</p>
 <p>首先执行 sudo apt-get install openssh-server 指令，接下来用 xshell 连接</p>
-<p><img src="/img/tool/linux/%e8%bf%9c%e7%a8%8b%e8%bf%9e%e6%8e%a5Linux.png"
+<p><img src="/assets/img/tool/linux/%e8%bf%9c%e7%a8%8b%e8%bf%9e%e6%8e%a5Linux.png"
 	
 	
 	
@@ -861,7 +861,7 @@
 </li>
 </ul>
 <p><code>top -Hp 进程 id</code>：分析该进程内各线程的 CPU 使用情况</p>
-<p><img src="/img/tool/linux/top%e5%91%bd%e4%bb%a4.png"
+<p><img src="/assets/img/tool/linux/top%e5%91%bd%e4%bb%a4.png"
 	
 	
 	
@@ -1191,7 +1191,7 @@
 <h3 id="文件属性">文件属性
 </h3><h4 id="基本属性">基本属性
 </h4><p>Linux 系统是一种典型的多用户系统，不同的用户处于不同的地位，拥有不同的权限。为了保护系统的安全性，Linux系统对不同的用户访问同一文件（包括目录文件）的权限做了不同的规定</p>
-<p><img src="/img/tool/linux/%e7%94%a8%e6%88%b7%e7%9b%ae%e5%bd%95%e4%b8%8b%e7%9a%84%e6%96%87%e4%bb%b6.png"
+<p><img src="/assets/img/tool/linux/%e7%94%a8%e6%88%b7%e7%9b%ae%e5%bd%95%e4%b8%8b%e7%9a%84%e6%96%87%e4%bb%b6.png"
 	
 	
 	
@@ -1208,7 +1208,7 @@
 <li>若是 c 则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)</li>
 </ul>
 <p>接下来的字符，以三个为一组，均为[rwx] 的三个参数组合。其中，[ r ]代表可读(read)、[ w ]代表可写(write)、[ x ]代表可执行(execute)。 要注意的是，这三个权限的位置不会改变，如果没有权限，就会出现[ - ]。</p>
-<img src="../img/tool/linux/文件权限.png" style="zoom: 50%;" />
+<img src="../../../assets/img/tool/linux/文件权限.png" style="zoom: 50%;" />
 <p>从左至右用 0-9 这些数字来表示：</p>
 <ul>
 <li>第 0 位确定文件类型</li>
@@ -1223,7 +1223,7 @@
 <li>文件的【属主】有一套【读写执行权限rwx】</li>
 <li>文件的【属组】有一套【读写执行权限rwx】</li>
 </ul>
-<p><img src="/img/tool/linux/%e5%88%97%e5%87%ba%e7%9b%ae%e5%bd%95%e6%96%87%e4%bb%b6.png"
+<p><img src="/assets/img/tool/linux/%e5%88%97%e5%87%ba%e7%9b%ae%e5%bd%95%e6%96%87%e4%bb%b6.png"
 	
 	
 	
@@ -1284,7 +1284,7 @@
 </ul>
 <p>表示为：<code>chmod -R 770 文件名</code></p>
 <h5 id="符号权限">符号权限
-</h5><p><img src="/img/tool/linux/%e6%9d%83%e9%99%90%e7%ac%a6%e5%8f%b7%e8%a1%a8.png"
+</h5><p><img src="/assets/img/tool/linux/%e6%9d%83%e9%99%90%e7%ac%a6%e5%8f%b7%e8%a1%a8.png"
 	
 	
 	
@@ -2170,7 +2170,7 @@
 </li>
 <li>
 <p>下次再使用 vim 编辑文件时，会看到以下屏幕信息：</p>
-<p><img src="/img/tool/linux/vim%e5%bc%82%e5%b8%b8.png"
+<p><img src="/assets/img/tool/linux/vim%e5%bc%82%e5%b8%b8.png"
 	
 	
 	
@@ -2197,7 +2197,7 @@
 <li>-s：默认是实体链接，加 -s 为符号链接</li>
 <li>-f：如果目标文件存在时，先删除目标文件</li>
 </ul>
-<img src="../img/tool/linux/文件链接.png" style="zoom: 80%;" />
+<img src="../../../assets/img/tool/linux/文件链接.png" style="zoom: 80%;" />
 <p><strong>实体链接</strong>：</p>
 <ul>
 <li>在目录下创建一个条目，记录着文件名与 inode 编号，这个 inode 就是源文件的 inode</li>
@@ -2422,7 +2422,7 @@
 </li>
 <li>
 <p><code>ping -c 2 www.baidu.com</code>
-<img src="/img/tool/linux/ping%e7%99%be%e5%ba%a6.png"
+<img src="/assets/img/tool/linux/ping%e7%99%be%e5%ba%a6.png"
 	
 	
 	
@@ -2480,7 +2480,7 @@
 <ul>
 <li>
 <p><code>lsblk</code>：以树状列出所有块设备
-<img src="/img/tool/linux/%e5%8f%af%e7%94%a8%e5%9d%97%e8%ae%be%e5%a4%87.png"
+<img src="/assets/img/tool/linux/%e5%8f%af%e7%94%a8%e5%9d%97%e8%ae%be%e5%a4%87.png"
 	
 	
 	
@@ -2498,7 +2498,7 @@
 </li>
 <li>
 <p><code>lsblk -f</code>：不会列出所有空设备
-<img src="/img/tool/linux/%e4%b8%8d%e5%8c%85%e5%90%ab%e7%a9%ba%e8%ae%be%e5%a4%87.png"
+<img src="/assets/img/tool/linux/%e4%b8%8d%e5%8c%85%e5%90%ab%e7%a9%ba%e8%ae%be%e5%a4%87.png"
 	
 	
 	
@@ -2521,7 +2521,7 @@
 <li>-h 使用人类可读的格式(预设值是不加这个选项的&hellip;)</li>
 <li>&ndash;total 计算所有的数据之和</li>
 </ul>
-<p><img src="/img/tool/linux/%e7%a3%81%e7%9b%98%e7%ae%a1%e7%90%86.png"
+<p><img src="/assets/img/tool/linux/%e7%a3%81%e7%9b%98%e7%ae%a1%e7%90%86.png"
 	
 	
 	
@@ -2563,7 +2563,7 @@
 <li>
 <p>开始挂载
 <code>mount -t auto /dev/cdrom /mnt/cdrom</code>：通过挂载点的方式查看上面的【ISO文件内容】
-<img src="/img/tool/linux/%e6%8c%82%e8%bd%bd%e6%88%90%e5%8a%9f.png"
+<img src="/assets/img/tool/linux/%e6%8c%82%e8%bd%bd%e6%88%90%e5%8a%9f.png"
 	
 	
 	
