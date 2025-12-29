@@ -349,7 +349,7 @@
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;跟踪断点进行排查&lt;/p&gt;
 &lt;p&gt;首先发生异常的位置&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cerr%5cprocessbody.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/err/processbody.png&#34;
 	
 	
 	
@@ -360,7 +360,7 @@
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;我们可以发现这个&lt;code&gt;converter&lt;/code&gt;是一个&lt;code&gt;StringHttpMessageConverter&lt;/code&gt;类型，然后我们进入到&lt;code&gt;addDefaultHeaders&lt;/code&gt;方法&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cerr%5cwrite.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/err/write.png&#34;
 	
 	
 	
@@ -371,7 +371,7 @@
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;然后，当代码执行到这个方法的 &lt;strong&gt;260 行&lt;/strong&gt;时，就会发生刚才我们说的那个&lt;code&gt;ClassCastException&lt;/code&gt;异常。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cerr%5cclasscast.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/err/classcast.png&#34;
 	
 	
 	
@@ -382,7 +382,7 @@
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;最后，我们终于找到了发生异常的原因，因为 260 的代码会执行getContentLength(t, headers.getContentType())这个方法，而这个方法会去执行StringHttpMessageConverter的getContentLength方法，如下图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cerr%5cstringconvert.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/err/stringconvert.png&#34;
 	
 	
 	
@@ -398,7 +398,7 @@
 &lt;p&gt;然后，我们通过源码就能发现，这个转换的执行过程是：
 1.遍历所有的转换器，判断当前转换器能不能使用
 2.如果可以使用，才调用我们写的&lt;code&gt;beforeBodyWrite&lt;/code&gt;进行处理&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cerr%5cmessageConverters.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/err/messageConverters.png&#34;
 	
 	
 	

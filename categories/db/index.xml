@@ -235,7 +235,7 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_01.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_01.png&#34;
 	
 	
 	
@@ -250,12 +250,12 @@
 &lt;p&gt;连接建立 TCP 以后需要做&lt;strong&gt;权限验证&lt;/strong&gt;，验证成功后可以进行执行 SQL。如果这时管理员账号对这个用户的权限做了修改，也不会影响已经存在连接的权限，只有再新建的连接才会使用新的权限设置&lt;/p&gt;
 &lt;p&gt;MySQL 服务器可以同时和多个客户端进行交互，所以要保证每个连接会话的隔离性（事务机制部分详解）&lt;/p&gt;
 &lt;p&gt;整体的执行流程：&lt;/p&gt;
-&lt;img src=&#34;..\img\db\db_02.png&#34; style=&#34;zoom: 33%;&#34; /&gt;
+&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_02.png&#34; style=&#34;zoom: 33%;&#34; /&gt;
 &lt;hr&gt;
 &lt;h4 id=&#34;权限信息&#34;&gt;权限信息
 &lt;/h4&gt;&lt;p&gt;grant 语句会同时修改数据表和内存，判断权限的时候使用的是内存数据&lt;/p&gt;
 &lt;p&gt;flush privileges 语句本身会用数据表（磁盘）的数据重建一份内存权限数据，所以在权限数据可能存在不一致的情况下使用，这种不一致往往是由于直接用 DML 语句操作系统权限表导致的，所以尽量不要使用这类语句&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_03.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_03.png&#34;
 	
 	
 	
@@ -285,7 +285,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;SHOW PROCESSLIST：查看当前 MySQL 在进行的线程，可以实时地查看 SQL 的执行情况，其中的 Command 列显示为 Sleep 的这一行，就表示现在系统里面有一个空闲连接&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_04.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_04.png&#34;
 	
 	
 	
@@ -422,7 +422,7 @@
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;SHOW&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;STATUS&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;LIKE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Qcache%&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;img src=&#34;..\img\db\db_05.png&#34; style=&#34;zoom:67%;&#34; /&gt;
+&lt;/div&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_05.png&#34; style=&#34;zoom:67%;&#34; /&gt;
 &lt;table&gt;
   &lt;thead&gt;
       &lt;tr&gt;
@@ -808,7 +808,7 @@
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;备份&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_06.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_06.png&#34;
 	
 	
 	
@@ -821,7 +821,7 @@
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;恢复&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_07.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_07.png&#34;
 	
 	
 	
@@ -951,7 +951,7 @@
 &lt;ul&gt;
 &lt;li&gt;用来定义数据库的访问权限和安全级别，及创建用户。关键字：grant， revoke等&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_08.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_08.png&#34;
 	
 	
 	
@@ -1914,7 +1914,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;product&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NAME&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;LIKE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%电脑%&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;img src=&#34;..\img\db\db_09.png&#34; style=&#34;zoom: 80%;&#34; /&gt;
+&lt;/div&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_09.png&#34; style=&#34;zoom: 80%;&#34; /&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
@@ -2467,7 +2467,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;product&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;LIMIT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;-- 第四页 开始索引=(4-1) * 2
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_10.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_10.png&#34;
 	
 	
 	
@@ -2968,7 +2968,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;card&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;12345&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;56789&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_11.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_11.png&#34;
 	
 	
 	
@@ -3020,7 +3020,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;orderlist&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;hm001&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;hm002&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;hm003&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;hm004&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_12.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_12.png&#34;
 	
 	
 	
@@ -3092,7 +3092,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;stu_course&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_13.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_13.png&#34;
 	
 	
 	
@@ -3159,7 +3159,7 @@
 &lt;/div&gt;
 &lt;/div&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_14.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_14.png&#34;
 	
 	
 	
@@ -3197,7 +3197,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;INSERT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INTO&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;employee&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;VALUES&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1001&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;孙悟空&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1005&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;9000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;00&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),..,(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1009&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;宋江&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;16000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;00&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_15.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_15.png&#34;
 	
 	
 	
@@ -3545,7 +3545,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_16.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_16.png&#34;
 	
 	
 	
@@ -5453,7 +5453,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;kp&#34;&gt;ENGINE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MERGE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;UNION&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;order_1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;order_2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;INSERT_METHOD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LAST&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;DEFAULT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kp&#34;&gt;CHARSET&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;utf8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_17.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_17.png&#34;
 	
 	
 	
@@ -5644,7 +5644,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/h4&gt;&lt;p&gt;MySQL 官方对索引的定义为：索引（index）是帮助 MySQL 高效获取数据的一种数据结构，**本质是排好序的快速查找数据结构。**在表数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式指向数据， 这样就可以在这些数据结构上实现高级查找算法，这种数据结构就是索引&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;索引是在存储引擎层实现的&lt;/strong&gt;，所以并没有统一的索引标准，即不同存储引擎的索引的工作方式并不一样&lt;/p&gt;
 &lt;p&gt;索引使用：一张数据表，用于保存数据；一个索引配置文件，用于保存索引；每个索引都指向了某一个数据
-&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_18.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_18.png&#34;
 	
 	
 	
@@ -5730,7 +5730,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;联合索引图示：根据身高年龄建立的组合索引（height、age）&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_19.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_19.png&#34;
 	
 	
 	
@@ -5924,7 +5924,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;p&gt;InnoDB 表是基于聚簇索引建立的，因此 InnoDB 的索引能提供一种非常快速的主键查找性能。不过辅助索引也会包含主键列，所以不建议使用过长的字段作为主键，&lt;strong&gt;过长的主索引会令辅助索引变得过大&lt;/strong&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_20.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_20.png&#34;
 	
 	
 	
@@ -5940,7 +5940,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;li&gt;主键索引 B+ 树的节点存储了主键，辅助键索引 B+ 树存储了辅助键，表数据存储在独立的地方，这两颗 B+ 树的叶子节点都使用一个地址指向真正的表数据，对于表数据来说，这两个键没有任何差别&lt;/li&gt;
 &lt;li&gt;由于索引树是独立的，通过辅助索引检索&lt;strong&gt;无需回表查询&lt;/strong&gt;访问主键的索引树&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_21.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_21.png&#34;
 	
 	
 	
@@ -5953,7 +5953,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/h5&gt;&lt;p&gt;MyISAM 的索引方式也叫做非聚集的，之所以这么称呼是为了与 InnoDB 的聚集索引区分&lt;/p&gt;
 &lt;p&gt;主键索引：MyISAM 引擎使用 B+Tree 作为索引结构，叶节点的 data 域存放的是数据记录的地址&lt;/p&gt;
 &lt;p&gt;辅助索引：MyISAM 中主索引和辅助索引（Secondary key）在结构上没有任何区别，只是主索引要求 key 是唯一的，而辅助索引的 key 可以重复&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_22.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_22.png&#34;
 	
 	
 	
@@ -6001,7 +6001,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;插入前 4 个字母 C N G A&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_23.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_23.png&#34;
 	
 	
 	
@@ -6012,7 +6012,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;插入 H，n&amp;gt;4，中间元素 G 字母向上分裂到新的节点&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_24.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_24.png&#34;
 	
 	
 	
@@ -6023,7 +6023,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;插入 E、K、Q 不需要分裂&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_25.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_25.png&#34;
 	
 	
 	
@@ -6034,7 +6034,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;插入 M，中间元素 M 字母向上分裂到父节点 G&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_26.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_26.png&#34;
 	
 	
 	
@@ -6045,7 +6045,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;插入 F，W，L，T 不需要分裂&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_27.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_27.png&#34;
 	
 	
 	
@@ -6058,7 +6058,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;p&gt;插入 Z，中间元素 T 向上分裂到父节点中&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_28.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_28.png&#34;
 	
 	
 	
@@ -6069,7 +6069,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;插入 D，中间元素 D 向上分裂到父节点中，然后插入 P，R，X，Y 不需要分裂&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_29.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_29.png&#34;
 	
 	
 	
@@ -6082,7 +6082,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;p&gt;最后插入 S，NPQR 节点 n&amp;gt;5，中间节点 Q 向上分裂，但分裂后父节点 DGMT 的 n&amp;gt;5，中间节点 M 向上分裂&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_30.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_30.png&#34;
 	
 	
 	
@@ -6092,7 +6092,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &gt;&lt;/p&gt;
 &lt;p&gt;BTree 树就已经构建完成了，BTree 树和二叉树相比， 查询数据的效率更高， 因为对于相同的数据量来说，&lt;strong&gt;BTree 的层级结构比二叉树少&lt;/strong&gt;，所以搜索速度快&lt;/p&gt;
 &lt;p&gt;BTree 结构的数据可以让系统高效的找到数据所在的磁盘块，定义一条记录为一个二元组 [key, data] ，key 为记录的键值，对应表中的主键值，data 为一行记录中除主键外的数据。对于不同的记录，key 值互不相同，BTree 中的每个节点根据实际情况可以包含大量的关键字信息和分支
-&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_31.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_31.png&#34;
 	
 	
 	
@@ -6115,14 +6115,14 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;li&gt;&lt;strong&gt;叶子节点按照 key 大小顺序排列，左边结尾数据都会保存右边节点开始数据的指针，形成一个链表&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;所有节点中的 key 在叶子节点中也存在（比如 5)，&lt;strong&gt;key 允许重复&lt;/strong&gt;，B 树不同节点不存在重复的 key&lt;/li&gt;
 &lt;/ul&gt;
-&lt;img src=&#34;..\img\db\db_32.png&#34; style=&#34;zoom:67%;&#34; /&gt;
+&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_32.png&#34; style=&#34;zoom:67%;&#34; /&gt;
 &lt;p&gt;B* 树：是 B+ 树的变体，在 B+ 树的非根和非叶子结点再增加指向兄弟的指针&lt;/p&gt;
 &lt;hr&gt;
 &lt;h5 id=&#34;优化结构&#34;&gt;优化结构
 &lt;/h5&gt;&lt;p&gt;MySQL 索引数据结构对经典的 B+Tree 进行了优化，在原 B+Tree 的基础上，增加一个指向相邻叶子节点的链表指针，就形成了带有顺序指针的 B+Tree，&lt;strong&gt;提高区间访问的性能，防止回旋查找&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;区间访问的意思是访问索引为 5 - 15 的数据，可以直接根据相邻节点的指针遍历&lt;/p&gt;
 &lt;p&gt;B+ 树的&lt;strong&gt;叶子节点是数据页&lt;/strong&gt;（page），一个页里面可以存多个数据行&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_33.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_33.png&#34;
 	
 	
 	
@@ -6258,7 +6258,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;不使用索引下推优化时存储引擎通过索引检索到数据，然后回表查询记录返回给 Server 层，&lt;strong&gt;服务器判断数据是否符合条件&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_34.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_34.png&#34;
 	
 	
 	
@@ -6269,7 +6269,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;使用索引下推优化时，如果&lt;strong&gt;存在某些被索引的列的判断条件&lt;/strong&gt;时，由存储引擎在索引遍历的过程中判断数据是否符合传递的条件，将符合条件的数据进行回表，检索出来返回给服务器，由此减少 IO 次数&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_35.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_35.png&#34;
 	
 	
 	
@@ -6297,7 +6297,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;优化前：在非主键索引树上找到满足第一个条件的行，然后通过叶子节点记录的主键值再回到主键索引树上查找到对应的行数据，再对比 AND 后的条件是否符合，符合返回数据，需要 4 次回表&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_36.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_36.png&#34;
 	
 	
 	
@@ -6308,7 +6308,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;优化后：检查索引中存储的列信息是否符合索引条件，然后交由存储引擎用剩余的判断条件判断此行数据是否符合要求，&lt;strong&gt;不满足条件的不去读取表中的数据&lt;/strong&gt;，满足下推条件的就根据主键值进行回表查询，2 次回表
-&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_37.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_37.png&#34;
 	
 	
 	
@@ -6633,7 +6633,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Com_xxx 表示每种语句执行的次数&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_38.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_38.png&#34;
 	
 	
 	
@@ -6652,7 +6652,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;SHOW&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;STATUS&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;LIKE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Innodb_rows_%&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_39.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_39.png&#34;
 	
 	
 	
@@ -6774,7 +6774,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;SHOW PROCESSLIST：&lt;strong&gt;实时查看&lt;/strong&gt;当前 MySQL 在进行的连接线程，包括线程的状态、是否锁表、SQL 的执行情况，同时对一些锁表操作进行优化&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_40.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_40.png&#34;
 	
 	
 	
@@ -6797,7 +6797,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;table_1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_41.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_41.png&#34;
 	
 	
 	
@@ -6869,7 +6869,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/ul&gt;
 &lt;p&gt;SHOW WARINGS：在使用 EXPALIN 命令后执行该语句，可以查询与执行计划相关的拓展信息，展示出 Level、Code、Message 三个字段，当 Code 为 1003 时，Message 字段展示的信息类似于将查询语句重写后的信息，但是不是等价，不能执行复制过来运行&lt;/p&gt;
 &lt;p&gt;环境准备：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_42.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_42.png&#34;
 	
 	
 	
@@ -6891,7 +6891,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t_role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t_user&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ur&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ur&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;role_id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AND&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ur&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_43.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_43.png&#34;
 	
 	
 	
@@ -6910,7 +6910,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t_role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;role_id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t_user&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;stu1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_44.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_44.png&#34;
 	
 	
 	
@@ -6929,7 +6929,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;t_role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_role&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ur&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ur&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;2&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;role_id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; 
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_45.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_45.png&#34;
 	
 	
 	
@@ -7095,7 +7095,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;通过 have_profiling 参数，能够看到当前 MySQL 是否支持 profile：
-&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_46.png&#34;
+&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_46.png&#34;
 	
 	
 	
@@ -7106,7 +7106,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;默认 profiling 是关闭的，可以通过 set 语句在 Session 级别开启 profiling：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_47.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_47.png&#34;
 	
 	
 	
@@ -7133,7 +7133,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;SHOW&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PROFILES&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_48.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_48.png&#34;
 	
 	
 	
@@ -7152,7 +7152,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;SHOW&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PROFILE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FOR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;QUERY&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;query_id&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_49.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_49.png&#34;
 	
 	
 	
@@ -7163,7 +7163,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;在获取到最消耗时间的线程状态后，MySQL 支持选择 all、cpu、block io 、context switch、page faults 等类型查看 MySQL 在使用什么资源上耗费了过高的时间。例如，选择查看 CPU 的耗费时间：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_50.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_50.png&#34;
 	
 	
 	
@@ -7254,7 +7254,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;CREATE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;INDEX&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;idx_seller_name_sta_addr&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;ON&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;address&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# 联合索引
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_51.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_51.png&#34;
 	
 	
 	
@@ -7276,7 +7276,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;小米科技&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AND&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AND&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;address&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;西安市&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_52.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_52.png&#34;
 	
 	
 	
@@ -7298,7 +7298,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;小米科技&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AND&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_53.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_53.png&#34;
 	
 	
 	
@@ -7317,7 +7317,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AND&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;address&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;西安市&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_54.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_54.png&#34;
 	
 	
 	
@@ -7334,7 +7334,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;小米科技&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AND&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;address&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;西安市&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_55.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_55.png&#34;
 	
 	
 	
@@ -7355,7 +7355,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;根据前面的两个字段 name ， status 查询是走索引的， 但是最后一个条件 address 没有用到索引，使用了索引下推&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_56.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_56.png&#34;
 	
 	
 	
@@ -7374,7 +7374,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;SUBSTRING&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;科技&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_57.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_57.png&#34;
 	
 	
 	
@@ -7394,7 +7394,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;小米科技&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AND&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_58.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_58.png&#34;
 	
 	
 	
@@ -7421,7 +7421,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;小米科技&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;OR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_59.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_59.png&#34;
 	
 	
 	
@@ -7438,7 +7438,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;阿里巴巴&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;AND&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;createtime&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;2088-01-01 12:00:00&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_60.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_60.png&#34;
 	
 	
 	
@@ -7458,7 +7458,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;like&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%科技%&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_61.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_61.png&#34;
 	
 	
 	
@@ -7475,7 +7475,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPLAIN&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;SELECT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sellerid&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tb_seller&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;WHERE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;like&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%科技%&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cdb_62.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/db_62.png&#34;
 	
 	
 	
@@ -20251,7 +20251,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
         <guid>https://tommyzz8888.github.io/p/mysql/</guid>
         <description>&lt;h1 id=&#34;mysql&#34;&gt;MySql
 &lt;/h1&gt;&lt;p&gt;mysql执行流程&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5c%e6%89%a7%e8%a1%8c%e6%b5%81%e7%a8%8b.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/%e6%89%a7%e8%a1%8c%e6%b5%81%e7%a8%8b.png&#34;
 	
 	
 	
@@ -20776,7 +20776,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;h5 id=&#34;211user表&#34;&gt;2.11user表
 &lt;/h5&gt;&lt;p&gt;&lt;strong&gt;user表：是MySQL中最重要的一个权限表， 记录用户账号和权限信息。&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154814619-880344668.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql_01.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql_01.png&#34;
 	
 	
 	
@@ -20825,7 +20825,7 @@ INOUT：代表既可以作为输入参数，也可以作为输出参数&lt;/p&gt
 &lt;h5 id=&#34;212db表&#34;&gt;2.12db表
 &lt;/h5&gt;&lt;p&gt;&lt;strong&gt;db表：记录数据库层级的权限&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152406519-649151221.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5c%e8%ae%b0%e5%bd%95%e6%95%b0%e6%8d%ae%e5%ba%93%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/%e8%ae%b0%e5%bd%95%e6%95%b0%e6%8d%ae%e5%ba%93%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png&#34;
 	
 	
 	
@@ -20843,7 +20843,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;h5 id=&#34;213tables_priv表&#34;&gt;2.13tables_priv表
 &lt;/h5&gt;&lt;p&gt;&lt;strong&gt;tables_priv表：记录表层级的权限&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152825187-262801799.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5c%e8%ae%b0%e5%bd%95%e8%a1%a8%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/%e8%ae%b0%e5%bd%95%e8%a1%a8%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png&#34;
 	
 	
 	
@@ -20863,7 +20863,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;h5 id=&#34;214columns_priv表&#34;&gt;2.14columns_priv表
 &lt;/h5&gt;&lt;p&gt;&lt;strong&gt;columns_priv表：记录列层级的权限&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220153703503-765466053.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5c%e8%ae%b0%e5%bd%95%e5%88%97%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/%e8%ae%b0%e5%bd%95%e5%88%97%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png&#34;
 	
 	
 	
@@ -20881,7 +20881,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;h5 id=&#34;215procs_priv表&#34;&gt;2.15procs_priv表
 &lt;/h5&gt;&lt;p&gt;&lt;strong&gt;procs_priv表：存储的过程和函数的权限&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154121398-1977529702.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5c%e5%ad%98%e5%82%a8%e7%9a%84%e8%bf%87%e7%a8%8b%e5%92%8c%e5%87%bd%e6%95%b0%e7%9a%84%e6%9d%83%e9%99%90.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/%e5%ad%98%e5%82%a8%e7%9a%84%e8%bf%87%e7%a8%8b%e5%92%8c%e5%87%bd%e6%95%b0%e7%9a%84%e6%9d%83%e9%99%90.png&#34;
 	
 	
 	
@@ -20903,7 +20903,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;h5 id=&#34;217请求核实阶段&#34;&gt;2.17请求核实阶段
 &lt;/h5&gt;&lt;p&gt;一旦建立了连接，服务器就进入请求核实阶段。对此连接上进来的每个请求，服务器检查该请求要执行什么操作、是否有足够的权限来执行它，这正是需要授权表中的权限列发挥作用的地方。这些权限可以来自user、db、table_priv和column_priv表。
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220161703950-393897996.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5c%e8%af%b7%e6%b1%82%e6%a0%b8%e5%ae%9e%e9%98%b6%e6%ae%b5%e6%b5%81%e7%a8%8b%e5%9b%be.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/%e8%af%b7%e6%b1%82%e6%a0%b8%e5%ae%9e%e9%98%b6%e6%ae%b5%e6%b5%81%e7%a8%8b%e5%9b%be.png&#34;
 	
 	
 	
@@ -20916,7 +20916,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;h3 id=&#34;3mysql的数据目录结构&#34;&gt;3、Mysql的数据目录结构
 &lt;/h3&gt;&lt;h5 id=&#34;31查看mysql的主要目录结构&#34;&gt;3.1查看mysql的主要目录结构
 &lt;/h5&gt;&lt;p&gt;通过命名查看mysql的目录结构：&lt;code&gt;find / -name mysql&lt;/code&gt;
-[&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5cmysql%e4%b8%bb%e8%a6%81%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84.png&#34;
+[&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5cmysql%e4%b8%bb%e8%a6%81%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84.png&#34;
 	
 	
 	
@@ -20929,7 +20929,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;h5 id=&#34;32数据库文件的存放路径&#34;&gt;3.2数据库文件的存放路径
 &lt;/h5&gt;&lt;p&gt;MySQL数据库文件的存放路径：/var/lib/mysql/
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163111437-1807887880.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e6%95%b0%e6%8d%ae%e5%ba%93%e6%96%87%e4%bb%b6%e7%9a%84%e5%ad%98%e6%94%be%e8%b7%af%e5%be%84.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e6%95%b0%e6%8d%ae%e5%ba%93%e6%96%87%e4%bb%b6%e7%9a%84%e5%ad%98%e6%94%be%e8%b7%af%e5%be%84.png&#34;
 	
 	
 	
@@ -20943,7 +20943,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;/h5&gt;&lt;p&gt;相关命令目录：/usr/bin和/usr/sbin。
 &lt;strong&gt;/usr/bin目录&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163537093-646907271.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e7%9b%b8%e5%85%b3%e5%91%bd%e4%bb%a4%e7%9a%84%e5%ad%98%e6%94%be%e8%b7%af%e5%be%84.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e7%9b%b8%e5%85%b3%e5%91%bd%e4%bb%a4%e7%9a%84%e5%ad%98%e6%94%be%e8%b7%af%e5%be%84.png&#34;
 	
 	
 	
@@ -20955,7 +20955,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &gt;&lt;/a&gt;
 &lt;strong&gt;/usr/sbin目录&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163652279-1335793189.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e7%9b%ae%e5%bd%95.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e7%9b%ae%e5%bd%95.png&#34;
 	
 	
 	
@@ -20967,7 +20967,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &gt;&lt;/a&gt;
 &lt;strong&gt;启动命令能读取的配置文件选项组&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220175719237-1534110880.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c2345397-20220220175719237-1534110880.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c2345397-20220220175719237-1534110880.png&#34;
 	
 	
 	
@@ -20980,7 +20980,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;h5 id=&#34;34配置文件目录&#34;&gt;3.4配置文件目录
 &lt;/h5&gt;&lt;p&gt;配置文件目录：/usr/share/mysql（命令及配置文件）和 /etc（如my.cnf）
 &lt;strong&gt;/usr/share/mysql（命令及配置文件）&lt;/strong&gt;
-[&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e7%9b%ae%e5%bd%95.png&#34;
+[&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e7%9b%ae%e5%bd%95.png&#34;
 	
 	
 	
@@ -20992,7 +20992,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &gt;
 &lt;strong&gt;/etc目录&lt;/strong&gt;
 &lt;a class=&#34;link&#34; href=&#34;https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220164107873-1172310117.png&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c2345397-20220220164107873-1172310117.png&#34;
+    &gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c2345397-20220220164107873-1172310117.png&#34;
 	
 	
 	
@@ -21006,7 +21006,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 &lt;/h4&gt;&lt;p&gt;数据库的文件信息会存在磁盘上，文件系统来管理这些文件信息。&lt;/p&gt;
 &lt;h5 id=&#34;35查看默认的数据库&#34;&gt;3.5查看默认的数据库
 &lt;/h5&gt;&lt;p&gt;查看命令：SHOW DATABASES;
-[&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e6%9f%a5%e7%9c%8b%e9%bb%98%e8%ae%a4%e7%9a%84%e6%95%b0%e6%8d%ae%e5%ba%93.png&#34;
+[&lt;img src=&#34;https://tommyzz8888.github.io/img/db/mysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e6%9f%a5%e7%9c%8b%e9%bb%98%e8%ae%a4%e7%9a%84%e6%95%b0%e6%8d%ae%e5%ba%93.png&#34;
 	
 	
 	

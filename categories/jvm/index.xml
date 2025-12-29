@@ -1808,7 +1808,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nl&#34;&gt;xx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PrintTenuringDistribution&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5c%e5%a0%86%e6%a0%88.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/%e5%a0%86%e6%a0%88.png&#34;
 	
 	
 	
@@ -1818,7 +1818,7 @@
 	
 	
 &gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5c%e6%a0%88%e5%b8%a7.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/%e6%a0%88%e5%b8%a7.png&#34;
 	
 	
 	
@@ -8957,7 +8957,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 &lt;/div&gt;&lt;p&gt;虚拟机参数配置-Xmx10m -Xms10m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=path/to/dump.hprof&lt;/p&gt;
 &lt;p&gt;也可以及时手动jmap -dump:format=b,file=dump.hprof &lt;PID&gt;，下载日志分析，但需要及时处理，不然可以GC掉，日志不完整，或者出现其他oom，被覆盖&lt;/p&gt;
 &lt;h3 id=&#34;mat工具&#34;&gt;mat工具
-&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;F:%5cgithub%5cjava%5cTommy-s-Note%5cnotes%5cimg%5cjvm%5cmat%e5%88%9d%e5%a7%8b%e7%95%8c%e9%9d%a2.png&#34;
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/mat%e5%88%9d%e5%a7%8b%e7%95%8c%e9%9d%a2.png&#34;
 	
 	
 	
@@ -8966,7 +8966,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;可以查看到熟悉的类&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5cmat%e5%88%86%e6%9e%902.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/mat%e5%88%86%e6%9e%902.png&#34;
 	
 	
 	
@@ -8977,7 +8977,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;如果上述不易发现，可以查看线程&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5cmat%e7%ba%bf%e7%a8%8b%e5%88%86%e6%9e%90.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/mat%e7%ba%bf%e7%a8%8b%e5%88%86%e6%9e%90.png&#34;
 	
 	
 	
@@ -8988,7 +8988,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;也可以查看&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5cleak.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/leak.png&#34;
 	
 	
 	
@@ -8999,7 +8999,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;进而查看&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5cleak-suspects-detail.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/leak-suspects-detail.png&#34;
 	
 	
 	
@@ -9009,7 +9009,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 	
 	
 &gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5cmat-thread-into-detail.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/mat-thread-into-detail.png&#34;
 	
 	
 	
@@ -9019,7 +9019,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 	
 	
 &gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5cmat-thread.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/mat-thread.png&#34;
 	
 	
 	
@@ -9029,7 +9029,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 	
 	
 &gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5cmat%e7%ba%bf%e7%a8%8b%e5%88%97%e8%a1%a8.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/mat%e7%ba%bf%e7%a8%8b%e5%88%97%e8%a1%a8.png&#34;
 	
 	
 	
@@ -9039,7 +9039,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 	
 	
 &gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjvm%5cmat-thread-detail.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/jvm/mat-thread-detail.png&#34;
 	
 	
 	

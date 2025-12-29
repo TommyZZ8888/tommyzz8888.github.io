@@ -40265,7 +40265,7 @@ Short.MAX_VALUE 是 32767，所以 32768 = Short.MAX_VALUE + 1 实际是在编�
 &lt;p&gt;这种情况下，容器不知道该注入哪个会抛出 &lt;code&gt;NoUniqueBeanDefinitionException&lt;/code&gt; 异常。&lt;/p&gt;
 &lt;h4 id=&#34;二解决冲突&#34;&gt;二、解决冲突
 &lt;/h4&gt;&lt;p&gt;假设在项目中定义一个 &lt;code&gt;BeanService&lt;/code&gt; 接口，基于该接口有三个实现类 &lt;code&gt;OneServiceImpl&lt;/code&gt;、&lt;code&gt;TwoServiceImpl&lt;/code&gt; 和 &lt;code&gt;ThreeServiceImpl&lt;/code&gt;，三个实现类都由 Spring 容器管理。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjavabase%5cgot%5cbeantest-%e7%bb%93%e6%9e%84.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/javabase/got/beantest-%e7%bb%93%e6%9e%84.png&#34;
 	
 	
 	
@@ -40800,7 +40800,7 @@ classpath:/config/ 类路径下
 classpath:
 spring.config.location可以用来改变加载文件位置。在项目打包后，可以用命令行参数的形式指定配置文件的新位置。和默认加载的文件形成互补，共同起作用。
 java -jar XXX.jar &amp;ndash;server.port=8007&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/..%5cimg%5cjavabase%5cspring%5c%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e5%8a%a0%e8%bd%bd%e9%a1%ba%e5%ba%8f.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://tommyzz8888.github.io/img/javabase/spring/%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e5%8a%a0%e8%bd%bd%e9%a1%ba%e5%ba%8f.png&#34;
 	
 	
 	

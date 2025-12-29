@@ -1346,7 +1346,7 @@
 <li>使用 System.exit(int) 方法停止线程：目的仅是停止一个线程，但这种做法会让整个程序都停止</li>
 </ul>
 <p>两阶段终止模式图示：</p>
-<img src="..\img\multiplethread\juc\JUC-两阶段终止模式.png" style="zoom: 67%;" />
+<img src="/img/multiplethread/juc/JUC-两阶段终止模式.png" style="zoom: 67%;" />
 <p>打断线程可能在任何时间，所以需要考虑在任何时刻被打断的处理方法：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1572,7 +1572,7 @@
       </tr>
   </tbody>
 </table></div>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e7%ba%bf%e7%a8%8b6%e7%a7%8d%e7%8a%b6%e6%80%81.png"
+<p><img src="/img/multiplethread/juc/JUC-%e7%ba%bf%e7%a8%8b6%e7%a7%8d%e7%8a%b6%e6%80%81.png"
 	
 	
 	
@@ -1904,7 +1904,7 @@
 <ul>
 <li>
 <p>Mark Word 结构：最后两位是<strong>锁标志位</strong></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-Monitor-MarkWord%e7%bb%93%e6%9e%8432%e4%bd%8d.png"
+<p><img src="/img/multiplethread/juc/JUC-Monitor-MarkWord%e7%bb%93%e6%9e%8432%e4%bd%8d.png"
 	
 	
 	
@@ -1915,7 +1915,7 @@
 </li>
 <li>
 <p>64 位虚拟机 Mark Word：</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-Monitor-MarkWord%e7%bb%93%e6%9e%8464%e4%bd%8d.png"
+<p><img src="/img/multiplethread/juc/JUC-Monitor-MarkWord%e7%bb%93%e6%9e%8464%e4%bd%8d.png"
 	
 	
 	
@@ -1929,13 +1929,13 @@
 <ul>
 <li>开始时 Monitor 中 Owner 为 null</li>
 <li>当 Thread-2 执行 synchronized(obj) 就会将 Monitor 的所有者 Owner 置为 Thread-2，Monitor 中只能有一个 Owner，<strong>obj 对象的 Mark Word 指向 Monitor</strong>，把<strong>对象原有的 MarkWord 存入线程栈中的锁记录</strong>中（轻量级锁部分详解）
-<img src="..\img\multiplethread\juc\JUC-Monitor工作原理1.png" style="zoom:67%;" /></li>
+<img src="/img/multiplethread/juc/JUC-Monitor工作原理1.png" style="zoom:67%;" /></li>
 <li>在 Thread-2 上锁的过程，Thread-3、Thread-4、Thread-5 也执行 synchronized(obj)，就会进入 EntryList BLOCKED（双向链表）</li>
 <li>Thread-2 执行完同步代码块的内容，根据 obj 对象头中 Monitor 地址寻找，设置 Owner 为空，把线程栈的锁记录中的对象头的值设置回 MarkWord</li>
 <li>唤醒 EntryList 中等待的线程来竞争锁，竞争是<strong>非公平的</strong>，如果这时有新的线程想要获取锁，可能直接就抢占到了，阻塞队列的线程就会继续阻塞</li>
 <li>WaitSet 中的 Thread-0，是以前获得过锁，但条件不满足进入 WAITING 状态的线程（wait-notify 机制）</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-Monitor%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%862.png"
+<p><img src="/img/multiplethread/juc/JUC-Monitor%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%862.png"
 	
 	
 	
@@ -2050,7 +2050,7 @@
 <pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">无锁</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">偏向锁</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">轻量级锁</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">重量级锁</span><span class="w">	</span><span class="c1">// 随着竞争的增加，只能锁升级，不能降级</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e9%94%81%e5%8d%87%e7%ba%a7%e8%bf%87%e7%a8%8b.png"
+</div><p><img src="/img/multiplethread/juc/JUC-%e9%94%81%e5%8d%87%e7%ba%a7%e8%bf%87%e7%a8%8b.png"
 	
 	
 	
@@ -2139,7 +2139,7 @@
 </div><ul>
 <li>
 <p>创建锁记录（Lock Record）对象，每个线程的<strong>栈帧</strong>都会包含一个锁记录的结构，存储锁定对象的 Mark Word</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%861.png"
+<p><img src="/img/multiplethread/juc/JUC-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%861.png"
 	
 	
 	
@@ -2153,7 +2153,7 @@
 </li>
 <li>
 <p>如果 CAS 替换成功，对象头中存储了锁记录地址和状态 00（轻量级锁） ，表示由该线程给对象加锁
-<img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%862.png"
+<img src="/img/multiplethread/juc/JUC-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%862.png"
 	
 	
 	
@@ -2168,7 +2168,7 @@
 <li>如果是其它线程已经持有了该 Object 的轻量级锁，这时表明有竞争，进入锁膨胀过程</li>
 <li>如果是线程自己执行了 synchronized 锁重入，就添加一条 Lock Record 作为重入的计数</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%863.png"
+<p><img src="/img/multiplethread/juc/JUC-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%863.png"
 	
 	
 	
@@ -2196,7 +2196,7 @@
 <ul>
 <li>
 <p>当 Thread-1 进行轻量级加锁时，Thread-0 已经对该对象加了轻量级锁</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e9%87%8d%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%861.png"
+<p><img src="/img/multiplethread/juc/JUC-%e9%87%8d%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%861.png"
 	
 	
 	
@@ -2207,7 +2207,7 @@
 </li>
 <li>
 <p>Thread-1 加轻量级锁失败，进入锁膨胀流程：为 Object 对象申请 Monitor 锁，<strong>通过 Object 对象头获取到持锁线程</strong>，将 Monitor 的 Owner 置为 Thread-0，将 Object 的对象头指向重量级锁地址，然后自己进入 Monitor 的 EntryList BLOCKED</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e9%87%8d%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%862.png"
+<p><img src="/img/multiplethread/juc/JUC-%e9%87%8d%e9%87%8f%e7%ba%a7%e9%94%81%e5%8e%9f%e7%90%862.png"
 	
 	
 	
@@ -2235,11 +2235,11 @@
 <ul>
 <li>
 <p>自旋成功的情况：
-<img src="..\img\multiplethread\juc\JUC-自旋成功.png" style="zoom: 80%;" /></p>
+<img src="/img/multiplethread/juc/JUC-自旋成功.png" style="zoom: 80%;" /></p>
 </li>
 <li>
 <p>自旋失败的情况：</p>
-<img src="..\img\multiplethread\juc\JUC-自旋失败.png" style="zoom:80%;" />
+<img src="/img/multiplethread/juc/JUC-自旋失败.png" style="zoom:80%;" />
 </li>
 </ul>
 <p>自旋锁说明：</p>
@@ -2898,7 +2898,7 @@
 </ol>
 </li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-park%e5%8e%9f%e7%90%861.png"
+<p><img src="/img/multiplethread/juc/JUC-park%e5%8e%9f%e7%90%861.png"
 	
 	
 	
@@ -2914,7 +2914,7 @@
 <li>当前线程调用 Unsafe.park() 方法</li>
 <li>检查 _counter ，本情况为 1，这时线程无需挂起，继续运行，设置 _counter 为 0</li>
 </ol>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-park%e5%8e%9f%e7%90%862.png"
+<p><img src="/img/multiplethread/juc/JUC-park%e5%8e%9f%e7%90%862.png"
 	
 	
 	
@@ -3005,7 +3005,7 @@
 <li>如果有结果不断从一个线程到另一个线程那么可以使用消息队列（见生产者/消费者）</li>
 <li>JDK 中，join 的实现、Future 的实现，采用的就是此模式</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e4%bf%9d%e6%8a%a4%e6%80%a7%e6%9a%82%e5%81%9c.png"
+<p><img src="/img/multiplethread/juc/JUC-%e4%bf%9d%e6%8a%a4%e6%80%a7%e6%9a%82%e5%81%9c.png"
 	
 	
 	
@@ -3141,7 +3141,7 @@
 </div>
 </div><h5 id="多任务版">多任务版
 </h5><p>多任务版保护性暂停：</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e4%bf%9d%e6%8a%a4%e6%80%a7%e6%9a%82%e5%81%9c%e5%a4%9a%e4%bb%bb%e5%8a%a1%e7%89%88.png"
+<p><img src="/img/multiplethread/juc/JUC-%e4%bf%9d%e6%8a%a4%e6%80%a7%e6%9a%82%e5%81%9c%e5%a4%9a%e4%bb%bb%e5%8a%a1%e7%89%88.png"
 	
 	
 	
@@ -3581,7 +3581,7 @@
 <li>消息队列是有容量限制的，满时不会再加入数据，空时不会再消耗数据</li>
 <li>JDK 中各种阻塞队列，采用的就是这种模式</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e7%94%9f%e4%ba%a7%e8%80%85%e6%b6%88%e8%b4%b9%e8%80%85%e6%a8%a1%e5%bc%8f.png"
+<p><img src="/img/multiplethread/juc/JUC-%e7%94%9f%e4%ba%a7%e8%80%85%e6%b6%88%e8%b4%b9%e8%80%85%e6%a8%a1%e5%bc%8f.png"
 	
 	
 	
@@ -3812,7 +3812,7 @@
 <li>规定了线程和内存之间的一些关系</li>
 </ul>
 <p>根据 JMM 的设计，系统存在一个主内存（Main Memory），Java 中所有变量都存储在主存中，对于所有线程都是共享的；每条线程都有自己的工作内存（Working Memory），工作内存中保存的是主存中某些<strong>变量的拷贝</strong>，线程对所有变量的操作都是先对变量进行拷贝，然后在工作内存中进行，不能直接操作主内存中的变量；线程之间无法相互直接访问，线程间的通信（传递）必须通过主内存来完成</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJMM%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b.png"
+<p><img src="/img/multiplethread/juc/JMM%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b.png"
 	
 	
 	
@@ -3834,7 +3834,7 @@
 <h4 id="内存交互">内存交互
 </h4><p>Java 内存模型定义了 8 个操作来完成主内存和工作内存的交互操作，每个操作都是<strong>原子</strong>的</p>
 <p>非原子协定：没有被 volatile 修饰的 long、double 外，默认按照两次 32 位的操作</p>
-<img src="..\img\multiplethread\juc\JMM-内存交互.png" style="zoom: 67%;" />
+<img src="/img/multiplethread/juc/JMM-内存交互.png" style="zoom: 67%;" />
 <ul>
 <li>lock：作用于主内存，将一个变量标识为被一个线程独占状态（对应 monitorenter）</li>
 <li>unclock：作用于主内存，将一个变量从独占状态释放出来，释放后的变量才可以被其他线程锁定（对应 monitorexit）</li>
@@ -3886,7 +3886,7 @@
 <li>因为 t 线程要频繁从主内存中读取 run 的值，JIT 编译器会将 run 的值缓存至自己工作内存中的高速缓存中，减少对主存中 run 的访问，提高效率</li>
 <li>1 秒之后，main 线程修改了 run 的值，并同步至主存，而 t 是从自己工作内存中的高速缓存中读取这个变量的值，结果永远是旧值</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJMM-%e5%8f%af%e8%a7%81%e6%80%a7%e4%be%8b%e5%ad%90.png"
+<p><img src="/img/multiplethread/juc/JMM-%e5%8f%af%e8%a7%81%e6%80%a7%e4%be%8b%e5%ad%90.png"
 	
 	
 	
@@ -3938,7 +3938,7 @@
 </h4><h5 id="缓存结构">缓存结构
 </h5><p>在计算机系统中，CPU 高速缓存（CPU Cache，简称缓存）是用于减少处理器访问内存所需平均时间的部件；在存储体系中位于自顶向下的第二层，仅次于 CPU 寄存器；其容量远小于内存，但速度却可以接近处理器的频率</p>
 <p>CPU 处理器速度远远大于在主内存中的，为了解决速度差异，在它们之间架设了多级缓存，如 L1、L2、L3 级别的缓存，这些缓存离 CPU 越近就越快，将频繁操作的数据缓存到这里，加快访问速度</p>
-<img src="..\img\multiplethread\juc\JMM-CPU缓存结构.png" style="zoom: 50%;" />
+<img src="/img/multiplethread/juc/JMM-CPU缓存结构.png" style="zoom: 50%;" />
 <div class="table-wrapper"><table>
   <thead>
       <tr>
@@ -3976,7 +3976,7 @@
 <h4 id="伪共享">伪共享
 </h4><p><strong>缓存以缓存行 cache line 为单位</strong>，每个缓存行对应着一块内存，一般是 64 byte（8 个 long），在 CPU 从主存获取数据时，以 cache line 为单位加载，于是相邻的数据会一并加载到缓存中</p>
 <p>缓存会造成数据副本的产生，即同一份数据会缓存在不同核心的缓存行中，CPU 要保证数据的一致性，需要做到某个 CPU 核心更改了数据，其它 CPU 核心对应的<strong>整个缓存行必须失效</strong>，这就是伪共享</p>
-<img src="..\img\multiplethread\juc\JUC-内存伪共享.png" style="zoom: 67%;" />
+<img src="/img/multiplethread/juc/JUC-内存伪共享.png" style="zoom: 67%;" />
 <p>解决方法：</p>
 <ul>
 <li>
@@ -3994,7 +3994,7 @@
 <hr>
 <h4 id="缓存一致">缓存一致
 </h4><p>缓存一致性：当多个处理器运算任务都涉及到同一块主内存区域的时候，将可能导致各自的缓存数据不一样</p>
-<img src="..\img\multiplethread\juc\JUC-缓存一致性.png" style="zoom:80%;" />
+<img src="/img/multiplethread/juc/JUC-缓存一致性.png" style="zoom:80%;" />
 <p>MESI（Modified Exclusive Shared Or Invalid）是一种广泛使用的<strong>支持写回策略的缓存一致性协议</strong>，CPU 中每个缓存行（caceh line）使用 4 种状态进行标记（使用额外的两位 bit 表示)：</p>
 <ul>
 <li>
@@ -4194,7 +4194,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><img src="..\img\multiplethread\juc\JMM-volatile保证可见性.png" style="zoom:67%;" />
+</div><img src="/img/multiplethread/juc/JMM-volatile保证可见性.png" style="zoom:67%;" />
 </li>
 <li>
 <p>全能屏障：mfence（modify/mix Barrier），兼具 sfence 和 lfence 的功能</p>
@@ -4237,7 +4237,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="nl">2</span><span class="p">:</span><span class="w"> </span><span class="n">iinc</span><span class="w">		</span><span class="n">1</span><span class="p">,</span><span class="w"> </span><span class="n">1</span><span class="w">	
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><img src="..\img\multiplethread\juc\JMM-volatile不能保证原子性.png" style="zoom:67%;" />
+</div><img src="/img/multiplethread/juc/JMM-volatile不能保证原子性.png" style="zoom:67%;" />
 </li>
 </ul>
 <hr>
@@ -4368,7 +4368,7 @@
 <li>关键在于 0:getstatic 这行代码在 monitor 控制之外，可以越过 monitor 读取 INSTANCE 变量的值</li>
 <li>当其他线程访问 INSTANCE 不为 null 时，由于 INSTANCE 实例未必已初始化，那么 t2 拿到的是将是一个未初始化完毕的单例返回，这就造成了线程安全的问题</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJMM-DCL%e5%87%ba%e7%8e%b0%e7%9a%84%e9%97%ae%e9%a2%98.png"
+<p><img src="/img/multiplethread/juc/JMM-DCL%e5%87%ba%e7%8e%b0%e7%9a%84%e9%97%ae%e9%a2%98.png"
 	
 	
 	
@@ -5036,7 +5036,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Cell 是数组形式，<strong>在内存中是连续存储的</strong>，64 位系统中，一个 Cell 为 24 字节（16 字节的对象头和 8 字节的 value），每一个 cache line 为 64 字节，因此缓存行可以存下 2 个的 Cell 对象，当 Core-0 要修改 Cell[0]、Core-1 要修改 Cell[1]，无论谁修改成功都会导致当前缓存行失效，从而导致对方的数据失效，需要重新去主存获取，影响效率</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e4%bc%aa%e5%85%b1%e4%ba%ab1.png"
+<p><img src="/img/multiplethread/juc/JUC-%e4%bc%aa%e5%85%b1%e4%ba%ab1.png"
 	
 	
 	
@@ -5045,7 +5045,7 @@
 	
 ></p>
 <p>@sun.misc.Contended：防止缓存行伪共享，在使用此注解的对象或字段的前后各增加 128 字节大小的 padding，使用 2 倍于大多数硬件缓存行让 CPU 将对象预读至缓存时<strong>占用不同的缓存行</strong>，这样就不会造成对方缓存行的失效</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e4%bc%aa%e5%85%b1%e4%ba%ab2.png"
+<p><img src="/img/multiplethread/juc/JUC-%e4%bc%aa%e5%85%b1%e4%ba%ab2.png"
 	
 	
 	
@@ -5922,7 +5922,7 @@
 <h4 id="实现原理">实现原理
 </h4><h5 id="底层结构">底层结构
 </h5><p>JDK8 以前：每个 ThreadLocal 都创建一个 Map，然后用线程作为 Map 的 key，要存储的局部变量作为 Map 的 value，达到各个线程的局部变量隔离的效果。这种结构会造成 Map 结构过大和内存泄露，因为 Thread 停止后无法通过 key 删除对应的数据</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ThreadLocal%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84JDK8%e5%89%8d.png"
+<p><img src="/img/multiplethread/juc/JUC-ThreadLocal%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84JDK8%e5%89%8d.png"
 	
 	
 	
@@ -5937,7 +5937,7 @@
 <li>Thread 内部的 Map 是由 ThreadLocal 维护的，由 ThreadLocal 负责向 map 获取和设置线程的变量值</li>
 <li>对于不同的线程，每次获取副本值时，别的线程并不能获取到当前线程的副本值，形成副本的隔离，互不干扰</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ThreadLocal%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84JDK8%e5%90%8e.png"
+<p><img src="/img/multiplethread/juc/JUC-ThreadLocal%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84JDK8%e5%90%8e.png"
 	
 	
 	
@@ -6513,7 +6513,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-replaceStaleEntry%e6%b5%81%e7%a8%8b.png"
+</div><p><img src="/img/multiplethread/juc/JUC-replaceStaleEntry%e6%b5%81%e7%a8%8b.png"
 	
 	
 	
@@ -6888,8 +6888,8 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><img src="..\img\multiplethread\juc\JUC-ThreadLocal探测式清理1.png" style="zoom:67%;" />
-<img src="..\img\multiplethread\juc\JUC-ThreadLocal探测式清理2.png" style="zoom:67%;" />
+</div><img src="/img/multiplethread/juc/JUC-ThreadLocal探测式清理1.png" style="zoom:67%;" />
+<img src="/img/multiplethread/juc/JUC-ThreadLocal探测式清理2.png" style="zoom:67%;" />
 </li>
 <li>
 <p>启发式清理：向后循环扫描过期数据，发现过期数据调用探测式清理方法，如果连续几次的循环都没有发现过期数据，就停止扫描</p>
@@ -6964,11 +6964,11 @@
 <ul>
 <li>
 <p>如果 key 使用强引用：使用完 ThreadLocal ，threadLocal Ref 被回收，但是 threadLocalMap 的 Entry 强引用了 threadLocal，造成 threadLocal 无法被回收，无法完全避免内存泄漏</p>
-<img src="..\img\multiplethread\juc\JUC-ThreadLocal内存泄漏强引用.png" style="zoom:67%;" />
+<img src="/img/multiplethread/juc/JUC-ThreadLocal内存泄漏强引用.png" style="zoom:67%;" />
 </li>
 <li>
 <p>如果 key 使用弱引用：使用完 ThreadLocal ，threadLocal Ref 被回收，ThreadLocalMap 只持有 ThreadLocal 的弱引用，所以threadlocal 也可以被回收，此时 Entry 中的 key = null。但没有手动删除这个 Entry 或者 CurrentThread 依然运行，依然存在强引用链，value 不会被回收，而这块 value 永远不会被访问到，也会导致 value 内存泄漏</p>
-<img src="..\img\multiplethread\juc\JUC-ThreadLocal内存泄漏弱引用.png" style="zoom:67%;" />
+<img src="/img/multiplethread/juc/JUC-ThreadLocal内存泄漏弱引用.png" style="zoom:67%;" />
 </li>
 <li>
 <p>两个主要原因：</p>
@@ -7310,7 +7310,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-LinkedBlockingQueue%e5%85%a5%e9%98%9f%e6%b5%81%e7%a8%8b.png"
+</div><p><img src="/img/multiplethread/juc/JUC-LinkedBlockingQueue%e5%85%a5%e9%98%9f%e6%b5%81%e7%a8%8b.png"
 	
 	
 	
@@ -7362,7 +7362,7 @@
 </div></li>
 <li>
 <p><code>h = head</code> → <code>first = h.next</code></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-LinkedBlockingQueue%e5%87%ba%e9%98%9f%e6%b5%81%e7%a8%8b1.png"
+<p><img src="/img/multiplethread/juc/JUC-LinkedBlockingQueue%e5%87%ba%e9%98%9f%e6%b5%81%e7%a8%8b1.png"
 	
 	
 	
@@ -7373,7 +7373,7 @@
 </li>
 <li>
 <p><code>h.next = h</code> → <code>head = first</code></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-LinkedBlockingQueue%e5%87%ba%e9%98%9f%e6%b5%81%e7%a8%8b2.png"
+<p><img src="/img/multiplethread/juc/JUC-LinkedBlockingQueue%e5%87%ba%e9%98%9f%e6%b5%81%e7%a8%8b2.png"
 	
 	
 	
@@ -8795,7 +8795,7 @@
 </li>
 </ul>
 <p>工作原理：</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e7%ba%bf%e7%a8%8b%e6%b1%a0%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86.png"
+<p><img src="/img/multiplethread/juc/JUC-%e7%ba%bf%e7%a8%8b%e6%b1%a0%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86.png"
 	
 	
 	
@@ -8914,7 +8914,7 @@
 <p>Executors.newFixedThreadPool(1) 初始时为 1，可以修改。对外暴露的是 ThreadPoolExecutor 对象，可以强转后调用 setCorePoolSize 等方法进行修改</p>
 </li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-newSingleThreadExecutor.png"
+<p><img src="/img/multiplethread/juc/JUC-newSingleThreadExecutor.png"
 	
 	
 	
@@ -9119,7 +9119,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">CAPACITY</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">COUNT_BITS</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">1</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-%e7%ba%bf%e7%a8%8b%e6%b1%a0%e7%8a%b6%e6%80%81%e8%bd%ac%e6%8d%a2%e5%9b%be.png"
+</div><p><img src="/img/multiplethread/juc/JUC-%e7%ba%bf%e7%a8%8b%e6%b1%a0%e7%8a%b6%e6%80%81%e8%bd%ac%e6%8d%a2%e5%9b%be.png"
 	
 	
 	
@@ -12955,7 +12955,7 @@
 <li>
 <p>请求的共享资源被占用，AQS 用队列实现线程阻塞等待以及被唤醒时锁分配的机制，将暂时获取不到锁的线程加入到队列中</p>
 <p>CLH 是一种基于单向链表的<strong>高性能、公平的自旋锁</strong>，AQS 是将每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点（Node）来实现锁的分配</p>
-<img src="..\img\multiplethread\juc\JUC-AQS原理图.png" style="zoom: 80%;" />
+<img src="/img/multiplethread/juc/JUC-AQS原理图.png" style="zoom: 80%;" />
 </li>
 </ul>
 <hr>
@@ -13116,7 +13116,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-AQS%e9%98%9f%e5%88%97%e8%ae%be%e8%ae%a1.png"
+</div><p><img src="/img/multiplethread/juc/JUC-AQS%e9%98%9f%e5%88%97%e8%ae%be%e8%ae%a1.png"
 	
 	
 	
@@ -13477,7 +13477,7 @@
 </div>
 </div></li>
 </ul>
-<img src="..\img\multiplethread\juc\JUC-ReentrantLock-非公平锁1.png" style="zoom:80%;" />
+<img src="/img/multiplethread/juc/JUC-ReentrantLock-非公平锁1.png" style="zoom:80%;" />
 <ul>
 <li>
 <p>进入 tryAcquire 尝试获取锁逻辑，这时 state 已经是1，结果仍然失败（第二次），加锁成功有两种情况：</p>
@@ -13656,7 +13656,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><img src="..\img\multiplethread\juc\JUC-ReentrantLock-非公平锁2.png" style="zoom:80%;" />
+</div><img src="/img/multiplethread/juc/JUC-ReentrantLock-非公平锁2.png" style="zoom:80%;" />
 </li>
 <li>
 <p>线程节点加入队列成功，进入 AbstractQueuedSynchronizer#acquireQueued 逻辑阻塞线程</p>
@@ -13811,7 +13811,7 @@
 </div></li>
 <li>
 <p>再有多个线程经历竞争失败后：</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ReentrantLock-%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%813.png"
+<p><img src="/img/multiplethread/juc/JUC-ReentrantLock-%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%813.png"
 	
 	
 	
@@ -13985,7 +13985,7 @@
 <li>head 指向刚刚 Thread-1 所在的 Node，该 Node 会清空 Thread</li>
 <li>原本的 head 因为从链表断开，而可被垃圾回收（图中有错误，原来的头节点的 waitStatus 被改为 0 了）</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ReentrantLock-%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%814.png"
+<p><img src="/img/multiplethread/juc/JUC-ReentrantLock-%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%814.png"
 	
 	
 	
@@ -14000,7 +14000,7 @@
 <li>Thread-4 被设置为 exclusiveOwnerThread，state = 1</li>
 <li>Thread-1 再次进入 acquireQueued 流程，获取锁失败，重新进入 park 阻塞</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ReentrantLock-%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%815.png"
+<p><img src="/img/multiplethread/juc/JUC-ReentrantLock-%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%815.png"
 	
 	
 	
@@ -14961,7 +14961,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">THROW_IE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">1</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ReentrantLock-%e6%9d%a1%e4%bb%b6%e5%8f%98%e9%87%8f1.png"
+</div><p><img src="/img/multiplethread/juc/JUC-ReentrantLock-%e6%9d%a1%e4%bb%b6%e5%8f%98%e9%87%8f1.png"
 	
 	
 	
@@ -15144,7 +15144,7 @@
 </div></li>
 <li>
 <p>fullyRelease 中会 unpark AQS 队列中的下一个节点竞争锁，假设 Thread-1 竞争成功</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ReentrantLock-%e6%9d%a1%e4%bb%b6%e5%8f%98%e9%87%8f2.png"
+<p><img src="/img/multiplethread/juc/JUC-ReentrantLock-%e6%9d%a1%e4%bb%b6%e5%8f%98%e9%87%8f2.png"
 	
 	
 	
@@ -15409,7 +15409,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ReentrantLock-%e6%9d%a1%e4%bb%b6%e5%8f%98%e9%87%8f3.png"
+</div><p><img src="/img/multiplethread/juc/JUC-ReentrantLock-%e6%9d%a1%e4%bb%b6%e5%8f%98%e9%87%8f3.png"
 	
 	
 	
@@ -15573,7 +15573,7 @@
 </li>
 <li>
 <p>补充情况：查询线程 A 查询数据时恰好缓存数据由于时间到期失效，或是第一次查询</p>
-<img src="..\img\multiplethread\juc\JUC-ReentrantReadWriteLock缓存.png" style="zoom:80%;" />
+<img src="/img/multiplethread/juc/JUC-ReentrantReadWriteLock缓存.png" style="zoom:80%;" />
 </li>
 </ul>
 <p>可以使用读写锁进行操作</p>
@@ -16189,11 +16189,11 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果没有成功，在 doAcquireShared 内 for (;;) 循环一次，shouldParkAfterFailedAcquire 内把前驱节点的 waitStatus 改为 -1，再 for (;;) 循环一次尝试 tryAcquireShared，不成功在 parkAndCheckInterrupt() 处 park</p>
-<img src="..\img\multiplethread\juc\JUC-ReentrantReadWriteLock加锁1.png" style="zoom: 80%;" />
+<img src="/img/multiplethread/juc/JUC-ReentrantReadWriteLock加锁1.png" style="zoom: 80%;" />
 </li>
 <li>
 <p>这种状态下，假设又有 t3 r.lock，t4 w.lock，这期间 t1 仍然持有锁，就变成了下面的样子</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ReentrantReadWriteLock%e5%8a%a0%e9%94%812.png"
+<p><img src="/img/multiplethread/juc/JUC-ReentrantReadWriteLock%e5%8a%a0%e9%94%812.png"
 	
 	
 	
@@ -16366,7 +16366,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><img src="..\img\multiplethread\juc\JUC-ReentrantReadWriteLock解锁1.png" style="zoom: 67%;" />
+</div><img src="/img/multiplethread/juc/JUC-ReentrantReadWriteLock解锁1.png" style="zoom: 67%;" />
 </li>
 <li>
 <p>下一个节点不是 shared 了，因此不会继续唤醒 t4 所在节点</p>
@@ -16430,7 +16430,7 @@
 </div></li>
 <li>
 <p>t4 在 acquireQueued 中 parkAndCheckInterrupt 处恢复运行，再次 for (;;) 这次自己是头节点的临节点，并且没有其他节点竞争，tryAcquire(1) 成功，修改头结点，流程结束</p>
-<img src="..\img\multiplethread\juc\JUC-ReentrantReadWriteLock解锁2.png" style="zoom: 67%;" />
+<img src="/img/multiplethread/juc/JUC-ReentrantReadWriteLock解锁2.png" style="zoom: 67%;" />
 </li>
 </ul>
 <hr>
@@ -17143,7 +17143,7 @@
 </div>
 </div></li>
 </ul>
-<img src="..\img\multiplethread\juc\JUC-CyclicBarrier工作原理.png" style="zoom: 80%;" />
+<img src="/img/multiplethread/juc/JUC-CyclicBarrier工作原理.png" style="zoom: 80%;" />
 <hr>
 <h5 id="成员方法-5">成员方法
 </h5><ul>
@@ -17648,7 +17648,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-Semaphore%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b1.png"
+</div><p><img src="/img/multiplethread/juc/JUC-Semaphore%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b1.png"
 	
 	
 	
@@ -17719,7 +17719,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-Semaphore%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b2.png"
+</div><p><img src="/img/multiplethread/juc/JUC-Semaphore%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b2.png"
 	
 	
 	
@@ -18001,7 +18001,7 @@
 <li>ConcurrentHashMap、Hashtable <strong>不允许 null 值</strong>，HashMap 允许 null 值</li>
 <li>ConcurrentHashMap、HashMap 的初始容量为 16，Hashtable 初始容量为11，填充因子默认都是 0.75，两种 Map 扩容是当前容量翻倍：capacity * 2，Hashtable 扩容时是容量翻倍 + 1：capacity*2 + 1</li>
 </ol>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cConcurrentHashMap%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84.png"
+<p><img src="/img/multiplethread/juc/ConcurrentHashMap%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84.png"
 	
 	
 	
@@ -19720,7 +19720,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>链表处理的 LastRun 机制，<strong>可以减少节点的创建</strong></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentHashMap-LastRun%e6%9c%ba%e5%88%b6.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentHashMap-LastRun%e6%9c%ba%e5%88%b6.png"
 	
 	
 	
@@ -20153,7 +20153,7 @@
 </li>
 <li>
 <p>缺点：Segments 数组默认大小为16，这个容量初始化指定后就不能改变了，并且不是懒惰初始化</p>
-<p>![](..\img\multiplethread\juc\JUC-ConcurrentHashMap 1.7底层结构.png)</p>
+<p>![](/img/multiplethread/juc/JUC-ConcurrentHashMap 1.7底层结构.png)</p>
 </li>
 </ul>
 <hr>
@@ -20326,7 +20326,7 @@
 <p>弱一致性：系统并不保证进程或者线程的访问都会返回最新的更新过的值，也不会承诺多久之后可以读到</p>
 </li>
 </ul>
-<img src="..\img\multiplethread\juc\JUC-CopyOnWriteArrayList弱一致性.png" style="zoom:80%;" />
+<img src="/img/multiplethread/juc/JUC-CopyOnWriteArrayList弱一致性.png" style="zoom:80%;" />
 <div class="table-wrapper"><table>
   <thead>
       <tr>
@@ -20482,7 +20482,7 @@
 <li>对平衡树的插入和删除往往很可能导致平衡树进行一次全局的调整；而对跳表的插入和删除，<strong>只需要对整个结构的局部进行操作</strong></li>
 <li>在高并发的情况下，保证整个平衡树的线程安全需要一个全局锁；对于跳表则只需要部分锁，拥有更好的性能</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentSkipListMap%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentSkipListMap%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84.png"
 	
 	
 	
@@ -20768,7 +20768,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentSkipListMap-Put%e6%b5%81%e7%a8%8b.png"
+</div><p><img src="/img/multiplethread/juc/JUC-ConcurrentSkipListMap-Put%e6%b5%81%e7%a8%8b.png"
 	
 	
 	
@@ -21462,7 +21462,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>经过 findPredecessor() 中的 unlink() 后索引已经被删除</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentSkipListMap-remove%e6%b5%81%e7%a8%8b.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentSkipListMap-remove%e6%b5%81%e7%a8%8b.png"
 	
 	
 	
@@ -21747,7 +21747,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>图解入队：</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentLinkedQueue%e5%85%a5%e9%98%9f%e6%93%8d%e4%bd%9c1.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentLinkedQueue%e5%85%a5%e9%98%9f%e6%93%8d%e4%bd%9c1.png"
 	
 	
 	
@@ -21755,7 +21755,7 @@
 	
 	
 ></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentLinkedQueue%e5%85%a5%e9%98%9f%e6%93%8d%e4%bd%9c2.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentLinkedQueue%e5%85%a5%e9%98%9f%e6%93%8d%e4%bd%9c2.png"
 	
 	
 	
@@ -21763,7 +21763,7 @@
 	
 	
 ></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentLinkedQueue%e5%85%a5%e9%98%9f%e6%93%8d%e4%bd%9c3.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentLinkedQueue%e5%85%a5%e9%98%9f%e6%93%8d%e4%bd%9c3.png"
 	
 	
 	
@@ -21859,7 +21859,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>在更新完 head 之后，会将旧的头结点 h 的 next 域指向为 h，图中所示的虚线也就表示这个节点的自引用，被移动的节点（item 为 null 的节点）会被 GC 回收</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentLinkedQueue%e5%87%ba%e9%98%9f%e6%93%8d%e4%bd%9c1.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentLinkedQueue%e5%87%ba%e9%98%9f%e6%93%8d%e4%bd%9c1.png"
 	
 	
 	
@@ -21867,7 +21867,7 @@
 	
 	
 ></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentLinkedQueue%e5%87%ba%e9%98%9f%e6%93%8d%e4%bd%9c2.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentLinkedQueue%e5%87%ba%e9%98%9f%e6%93%8d%e4%bd%9c2.png"
 	
 	
 	
@@ -21875,7 +21875,7 @@
 	
 	
 ></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cJUC-ConcurrentLinkedQueue%e5%87%ba%e9%98%9f%e6%93%8d%e4%bd%9c3.png"
+<p><img src="/img/multiplethread/juc/JUC-ConcurrentLinkedQueue%e5%87%ba%e9%98%9f%e6%93%8d%e4%bd%9c3.png"
 	
 	
 	
@@ -22151,7 +22151,7 @@
 <h4 id="阻塞式io">阻塞式IO
 </h4><p>应用进程通过系统调用 recvfrom 接收数据，会被阻塞，直到数据从内核缓冲区复制到应用进程缓冲区中才返回。阻塞不意味着整个操作系统都被阻塞，其它应用进程还可以执行，只是当前阻塞进程不消耗 CPU 时间，这种模型的 CPU 利用率会比较高</p>
 <p>recvfrom() 用于<strong>接收 Socket 传来的数据，并复制到应用进程的缓冲区 buf 中</strong>，把 recvfrom() 当成系统调用</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO%e6%a8%a1%e5%9e%8b-%e9%98%bb%e5%a1%9e%e5%bc%8fIO.png"
+<p><img src="/img/multiplethread/juc/IO%e6%a8%a1%e5%9e%8b-%e9%98%bb%e5%a1%9e%e5%bc%8fIO.png"
 	
 	
 	
@@ -22163,7 +22163,7 @@
 <h4 id="非阻塞式">非阻塞式
 </h4><p>应用进程通过 recvfrom 调用不停的去和内核交互，直到内核准备好数据。如果没有准备好数据，内核返回一个错误码，过一段时间应用进程再执行 recvfrom 系统调用，在两次发送请求的时间段，进程可以进行其他任务，这种方式称为轮询（polling）</p>
 <p>由于 CPU 要处理更多的系统调用，因此这种模型的 CPU 利用率比较低</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO%e6%a8%a1%e5%9e%8b-%e9%9d%9e%e9%98%bb%e5%a1%9e%e5%bc%8fIO.png"
+<p><img src="/img/multiplethread/juc/IO%e6%a8%a1%e5%9e%8b-%e9%9d%9e%e9%98%bb%e5%a1%9e%e5%bc%8fIO.png"
 	
 	
 	
@@ -22175,7 +22175,7 @@
 <h4 id="信号驱动">信号驱动
 </h4><p>应用进程使用 sigaction 系统调用，内核立即返回，应用进程可以继续执行，等待数据阶段应用进程是非阻塞的。当内核数据准备就绪时向应用进程发送 SIGIO 信号，应用进程收到之后在信号处理程序中调用 recvfrom 将数据从内核复制到应用进程中</p>
 <p>相比于非阻塞式 I/O 的轮询方式，信号驱动 I/O 的 CPU 利用率更高</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO%e6%a8%a1%e5%9e%8b-%e4%bf%a1%e5%8f%b7%e9%a9%b1%e5%8a%a8IO.png"
+<p><img src="/img/multiplethread/juc/IO%e6%a8%a1%e5%9e%8b-%e4%bf%a1%e5%8f%b7%e9%a9%b1%e5%8a%a8IO.png"
 	
 	
 	
@@ -22188,7 +22188,7 @@
 </h4><p>IO 复用模型使用 select 或者 poll 函数等待数据，select 会监听所有注册好的 IO，<strong>等待多个套接字中的任何一个变为可读</strong>，等待过程会被阻塞，当某个套接字准备好数据变为可读时 select 调用就返回，然后调用 recvfrom 把数据从内核复制到进程中</p>
 <p>IO 复用让单个进程具有处理多个 I/O 事件的能力，又被称为 Event Driven I/O，即<strong>事件驱动 I/O</strong></p>
 <p>如果一个 Web 服务器没有 I/O 复用，那么每一个 Socket 连接都要创建一个线程去处理，如果同时有几万个连接，就需要创建相同数量的线程。相比于多进程和多线程技术，I/O 复用不需要进程线程创建和切换的开销，系统开销更小</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO%e6%a8%a1%e5%9e%8b-IO%e5%a4%8d%e7%94%a8%e6%a8%a1%e5%9e%8b.png"
+<p><img src="/img/multiplethread/juc/IO%e6%a8%a1%e5%9e%8b-IO%e5%a4%8d%e7%94%a8%e6%a8%a1%e5%9e%8b.png"
 	
 	
 	
@@ -22200,7 +22200,7 @@
 <h4 id="异步-io">异步 IO
 </h4><p>应用进程执行 aio_read 系统调用会立即返回，给内核传递描述符、缓冲区指针、缓冲区大小等。应用进程可以继续执行不会被阻塞，内核会在所有操作完成之后向应用进程发送信号</p>
 <p>异步 I/O 与信号驱动 I/O 的区别在于，异步 I/O 的信号是通知应用进程 I/O 完成，而信号驱动 I/O 的信号是通知应用进程可以开始 I/O</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO%e6%a8%a1%e5%9e%8b-%e5%bc%82%e6%ad%a5IO%e6%a8%a1%e5%9e%8b.png"
+<p><img src="/img/multiplethread/juc/IO%e6%a8%a1%e5%9e%8b-%e5%bc%82%e6%ad%a5IO%e6%a8%a1%e5%9e%8b.png"
 	
 	
 	
@@ -22346,7 +22346,7 @@
 <hr>
 <h5 id="流程">流程
 </h5><p>select 调用流程图：</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO-select%e8%b0%83%e7%94%a8%e8%bf%87%e7%a8%8b.png"
+<p><img src="/img/multiplethread/juc/IO-select%e8%b0%83%e7%94%a8%e8%bf%87%e7%a8%8b.png"
 	
 	
 	
@@ -22630,7 +22630,7 @@
 <li>线程上下文：用户程序基地址，程序计数器、cpu cache、寄存器等，方便程序切回用户态时恢复现场</li>
 <li>内核堆栈：**系统调用函数也是要创建变量的，**这些变量在内核堆栈上分配</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO-%e7%94%a8%e6%88%b7%e6%80%81%e5%92%8c%e5%86%85%e6%a0%b8%e6%80%81.png"
+<p><img src="/img/multiplethread/juc/IO-%e7%94%a8%e6%88%b7%e6%80%81%e5%92%8c%e5%86%85%e6%a0%b8%e6%80%81.png"
 	
 	
 	
@@ -22658,7 +22658,7 @@
 <li>执行 80 中断处理程序，找到刚刚存的系统调用号（read），先检查缓存中有没有对应的数据，没有就去磁盘中加载到内核缓冲区，然后从内核缓冲区拷贝到用户空间</li>
 <li>最后恢复到用户态，通过 thread_info 恢复现场，用户态继续执行</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO-%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8%e7%9a%84%e8%bf%87%e7%a8%8b.jpg"
+<p><img src="/img/multiplethread/juc/IO-%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8%e7%9a%84%e8%bf%87%e7%a8%8b.jpg"
 	
 	
 	
@@ -22678,7 +22678,7 @@
 <li>使用 DMA：把数据读到 Socket 内核缓存区（CPU 复制），CPU 分配给 DMA 开始<strong>异步</strong>操作，DMA 读取 Socket 缓冲区到 DMA 缓冲区，然后写到网卡。DMA 执行完后<strong>中断</strong>（就是通知） CPU，这时 Socket 内核缓冲区为空，CPU 从用户态切换到内核态，执行中断处理程序，将需要使用 Socket 缓冲区的阻塞进程移到就绪队列</li>
 </ul>
 <p>一个完整的 DMA 传输过程必须经历 DMA 请求、DMA 响应、DMA 传输、DMA 结束四个步骤：</p>
-<img src="..\img\multiplethread\juc\IO-DMA.png" style="zoom: 50%;" />
+<img src="/img/multiplethread/juc/IO-DMA.png" style="zoom: 50%;" />
 <p>DMA 方式是一种完全由硬件进行信息传送的控制方式，通常系统总线由 CPU 管理，在 DMA 方式中，CPU 的主存控制信号被禁止使用，CPU 把总线（地址总线、数据总线、控制总线）让出来由 DMA 控制器接管，用来控制传送的字节数、判断 DMA 是否结束、以及发出 DMA 结束信号，所以 DMA 控制器必须有以下功能：</p>
 <ul>
 <li>接受外设发出的 DMA 请求，并向 CPU 发出总线接管请求</li>
@@ -22697,7 +22697,7 @@
 <li>将内核空间缓冲区中的数据写到 hardware（拷贝4），write 系统调用返回，导致内核空间到用户空间的再次上下文切换（切换4）</li>
 </ul>
 <p>流程图中的箭头反过来也成立，可以从网卡获取数据</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO-BIO%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b.png"
+<p><img src="/img/multiplethread/juc/IO-BIO%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b.png"
 	
 	
 	
@@ -22706,7 +22706,7 @@
 	
 ></p>
 <p>read 调用图示：read、write 都是系统调用指令</p>
-<img src="..\img\multiplethread\juc\IO-缓冲区读写.png" style="zoom: 67%;" />
+<img src="/img/multiplethread/juc/IO-缓冲区读写.png" style="zoom: 67%;" />
 <hr>
 <h4 id="mmap">mmap
 </h4><p>mmap（Memory Mapped Files）内存映射加 write 实现零拷贝，<strong>零拷贝就是没有数据从内核空间复制到用户空间</strong></p>
@@ -22716,7 +22716,7 @@
 <li>发出 mmap 系统调用，DMA 拷贝到内核缓冲区，映射到共享缓冲区；mmap 系统调用返回，无需拷贝</li>
 <li>发出 write 系统调用，将数据从内核缓冲区拷贝到内核 Socket 缓冲区；write 系统调用返回，DMA 将内核空间 Socket 缓冲区中的数据传递到协议引擎</li>
 </ul>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO-mmap%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b.png"
+<p><img src="/img/multiplethread/juc/IO-mmap%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b.png"
 	
 	
 	
@@ -22732,7 +22732,7 @@
 </h4><p>sendfile 实现零拷贝，打开文件的文件描述符 fd 和 socket 的 fd 传递给 sendfile，然后经过 3 次复制和 2 次用户态和内核态的切换</p>
 <p>原理：数据根本不经过用户态，直接从内核缓冲区进入到 Socket Buffer，由于和用户态完全无关，就减少了两次上下文切换</p>
 <p>说明：零拷贝技术是不允许进程对文件内容作进一步的加工的，比如压缩数据再发送</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cIO-sendfile%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b.png"
+<p><img src="/img/multiplethread/juc/IO-sendfile%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b.png"
 	
 	
 	
@@ -22964,8 +22964,8 @@
 </ul>
 <p>TCP 协议的使用场景：文件上传和下载、邮件发送和接收、远程登录</p>
 <p>注意：<strong>TCP 不会为没有数据的 ACK 超时重传</strong></p>
-<img src="..\img\multiplethread\juc\三次握手.png" alt="三次握手" style="zoom: 50%;" />
-<img src="..\img\multiplethread\juc\四次挥手.png" alt="四次挥手" style="zoom: 67%;" />
+<img src="/img/multiplethread/juc/三次握手.png" alt="三次握手" style="zoom: 50%;" />
+<img src="/img/multiplethread/juc/四次挥手.png" alt="四次挥手" style="zoom: 67%;" />
 <p>推荐阅读：https://yuanrengu.com/2020/77eef79f.html</p>
 <hr>
 <h4 id="socket">Socket
@@ -23009,7 +23009,7 @@
 <li>
 <p>常用 API：<code>public Socket accept()</code>，<strong>阻塞等待</strong>接收一个客户端的 Socket 管道连接请求，连接成功返回一个 Socket 对象</p>
 <p>三次握手后 TCP 连接建立成功，服务器内核会把连接从 SYN 半连接队列（一次握手时在服务端建立的队列）中移出，移入 accept 全连接队列，等待进程调用 accept 函数时把连接取出。如果进程不能及时调用 accept 函数，就会造成 accept 队列溢出，最终导致建立好的 TCP 连接被丢弃</p>
-<img src="..\img\multiplethread\juc\Netty-TCP三次握手.png" style="zoom:67%;" />
+<img src="/img/multiplethread/juc/Netty-TCP三次握手.png" style="zoom:67%;" />
 </li>
 </ul>
 <p><strong>相当于</strong>客户端和服务器建立一个数据管道（虚连接，不是真正的物理连接），管道一般不用 close</p>
@@ -23029,7 +23029,7 @@
 <li>从 Socket 通信管道中得到一个字节输入流</li>
 <li>从字节输入流中读取客户端发来的数据</li>
 </ol>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cBIO%e5%b7%a5%e4%bd%9c%e6%9c%ba%e5%88%b6.png"
+<p><img src="/img/multiplethread/juc/BIO%e5%b7%a5%e4%bd%9c%e6%9c%ba%e5%88%b6.png"
 	
 	
 	
@@ -23037,7 +23037,7 @@
 	
 	
 ></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cTCP-%e5%b7%a5%e4%bd%9c%e6%a8%a1%e5%9e%8b.png"
+<p><img src="/img/multiplethread/juc/TCP-%e5%b7%a5%e4%bd%9c%e6%a8%a1%e5%9e%8b.png"
 	
 	
 	
@@ -23733,7 +23733,7 @@
 </li>
 </ul>
 <p>NIO 的实现框架：</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cNIO%e6%a1%86%e6%9e%b6.png"
+<p><img src="/img/multiplethread/juc/NIO%e6%a1%86%e6%9e%b6.png"
 	
 	
 	
@@ -23754,7 +23754,7 @@
 <h3 id="缓冲区">缓冲区
 </h3><h4 id="基本介绍-5">基本介绍
 </h4><p>缓冲区（Buffer）：缓冲区本质上是一个<strong>可以读写数据的内存块</strong>，用于特定基本数据类型的容器，用于与 NIO 通道进行交互，数据是从通道读入缓冲区，从缓冲区写入通道中的</p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cNIO-Buffer.png"
+<p><img src="/img/multiplethread/juc/NIO-Buffer.png"
 	
 	
 	
@@ -23780,7 +23780,7 @@
 </li>
 <li>
 <p>位置、限制、容量遵守以下不变式： <strong>0 &lt;= position &lt;= limit &lt;= capacity</strong></p>
-<img src="..\img\multiplethread\juc\NIO-Buffer操作.png" style="zoom:67%;" />
+<img src="/img/multiplethread/juc/NIO-Buffer操作.png" style="zoom:67%;" />
 </li>
 </ul>
 <hr>
@@ -24103,8 +24103,8 @@
 <li>直接内存是：本地 IO → 直接内存 → 本地 IO</li>
 </ul>
 <p>JVM 直接内存图解：</p>
-<img src="..\img\multiplethread\juc\JVM-直接内存直接缓冲区.png" style="zoom: 50%;" />
-<img src="..\img\multiplethread\juc\JVM-直接内存非直接缓冲区.png" style="zoom:50%;" />
+<img src="/img/multiplethread/juc/JVM-直接内存直接缓冲区.png" style="zoom: 50%;" />
+<img src="/img/multiplethread/juc/JVM-直接内存非直接缓冲区.png" style="zoom:50%;" />
 <hr>
 <h4 id="通信原理">通信原理
 </h4><p>堆外内存不受 JVM GC 控制，可以使用堆外内存进行通信，防止 GC 后缓冲区位置发生变化的情况</p>
@@ -24591,7 +24591,7 @@
 <li>Buffer</li>
 <li>使用上述两种方法</li>
 </ol>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cNIO-%e5%a4%8d%e5%88%b6%e6%96%87%e4%bb%b6.png"
+<p><img src="/img/multiplethread/juc/NIO-%e5%a4%8d%e5%88%b6%e6%96%87%e4%bb%b6.png"
 	
 	
 	
@@ -24793,7 +24793,7 @@
 <h3 id="选择器">选择器
 </h3><h4 id="基本介绍-8">基本介绍
 </h4><p>选择器（Selector） 是 SelectableChannle 对象的<strong>多路复用器</strong>，Selector 可以同时监控多个通道的状况，利用 Selector 可使一个单独的线程管理多个 Channel，<strong>Selector 是非阻塞 IO 的核心</strong></p>
-<p><img src="/..%5cimg%5cmultiplethread%5cjuc%5cNIO-Selector.png"
+<p><img src="/img/multiplethread/juc/NIO-Selector.png"
 	
 	
 	

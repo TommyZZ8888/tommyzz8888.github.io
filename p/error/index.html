@@ -691,7 +691,7 @@
 </div>
 </div><p>跟踪断点进行排查</p>
 <p>首先发生异常的位置</p>
-<p><img src="/..%5cimg%5cerr%5cprocessbody.png"
+<p><img src="/img/err/processbody.png"
 	
 	
 	
@@ -702,7 +702,7 @@
 	
 ></p>
 <p>我们可以发现这个<code>converter</code>是一个<code>StringHttpMessageConverter</code>类型，然后我们进入到<code>addDefaultHeaders</code>方法</p>
-<p><img src="/..%5cimg%5cerr%5cwrite.png"
+<p><img src="/img/err/write.png"
 	
 	
 	
@@ -713,7 +713,7 @@
 	
 ></p>
 <p>然后，当代码执行到这个方法的 <strong>260 行</strong>时，就会发生刚才我们说的那个<code>ClassCastException</code>异常。</p>
-<p><img src="/..%5cimg%5cerr%5cclasscast.png"
+<p><img src="/img/err/classcast.png"
 	
 	
 	
@@ -724,7 +724,7 @@
 	
 ></p>
 <p>最后，我们终于找到了发生异常的原因，因为 260 的代码会执行getContentLength(t, headers.getContentType())这个方法，而这个方法会去执行StringHttpMessageConverter的getContentLength方法，如下图所示：</p>
-<p><img src="/..%5cimg%5cerr%5cstringconvert.png"
+<p><img src="/img/err/stringconvert.png"
 	
 	
 	
@@ -740,7 +740,7 @@
 <p>然后，我们通过源码就能发现，这个转换的执行过程是：
 1.遍历所有的转换器，判断当前转换器能不能使用
 2.如果可以使用，才调用我们写的<code>beforeBodyWrite</code>进行处理</p>
-<p><img src="/..%5cimg%5cerr%5cmessageConverters.png"
+<p><img src="/img/err/messageConverters.png"
 	
 	
 	
