@@ -29,7 +29,7 @@ kafka-server-start.bat config\server.properties
 
 ##### 1.2.1 传统消息队列的应用场景
 
-![消息队列应用场景](..\img\middleware\kafka\消息队列应用场景.png)
+![消息队列应用场景](/img/middleware/kafka/消息队列应用场景.png)
 
 
 

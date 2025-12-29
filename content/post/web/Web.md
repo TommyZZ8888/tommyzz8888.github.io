@@ -308,7 +308,7 @@ HTML 标签可以拥有属性
 img标签中的img其实是英文image的缩写, img标签的作用, 就是告诉浏览器我们需要显示一张图片
 
 ```html
-<img src="../img/b.jpg" width="400px" height="200px" alt="" title=""/>
+<img src="../../../assets/img/b.jpg" width="400px" height="200px" alt="" title=""/>
 ```
 
 | 属性名     | 作用                               |
@@ -366,7 +366,7 @@ target属性取值:
     <a href="01案例二：样式演示.html" target="_blank">点我跳转到样式演示</a>  <br/>
     <a href="http://www.itcast.cn" target="_blank">传智播客</a>  <br/>
     <a href="http://www.itheima.com" target="_self">黑马程序员</a>  <br/>
-    <a href="http://www.itheima.com" target="_blank"><img src="../img/itheima.png" width="150px" height="50px"/></a>
+    <a href="http://www.itheima.com" target="_blank"><img src="../../../assets/img/itheima.png" width="150px" height="50px"/></a>
 </body>
 </html>
 ```
@@ -860,7 +860,7 @@ background属性用来设置背景相关的样式。
       <style>
           body{
               /*添加背景图片*/
-              background: url("../img/bg.png");
+              background: url("../../../assets/img/bg.png");
           }
       </style>
   </head>
@@ -1886,7 +1886,7 @@ span{
     我是文字
 </div>
 
-<img src="../img/wx.png" width="38px" height="38px"/>
+<img src="../../../assets/img/wx.png" width="38px" height="38px"/>
 <span>微信</span>
 ```
 
@@ -1939,7 +1939,7 @@ span{
 ```css
 /*背景图片*/
 body{
-    background: url("../img/bg.png");
+    background: url("../../../assets/img/bg.png");
 }
 
 /*中间表单样式*/
@@ -2014,7 +2014,7 @@ a{
 <body>
     <!--顶部公司图标-->
     <div>
-        <img src="../img/logo.png"/>
+        <img src="../../../assets/img/logo.png"/>
     </div>
 
     <!--中间表单-->

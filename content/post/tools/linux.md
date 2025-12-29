@@ -13,11 +13,11 @@ categories:
 
 操作系统作为接口的示意图：
 
-<img src="../img/tool/linux/操作系统.png" style="zoom:80%;" />
+<img src="../../../assets/img/tool/linux/操作系统.png" style="zoom:80%;" />
 
 移动设备操作系统：
 
-![](../img/tool/linux/移动设备操作系统.png)
+![](../../../assets/img/tool/linux/移动设备操作系统.png)
 
 
 
@@ -32,7 +32,7 @@ categories:
 ### 系统介绍
 
 从内到位依次是硬件 → 内核层 → Shell 层 → 应用层 → 用户
-![Linux](../img/tool/linux/Linux系统.png)
+![Linux](../../../assets/img/tool/linux/Linux系统.png)
 
 内核层：核心和基础，附着在硬件平台上，控制和管理系统内的各种资源，有效的组织进程的运行，扩展硬件的功能，提高资源利用效率，为用户提供安全可靠的应用环境。
 
@@ -48,7 +48,7 @@ Shell 层：与用户直接交互的界面。用户可以在提示符下输入�
 
 Linux 文件系统目录结构和熟知的 windows 系统有较大区别，没有各种盘符的概念。根目录只有一个/，采用层级式的树状目录结构。
 
-![Linux文件系统](../img/tool/linux/Linux文件系统.png)
+![Linux文件系统](../../../assets/img/tool/linux/Linux文件系统.png)
 
 
 
@@ -65,11 +65,11 @@ Linux 文件系统目录结构和熟知的 windows 系统有较大区别，没�
 #### NAT
 
 首先设置虚拟机中 NAT 模式的选项，打开 VMware，点击编辑下的虚拟网络编辑器，设置 NAT 参数
-	![](../img/tool/linux/配置NAT.jpg)
+	![](../../../assets/img/tool/linux/配置NAT.jpg)
 
 **注意**：VMware Network Adapter VMnet8 保证是启用状态
 
-​	![](../img/tool/linux/本地主机网络连接.jpg)
+​	![](../../../assets/img/tool/linux/本地主机网络连接.jpg)
 
 
 
@@ -116,7 +116,7 @@ Linux 文件系统目录结构和熟知的 windows 系统有较大区别，没�
 * 宿主机 ping 虚拟机，虚拟机 ping 宿主机
 * 在虚拟机中访问网络，需要增加一块 NAT 网卡
   * 【虚拟机】--【设置】--【添加】
-  * <img src="../img/tool/linux/两块NAT网卡.jpg" style="zoom:80%;" />
+  * <img src="../../../assets/img/tool/linux/两块NAT网卡.jpg" style="zoom:80%;" />
 
 
 
@@ -132,7 +132,7 @@ Linux 文件系统目录结构和熟知的 windows 系统有较大区别，没�
 
 首先执行 sudo apt-get install openssh-server 指令，接下来用 xshell 连接
 
-![](../img/tool/linux/远程连接Linux.png)
+![](../../../assets/img/tool/linux/远程连接Linux.png)
 
 先用普通用户登录，然后转成 root
 
@@ -425,7 +425,7 @@ top：用于实时显示 process 的动态
 
 `top -Hp 进程 id`：分析该进程内各线程的 CPU 使用情况
 
-![](../img/tool/linux/top命令.png)
+![](../../../assets/img/tool/linux/top命令.png)
 
 **各进程（任务）的状态监控属性解释说明：**
 
@@ -818,7 +818,7 @@ mv [options] source... directory
 
 Linux 系统是一种典型的多用户系统，不同的用户处于不同的地位，拥有不同的权限。为了保护系统的安全性，Linux系统对不同的用户访问同一文件（包括目录文件）的权限做了不同的规定
 
-![](../img/tool/linux/用户目录下的文件.png)
+![](../../../assets/img/tool/linux/用户目录下的文件.png)
 
 在Linux中第一个字符代表这个文件是目录、文件或链接文件等等。
 
@@ -830,7 +830,7 @@ Linux 系统是一种典型的多用户系统，不同的用户处于不同的�
 
 接下来的字符，以三个为一组，均为[rwx] 的三个参数组合。其中，[ r ]代表可读(read)、[ w ]代表可写(write)、[ x ]代表可执行(execute)。 要注意的是，这三个权限的位置不会改变，如果没有权限，就会出现[ - ]。
 
-<img src="../img/tool/linux/文件权限.png" style="zoom: 50%;" />
+<img src="../../../assets/img/tool/linux/文件权限.png" style="zoom: 50%;" />
 
 从左至右用 0-9 这些数字来表示：
 
@@ -852,7 +852,7 @@ Linux 系统是一种典型的多用户系统，不同的用户处于不同的�
 * 文件的【属主】有一套【读写执行权限rwx】
 * 文件的【属组】有一套【读写执行权限rwx】
 
-![](../img/tool/linux/列出目录文件.png)
+![](../../../assets/img/tool/linux/列出目录文件.png)
 
 `ls -l` 可以查看文件夹下文件的详细信息, 从左到右 依次是:
 
@@ -915,7 +915,7 @@ mode : 权限设定字串,格式: [ugoa...][[+-=][rwxX]...][,...]
 
 ##### 符号权限
 
-![](../img/tool/linux/权限符号表.png)
+![](../../../assets/img/tool/linux/权限符号表.png)
 
 - user     属主权限
 - group  属组权限
@@ -1601,7 +1601,7 @@ vim 中提供有一个 被复制文本的缓冲区
 
 * 下次再使用 vim 编辑文件时，会看到以下屏幕信息：
 
-  ![](../img/tool/linux/vim异常.png)
+  ![](../../../assets/img/tool/linux/vim异常.png)
 
 * ls -a 一下，会看到隐藏的 .swp 文件，删除了此文件即可
 
@@ -1620,7 +1620,7 @@ ln [-sf] source_filename dist_filename
 * -s：默认是实体链接，加 -s 为符号链接
 * -f：如果目标文件存在时，先删除目标文件
 
-<img src="../img/tool/linux/文件链接.png" style="zoom: 80%;" />
+<img src="../../../assets/img/tool/linux/文件链接.png" style="zoom: 80%;" />
 
 **实体链接**：
 
@@ -1850,7 +1850,7 @@ ping [-dfnqrRv][-c<完成次数>][-i<间隔秒数>][-I<网络界面>][-l<前置�
 * -c<完成次数>：设置完成要求回应的次数；
 
 * `ping -c 2 www.baidu.com`
-  ![](../img/tool/linux/ping百度.png)
+  ![](../../../assets/img/tool/linux/ping百度.png)
 
   icmp_seq：ping 序列，从1开始
 
@@ -1925,7 +1925,7 @@ lsblk 命令的英文是 list block，即用于列出所有可用块设备的信
 命令：lsblk [参数]
 
 * `lsblk`：以树状列出所有块设备
-  ![](../img/tool/linux/可用块设备.png)
+  ![](../../../assets/img/tool/linux/可用块设备.png)
 
   NAME：这是块设备名
 
@@ -1944,7 +1944,7 @@ lsblk 命令的英文是 list block，即用于列出所有可用块设备的信
   
 
 * `lsblk -f`：不会列出所有空设备
-  ![](../img/tool/linux/不包含空设备.png)
+  ![](../../../assets/img/tool/linux/不包含空设备.png)
 
   NAME表示设备名称
 
@@ -1971,7 +1971,7 @@ lsblk 命令的英文是 list block，即用于列出所有可用块设备的信
 * -h 使用人类可读的格式(预设值是不加这个选项的...)
 * --total 计算所有的数据之和
 
-![](../img/tool/linux/磁盘管理.png)
+![](../../../assets/img/tool/linux/磁盘管理.png)
 
 第一列指定文件系统的名称；第二列指定一个特定的文件系统，1K 是 1024 字节为单位的总容量；已用和可用列分别指定的容量；最后一个已用列指定使用的容量的百分比；最后一栏指定的文件系统的挂载点
 
@@ -2006,7 +2006,7 @@ mount [-fnrsvw] [-t vfstype] [-o options] device dir
 
 * 开始挂载
   `mount -t auto /dev/cdrom /mnt/cdrom`：通过挂载点的方式查看上面的【ISO文件内容】
-  ![挂载成功](../img/tool/linux/挂载成功.png)
+  ![挂载成功](../../../assets/img/tool/linux/挂载成功.png)
 
 * 查看挂载内容：`ls -l -a ./mnt/cdrom/`
 
