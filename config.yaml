@@ -1,5 +1,4 @@
-baseurl: http://localhost:1313/
-#baseurl: https://tommyzz8888.github.io/
+baseurl: https://tommyzz8888.github.io/
 languageCode: zh-Hans
 theme: stack
 pagination:
