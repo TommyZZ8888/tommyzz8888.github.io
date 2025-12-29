@@ -1,0 +1,69 @@
+{{ if eq .Layout "search" }}{{ return }}{{ end }}
+
+<div class="article-details">
+    {{ if .Params.categories }}
+    <header class="article-category">
+        {{ range (.GetTerms "categories") }}
+        <a href="{{ .RelPermalink }}" {{ with .Params.style
+            }}style="background-color: {{ .background }}; color: {{ .color }};" {{ end }}>
+            {{ .LinkTitle }}
+        </a>
+        {{ end }}
+    </header>
+    {{ end }}
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="{{ .RelPermalink }}">
+                {{- .Title -}}
+            </a>
+        </h2>
+
+        {{ with .Params.description }}
+        <h3 class="article-subtitle">
+            {{ . }}
+        </h3>
+        {{ end }}
+    </div>
+
+    {{ $showReadingTime := .Params.readingTime | default (.Site.Params.article.readingTime) }}
+    {{ $showWordCount := .Params.wordCount | default (.Site.Params.article.wordCount) }} <!-- 新增：判断是否显示字数 -->
+    {{ $showDate := not .Date.IsZero }}
+    {{ $showFooter := or $showDate $showReadingTime }}
+    {{ if $showFooter }}
+    <footer class="article-time">
+        {{ if $showDate }}
+        <div>
+            {{ partial "helper/icon" "clapperboard-solid" }}
+            <time class="article-time--published">
+                {{- .Date.Format (or .Site.Params.dateFormat.published "Jan 02, 2006") -}}
+            </time>
+        </div>
+        {{ end }}
+
+        {{ if $showReadingTime }}
+        <div>
+            {{ partial "helper/icon" "clock-solid" }}
+            <time class="article-time--reading">
+                {{ T "article.readingTime" .ReadingTime }}
+                <!-- 新增：如果开启字数统计，就拼接字数显示 -->
+                {{ if $showWordCount }}
+                , {{ .WordCount }} 字
+                {{ end }}
+            </time>
+        </div>
+        {{ end }}
+    </footer>
+    {{ end }}
+
+    {{ if .IsTranslated }}
+    <footer class="article-translations">
+        {{ partial "helper/icon" "language" }}
+        <div>
+            {{ range .Translations }}
+            <a href="{{ .Permalink }}" class="link">{{ .Language.LanguageName }}</a>
+            {{ end }}
+        </div>
+    </footer>
+    {{ end }}
+</div>

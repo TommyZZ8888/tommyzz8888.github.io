@@ -1,0 +1,142 @@
+baseurl: http://localhost:1313/
+#baseurl: https://tommyzz8888.github.io/
+languageCode: zh-Hans
+theme: stack
+pagination:
+  pagerSize: 10
+title: my note
+
+languages:
+  zh-cn:
+    languageName: 中文
+    title: my note
+    weight: 2
+
+disqusShortname: hugo-theme-stack
+googleAnalytics: # 保留为空即可
+
+DefaultContentLanguage: zh-cn
+hasCJKLanguage: true # 关键：确保中文字数统计准确
+
+permalinks:
+  post: /p/:slug/
+  page: /:slug/
+
+params:
+  mainSections:
+    - post
+  featuredImageField: image
+  rssFullContent: true
+
+  footer:
+    since: 2025
+    customText:
+
+  dateFormat:
+    published: 01月02日, 2006年
+    # 注释掉 lastUpdatedOn，隐藏最后更新时间
+    # lastUpdated: 01月02日 15点04分, 2006年
+
+  sidebar:
+    emoji: 🤩
+    avatar:
+      enabled: true
+      local: true
+
+  article:
+    math: true
+    toc: true
+    wordCount: true
+    readingTime:
+      other: "阅读时长: {{ .Count }} 分钟"
+
+  widgets:
+    homepage:
+      - type: search
+      - type: categories
+        params:
+          limit: 10
+      - type: tag-cloud
+        params:
+          limit: 100
+
+    page:
+      - type: search
+      - type: toc
+      - type: categories
+        params:
+          limit: 10
+
+  opengraph:
+    twitter:
+      site:
+      card: summary_large_image
+
+  defaultImage:
+    opengraph:
+      enabled: false
+      local: false
+      src:
+
+  colorScheme:
+    toggle: true
+    default: auto
+
+  imageProcessing:
+    cover:
+      enabled: true
+    content:
+      enabled: true
+
+  # 补充：i18n 配置，确保搜索提示文字正确
+  toggleMenu:
+    other: 切换菜单
+  darkMode:
+    other: 暗色模式
+
+  search:
+    title:
+      other: 搜索
+    placeholder:
+      other: 输入关键词...
+    resultTitle:
+      other: "#PAGES_COUNT 个结果 （用时 #TIME_SECONDS 秒）"
+
+menu:
+  main:
+    - identifier: pages
+      name: 文章
+      url: /post
+      weight: -100
+      params:
+        newTab: false
+        icon: newspaper-regular
+
+related:
+  includeNewer: true
+  threshold: 60
+  toLower: false
+  indices:
+    - name: tags
+      weight: 100
+    - name: categories
+      weight: 200
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  tableOfContents:
+    endLevel: 4
+    ordered: true
+    startLevel: 2
+  highlight:
+    noClasses: false
+    codeFences: true
+    guessSyntax: true
+    lineNoStart: 1
+    lineNos: true
+    lineNumbersInTable: true
+    tabWidth: 4
+
+ignoreErrors: "error-remote-getjson"

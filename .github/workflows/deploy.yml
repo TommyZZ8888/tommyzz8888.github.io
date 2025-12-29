@@ -1,0 +1,49 @@
+name: Deploy Hugo to GitHub Pages
+
+on:
+  # 监听 main 分支的 push 事件（提交代码时触发）
+  push:
+    branches: ["master"]
+  # 可选：允许手动触发
+  workflow_dispatch:
+
+# 设置权限（允许推送到 gh-pages 分支）
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# 并发控制（避免重复部署）
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 拉取仓库代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # 拉取主题子模块（如果用了子模块）
+          fetch-depth: 0    # 拉取所有提交记录（用于 Hugo 生成正确的日期）
+
+      # 2. 安装 Hugo 环境（匹配你的 Hugo 版本 0.153.3）
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: "0.153.3"
+          extended: true  # 启用扩展版（支持 SCSS 编译）
+
+      # 3. 构建静态文件
+      - name: Build Hugo site
+        run: hugo --minify --baseURL "https://tommyzz8888.github.io/feel-soul-mylife/"
+
+      # 4. 部署到 GitHub Pages（自动推送到 gh-pages 分支）
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动生成的令牌，无需手动配置
+          publish_dir: ./public                      # 构建后的静态文件目录
+          publish_branch: gh-pages                   # 静态文件存放的分支
