@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="MySql mysql执行流程\n1、InnoDB InnoDB是一个将表中数据存储到磁盘上的存储引擎，所以即使关机后重启我们的数据还是存在的，而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。\n">
+<title>MySQL</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/mysql/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="MySQL">
+<meta property='og:description' content="MySql mysql执行流程\n1、InnoDB InnoDB是一个将表中数据存储到磁盘上的存储引擎，所以即使关机后重启我们的数据还是存在的，而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/mysql/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="MySQL">
+<meta name="twitter:description" content="MySql mysql执行流程\n1、InnoDB InnoDB是一个将表中数据存储到磁盘上的存储引擎，所以即使关机后重启我们的数据还是存在的，而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#1innodb">1、InnoDB</a></li>
+        <li><a href="#面试点">面试点</a>
+          <ol>
+            <li></li>
+          </ol>
+        </li>
+        <li><a href="#2mysql用户管理和权限管理">2、Mysql用户管理和权限管理</a>
+          <ol>
+            <li><a href="#用户管理">用户管理</a></li>
+            <li><a href="#权限管理">权限管理</a></li>
+            <li><a href="#权限表和访问控制更深层次的理解">权限表和访问控制（更深层次的理解）</a></li>
+            <li><a href="#权限表">权限表</a></li>
+            <li><a href="#访问控制">访问控制</a></li>
+          </ol>
+        </li>
+        <li><a href="#3mysql的数据目录结构">3、Mysql的数据目录结构</a>
+          <ol>
+            <li></li>
+            <li><a href="#数据库和文件系统的关系">数据库和文件系统的关系</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/db/" >
+            DB
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/mysql/">MySQL</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 21 分钟
+                
+                
+                , 10099 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="mysql">MySql
+</h1><p>mysql执行流程</p>
+<p><img src="/..%5cimg%5cdb%5c%e6%89%a7%e8%a1%8c%e6%b5%81%e7%a8%8b.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230613135151431"
+	
+	
+></p>
+<h3 id="1innodb">1、InnoDB
+</h3><p><strong>InnoDB</strong>是一个将表中数据存储到磁盘上的存储引擎，所以即使关机后重启我们的数据还是存在的，而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。</p>
+<p><strong>字符集和比较规则</strong></p>
+<ul>
+<li>
+<p>ASCII字符集：共收录128个字符，包含空格，标点符号，数字，大小写字母</p>
+</li>
+<li>
+<p>ISO 8895-1字符集：共收录256个字符</p>
+</li>
+<li>
+<p>GB2312字符集：收录了汉字以及拉丁字母，希腊字母等，其中收录汉字6763个，其他文字符号682个，其中这种字符集兼容ASCII字符集。</p>
+</li>
+<li>
+<p>GBK字符集：只是在GB2312字符集上进行扩充，编码规则向上兼容GB2312字符集</p>
+</li>
+<li>
+<p>utf8字符集：收录地球上能想到的所有字符。</p>
+<ul>
+<li><code>utf8mb3</code>：阉割过的<code>utf8</code>字符集，只使用1～3个字节表示字符。</li>
+<li><code>utf8mb4</code>：正宗的<code>utf8</code>字符集，使用1～4个字节表示字符。</li>
+</ul>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>字符集名称</th>
+          <th>Maxlen</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>ascii</code></td>
+          <td><code>1</code></td>
+      </tr>
+      <tr>
+          <td><code>latin1</code></td>
+          <td><code>1</code></td>
+      </tr>
+      <tr>
+          <td><code>gb2312</code></td>
+          <td><code>2</code></td>
+      </tr>
+      <tr>
+          <td><code>gbk</code></td>
+          <td><code>2</code></td>
+      </tr>
+      <tr>
+          <td><code>utf8</code></td>
+          <td><code>3</code></td>
+      </tr>
+      <tr>
+          <td><code>utf8mb4</code></td>
+          <td><code>4</code></td>
+      </tr>
+  </tbody>
+</table></div>
+</li>
+<li>
+<p>名称后缀意味着该比较规则是否区分语言中的重音、大小写什么的，具体可以用的值如下：</p>
+</li>
+</ul>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>后缀</th>
+          <th>英文释义</th>
+          <th>描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>_ai</code></td>
+          <td><code>accent insensitive</code></td>
+          <td>不区分重音</td>
+      </tr>
+      <tr>
+          <td><code>_as</code></td>
+          <td><code>accent sensitive</code></td>
+          <td>区分重音</td>
+      </tr>
+      <tr>
+          <td><code>_ci</code></td>
+          <td><code>case insensitive</code></td>
+          <td>不区分大小写</td>
+      </tr>
+      <tr>
+          <td><code>_cs</code></td>
+          <td><code>case sensitive</code></td>
+          <td>区分大小写</td>
+      </tr>
+      <tr>
+          <td><code>_bin</code></td>
+          <td><code>binary</code></td>
+          <td>以二进制方式比较</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>innoDB数据页</strong></p>
+<p>innoDB都是以页为单位存放数据，每页大小为16kb。</p>
+<p>innoDB始终会维护一条记录的单链表，链表中的各个节点是按照主键值由小到大的顺序连接起来的。</p>
+<p>一个数据页大概分为7部分：</p>
+<ul>
+<li><code>File Header</code>，表示页的一些通用信息，占固定的38字节。</li>
+<li><code>Page Header</code>，表示数据页专有的一些信息，占固定的56个字节。</li>
+<li><code>Infimum + Supremum</code>，两个虚拟的伪记录，分别表示页中的最小和最大记录，占固定的<code>26</code>个字节。</li>
+<li><code>User Records</code>：真实存储我们插入的记录的部分，大小不固定。</li>
+<li><code>Free Space</code>：页中尚未使用的部分，大小不确定。</li>
+<li><code>Page Directory</code>：页中的某些记录相对位置，也就是各个槽在页面中的地址偏移量，大小不固定，插入的记录越多，这个部分占用的空间越多。</li>
+<li><code>File Trailer</code>：用于检验页是否完整的部分，占用固定的8个字节。</li>
+</ul>
+<p>innoDB的分组：对于最小记录所在的分组只能有1条记录，最大记录所在的分组拥有的记录条数只能在1-8条之间，剩下的分组中记录的条数范围只能在4-8条之间。<code>InnoDB</code>会为把页中的记录划分为若干个组，每个组的最后一个记录的地址偏移量作为一个<code>槽</code>，存放在<code>Page Directory</code>中。</p>
+<p>所以在一个数据页中查找指定主键的记录分为两步：</p>
+<p>​    1、通过二分法确定该记录所在的槽，并找到该槽中主键值最小的那条记录。</p>
+<p>​	2、通过记录的next_record属性遍历该槽所在的组中的各个记录。</p>
+<p><strong>B+树</strong></p>
+<p>在对页中的记录进行增删改查操作过程中，，我们必须通过一些诸如记录移动的操作来始终保证 <strong>下一个数据页中用户记录的主键必须大于上一个数据页中用户记录的主键值</strong>  这个过程叫做页分裂</p>
+<p>B+树本身就是一个目录，或者说本身就是一个索引。</p>
+<p><strong>索引</strong></p>
+<p>==innoDB引擎会自动为我们创建聚簇索引，在innoDB存储引擎中，聚簇索引就是数据的存储方式，索引即数据，数据即索引==。</p>
+<ul>
+<li>
+<p>聚簇索引：</p>
+<p>1、使用主键值的大小进行记录和页的排序</p>
+<p>2、B+树的叶子节点存储的是完整的用户数据</p>
+</li>
+<li>
+<p>非聚簇索引</p>
+<p>回表：根据以c2列大小排序的B+树来确定要查找的主键值，然后根据查找到的主键值在聚簇索引中查找一下完整的用户记录。</p>
+<ol>
+<li><code>B+</code>树索引在空间和时间上都有代价，所以没事儿别瞎建索引。</li>
+<li><code>B+</code>树索引适用于下面这些情况：
+<ul>
+<li>全值匹配</li>
+<li>匹配左边的列</li>
+<li>匹配范围值</li>
+<li>精确匹配某一列并范围匹配另外一列</li>
+<li>用于排序</li>
+<li>用于分组</li>
+</ul>
+</li>
+<li>在使用索引时需要注意下面这些事项：
+<ul>
+<li>只为用于搜索、排序或分组的列创建索引</li>
+<li>为列的基数大的列创建索引</li>
+<li>索引列的类型尽量小</li>
+<li>可以只对字符串值的前缀建立索引</li>
+<li>只有索引列在比较表达式中单独出现才可以适用索引</li>
+<li>为了尽可能少的让<code>聚簇索引</code>发生页面分裂和记录移位的情况，建议让主键拥有<code>AUTO_INCREMENT</code>属性。</li>
+<li>定位并删除表中的重复和冗余索引</li>
+<li>尽量使用<code>覆盖索引</code>进行查询，避免<code>回表</code></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<p><strong>MySql数据结构的类型</strong></p>
+<p>单表访问效率</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>访问效率</th>
+          <th>访问方式</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>const</td>
+          <td>主键索引，唯一二级索引</td>
+      </tr>
+      <tr>
+          <td>ref</td>
+          <td>普通二级索引</td>
+      </tr>
+      <tr>
+          <td>ref_or_null</td>
+          <td>二级索引列的值和该列的null值</td>
+      </tr>
+      <tr>
+          <td>range</td>
+          <td>搜索条件复杂（WHERE key2 IN (1438, 6328) OR (key2 &gt;= 38 AND key2 &lt;= 79）</td>
+      </tr>
+      <tr>
+          <td>index</td>
+          <td>遍历二级索引记录的执行方式（SELECT key_part1, key_part2, key_part3 FROM single_table WHERE key_part2 = &lsquo;abc&rsquo;;）  1-2-3是联合索引，2是唯一索引</td>
+      </tr>
+      <tr>
+          <td>all</td>
+          <td>全表扫描</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>一般情况下执行一个查询只会用到单个二级索引</strong></p>
+<p><strong>InnoDB表空间</strong></p>
+<p>InnoDB是以页为单位管理存储空间的，为了更好的管理页，提出了区的概念，，对于16kb的页来说，连续的64个页就是一个区，每26个区划分成一组。</p>
+<p>当数据足够多时，B+树的叶子节点和非叶子节点被区别对待，，存放叶子节点的区的集合算是一个段，存放非叶子节点的区的集合也算是一个段。也就是说一个索引会生成两个段，一个叶子节点段，一个非叶子节点段。</p>
+<h3 id="面试点">面试点
+</h3><h5 id="1update会锁表吗">1、update会锁表吗
+</h5><p>A:实际例子：</p>
+<p>1.没有索引</p>
+<p>运行命令：begin;开启事务，然后运行命令：update tb_user set phone=11 where name=&ldquo;c1&rdquo;;修改，先别commit事务。</p>
+<p>再开一个窗口，直接运行命令：update tb_user set phone=22 where name=&ldquo;c2&rdquo;;会发现命令卡住了，但是当前面一个事务通过commit提交了，命令就会正常运行结束，说明是被锁表了。</p>
+<p>2.给name字段加索引</p>
+<p>create index index_name on tb_user(name);</p>
+<p>然后继续如1里面的操作，也就是一个开启事务，运行update tb_user set phone=11 where name=&ldquo;c1&rdquo;；先不提交</p>
+<p>然后另一个运行update tb_user set phone=22 where name=&ldquo;c2&rdquo;;发现命令不会卡住，说明没有锁表</p>
+<p>但是如果另一个也是update tb_user set phone=22 where name=&ldquo;c1&rdquo;;更新同一行，说明是锁行了</p>
+<p>3.总结</p>
+<p>如果没有索引，所以update会锁表，如果加了索引，就会锁行</p>
+<h3 id="2mysql用户管理和权限管理">2、Mysql用户管理和权限管理
+</h3><h4 id="用户管理">用户管理
+</h4><h5 id="21登录服务器">2.1登录服务器
+</h5><p>启动Mysql服务器后可以通过mysql命令来登录mysql服务器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">mysql</span><span class="w"> </span><span class="o">-</span><span class="n">h</span><span class="w"> </span><span class="n">hostName</span><span class="o">/</span><span class="n">hostIP</span><span class="w"> </span><span class="o">-</span><span class="n">P</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">userName</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="n">DataBaseName</span><span class="w"> </span><span class="o">-</span><span class="n">e</span><span class="w"> </span><span class="s2">&#34;sql语句&#34;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>-h参数 后面接主机名或者主机IP，hostname为主机，hostIP为主机IP。</li>
+<li>-P参数 后面接MySQL服务的端口，通过该参数连接到指定的端口。MySQL服务的默认端口是3306，不使用该参数时自动连接到3306端口，port为连接的端口号。</li>
+<li>-u参数 后面接用户名，username为用户名。</li>
+<li>-p参数 会提示输入密码。</li>
+<li>DatabaseName参数 指明登录到哪一个数据库中。如果没有该参数，就会直接登录到MySQL数据库中，然后可以使用USE命令来选择数据库。</li>
+<li>-e参数 后面可以直接加SQL语句。登录MySQL服务器以后即可执行这个SQL语句，然后退出MySQL服务器。</li>
+</ul>
+<h5 id="22创建用户">2.2创建用户
+</h5><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="err">用户名</span><span class="w"> </span><span class="p">[[</span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;密码&#39;</span><span class="p">][,</span><span class="err">用户名</span><span class="w"> </span><span class="p">[</span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;密码&#39;</span><span class="p">]];</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>用户名参数表示新建用户的账户，由 用户（User） 和 主机名（Host：默认为%，代表所有地址） 构成；</li>
+<li>“[ ]”表示可选，也就是说，可以指定用户登录时需要密码验证，也可以不指定密码验证，这样用户可以直接登录。不过，不指定密码的方式不安全，不推荐使用。如果指定密码值，这里需要使用IDENTIFIED BY指定明文密码值。</li>
+<li>CREATE USER语句可以同时创建多个用户。</li>
+</ul>
+<h5 id="23修改用户">2.3修改用户
+</h5><p>修改用户名：</p>
+<p>第一步：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="n">mysql</span><span class="p">.</span><span class="k">user</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="k">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;li4&#39;</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="k">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;wang5&#39;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>第二步：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="24删除用户">2.4删除用户
+</h5><p>两种方式：
+<strong>方式1：使用DROP方式删除（推荐）</strong>
+使用DROP USER语句来删除用户时，必须用于DROP USER权限。DROP USER语句的基本语法形式如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">DROP</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="k">user</span><span class="p">[,</span><span class="k">user</span><span class="p">]</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>方式2：使用DELETE方式删除</strong>
+第一步：通过delete命令删除用户：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">delete</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">mysql</span><span class="p">.</span><span class="k">user</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="k">host</span><span class="o">=</span><span class="s1">&#39;hostname&#39;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意：不推荐通过 DELETE FROM mysql.user WHERE User=&lsquo;li4&rsquo; 进行删除，系统会有残留信息保留。而drop user命令会删除用户以及对应的权限，执行命令后你会发现mysql.user表和mysql.db表的相应记录都消失了。</p>
+<h5 id="25用户的密码">2.5用户的密码
+</h5><h6 id="251密码过期策略">2.5.1密码过期策略
+</h6><p>过期策略可以是<strong>全局的</strong> ，也可以为每个账号设置<strong>单独的</strong>过期策略，限制用户密码的有效时间。
+<strong>全局的设置：</strong>
+方式一：使用SQL语句更改该变量的值并持久化</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SET</span><span class="w"> </span><span class="n">PERSIST</span><span class="w"> </span><span class="n">default_password_lifetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">180</span><span class="p">;</span><span class="w"> </span><span class="o">#</span><span class="w"> </span><span class="err">建立全局策略，设置密码每隔</span><span class="mi">180</span><span class="err">天过期</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>方式二：配置文件my.cnf中进行维护</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="p">[</span><span class="n">mysqld</span><span class="p">]</span><span class="n">default_password_lifetime</span><span class="o">=</span><span class="mi">180</span><span class="w"> </span><span class="o">#</span><span class="err">建立全局策略，设置密码每隔</span><span class="mi">180</span><span class="err">天过期</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>单独的设置</strong>
+每个账号<strong>既可延用全局密码过期策略，也可单独设置策略</strong>。在 CREATE USER 和 ALTER USER 语句上<strong>加入 PASSWORD EXPIRE 选项可实现单独设置策略</strong>。下面是一些语句示例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="mi">1</span><span class="err">、不能使用最近</span><span class="mi">5</span><span class="err">个密码：</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="mi">2</span><span class="err">、不能使用最近</span><span class="mi">365</span><span class="err">天内的密码：</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">REUSE</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">365</span><span class="w"> </span><span class="k">DAY</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">REUSE</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">365</span><span class="w"> </span><span class="k">DAY</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="mi">3</span><span class="err">、既不能使用最近</span><span class="mi">5</span><span class="err">个密码，也不能使用</span><span class="mi">365</span><span class="err">天内的密码：</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="mi">5</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="n">PASSWORD</span><span class="w"> </span><span class="n">REUSE</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">365</span><span class="w"> </span><span class="k">DAY</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="mi">5</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="n">PASSWORD</span><span class="w"> </span><span class="n">REUSE</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">365</span><span class="w"> </span><span class="k">DAY</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="mi">4</span><span class="err">、延用全局密码重用策略：</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="n">PASSWORD</span><span class="w"> </span><span class="n">REUSE</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">HISTORY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="n">PASSWORD</span><span class="w"> </span><span class="n">REUSE</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="p">;</span><span class="w"> 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h6 id="252密码重用策略">2.5.2密码重用策略
+</h6><p>mysql限制已经使用过的密码，重用策略基于密码更改的数量和使用时间，重用策略可以是<strong>全局的</strong> ，也可以为每个账号设置<strong>单独的</strong>重用策略。
+<strong>全局的设置：</strong>
+方式一：使用SQL语句更改该变量的值并持久化</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">`SET PERSIST password_history = 6; #设置不能选择最近使用过的6个密码`
+</span></span><span class="line"><span class="cl">`SET PERSIST password_reuse_interval = 365; #设置不能选择最近一年内的密码`
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>方式二：配置文件my.cnf中进行维护</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[mysqld]
+</span></span><span class="line"><span class="cl">password_history=6
+</span></span><span class="line"><span class="cl">password_reuse_interval=365
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>单独的设置</strong>
+每个账号<strong>既可延用全局密码重用策略，也可单独设置策略</strong>。在 CREATE USER 和 ALTER USER 语句上<strong>加入 PASSWORD HISTORY 或者 PASSWORD_REUSE_INTERVAL 选项可实现单独设置策略</strong>。下面是一些语句示例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="mi">1</span><span class="err">、设置</span><span class="n">kangshifu账号密码每90天过期</span><span class="err">：</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">EXPIRE</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="k">DAY</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">EXPIRE</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="k">DAY</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="mi">2</span><span class="err">、设置密码永不过期：</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">EXPIRE</span><span class="w"> </span><span class="n">NEVER</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">EXPIRE</span><span class="w"> </span><span class="n">NEVER</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="mi">3</span><span class="err">、延用全局密码过期策略：</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">EXPIRE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="p">;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">EXPIRE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="mi">4</span><span class="err">、设置用户密码直接过期：</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;kangshifu&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="n">EXPIRE</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h6 id="254密码复杂度策略">2.5.4密码复杂度策略
+</h6><ul>
+<li>在MySQL8.0之前，MySQL使用的是validate_password插件检测、验证账号密码强度，保障账号的安全性。</li>
+<li>MySQL8.0更加安全，引入了服务器组件（Components）这个特性，validate_password插件已用服务器组件重新实现。8.0.25版本的数据库中，默认自动安装validate_password组件。</li>
+</ul>
+<h4 id="权限管理">权限管理
+</h4><h5 id="26权限列表">2.6权限列表
+</h5><p>使用该命令可以展示出mysql中存在的权限</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">show</span><span class="w"> </span><span class="n">priviledges</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>（1）<strong>CREATE和DROP权限</strong>：可以创建新的数据库和表，或删除（移掉）已有的数据库和表。如果将 MySQL数据库中的DROP权限授予某用户，用户就可以删除MySQL访问权限保存的数据库。
+（2）<strong>SELECT、INSERT、UPDATE和DELETE权限</strong>：允许在一个数据库现有的表上实施操作。
+（3）<strong>SELECT权限</strong>：只有在它们真正从一个表中检索行时才被用到。
+（4）<strong>INDEX权限</strong>：允许创建或删除索引，INDEX适用于已有的表。如果具有某个表的CREATE权限，就可以在CREATE TABLE语句中包括索引定义。
+（5）<strong>ALTER权限</strong>：可以使用ALTER TABLE来更改表的结构和重新命名表。
+（6）<strong>CREATE ROUTINE权限</strong>：用来创建保存的程序（函数和程序），ALTER ROUTINE权限：用来更改和删除保存的程序， EXECUTE权限：用来执行保存的程序。
+（7）<strong>GRANT权限</strong>：允许授权给其他用户，可用于数据库、表和保存的程序。
+（8）<strong>FILE权限</strong>：使用户可以使用LOAD DATA INFILE和SELECT &hellip; INTO OUTFILE语句读或写服务器上的文件，任何被授予FILE权限的用户都能读或写MySQL服务器上的任何文件（说明用户可以读任何数据库目录下的文件，因为服务器可以访问这些文件）。
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220123904589-418181875.png"  target="_blank" rel="noopener"
+    ><img src="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220123904589-418181875.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a></p>
+<h5 id="27授予权限的原则">2.7授予权限的原则
+</h5><p><strong>权限控制主要是出于安全因素，因此需要遵循以下几个经验原则 ：</strong>
+1、只授予能<strong>满足需要的最小权限</strong>，防止用户干坏事。比如用户只是需要查询，那就只给select权限就可以了，不要给用户赋予update、insert或者delete权限。
+2、创建用户的时候<strong>限制用户的登录主机</strong>，一般是限制成指定IP或者内网IP段。
+3、为每个用户<strong>设置满足密码复杂度的密码</strong>。
+4、 定期清理不需要的用户，回收权限或者删除用户。</p>
+<h5 id="28授予权限">2.8授予权限
+</h5><p>给用户授权的方式有 2 种，分别是通过<strong>把角色赋予用户给用户授权（mysql8.0的特性）</strong> 和 <strong>直接给用户授权</strong>。用户是数据库的使用者，我们可以通过给用户授予访问数据库中资源的权限，来控制用户对数据库的访问，消除安全隐患。
+<strong>授权命令：该权限如果发现没有该用户，则会直接新建一个用户。</strong>
+<code>GRANT 权限1,权限2,…权限n ON 数据库名称.表名称 TO 用户名@用户地址 [IDENTIFIED BY ‘密码口令’];</code>
+举例：
+1、给li4用户用本地命令行方式，授予atguigudb这个库下的所有表的插删改查的权限。
+<code>GRANT SELECT,INSERT,DELETE,UPDATE ON atguigudb.* TO li4@localhost ;</code>
+2、授予通过网络方式登录的joe用户 ，对所有库所有表的全部权限，密码设为123。如果需要赋予包括grant权限，添加参数“WITH GRANT OPTION”这个选项即可，表示该用户可以将自己拥有的权限授权给其他用户，可以使用grant重复给用户添加权限。
+<code>GRANT ALL PRIVILEGES ON *.* TO joe@'%' IDENTIFIED BY '123' with grant option;</code></p>
+<blockquote>
+<p>我们在开发应用的时候，经常会遇到一种需求，就是要根据用户的不同，对数据进行横向和纵向的分组。
+1、所谓横向的分组，就是指用户可以接触到的数据的范围，比如可以看到哪些表的数据；
+2、所谓纵向的分组，就是指用户对接触到的数据能访问到什么程度，比如能看、能改，甚至是删除</p>
+</blockquote>
+<h5 id="29查看权限">2.9查看权限
+</h5><ul>
+<li>查看当前用户的权限
+<code>SHOW GRANTS; 或者 SHOW GRANTS FOR CURRENT_USER; 或者 SHOW GRANTS FOR CURRENT_USER();</code></li>
+<li>查看某些用户的权限
+<code>SHOW GRANTS FOR 'user'@'主机地址' ;</code></li>
+</ul>
+<h5 id="210收回权限">2.10收回权限
+</h5><p><strong>收回权限就是取消已经赋予用户的某些权限</strong>。收回用户不必要的权限可以在一定程度上保证系统的安全性。</p>
+<blockquote>
+<p>MySQL中使用REVOKE语句取消用户的某些权限。使用REVOKE收回权限之后，用户账户的记录将从db、host、tables_priv和columns_priv表中删除，但是用户账户记录仍然在user表中保存（删除user表中的账户记录使用DROP USER语句，在将用户账户从user表删除之前，应该收回相应用户的所有权限。）</p>
+</blockquote>
+<ul>
+<li>收回权限的命令（收回权限后需要用户重新登录才能生效）
+<code>REVOKE 权限1,权限2,…权限n ON 数据库名称.表名称 FROM 用户名@用户地址;</code>
+举例：
+<code>收回全库全表的所有权限：REVOKE ALL PRIVILEGES ON *.* FROM joe@'%';</code>
+<code>收回mysql库下的所有表的插删改查权限：REVOKE SELECT,INSERT,UPDATE,DELETE ON mysql.* FROM joe@localhost;</code></li>
+</ul>
+<h4 id="权限表和访问控制更深层次的理解">权限表和访问控制（更深层次的理解）
+</h4><h4 id="权限表">权限表
+</h4><p>当msyql通过grant命令给用户赋予某些权限时，mysql会把用户的信息保存在相应的权限表中，<strong>mysql服务器通过权限表来控制用户对数据库的访问</strong>，权限表存放在<strong>mysql数据库</strong>中。
+<strong>权限表主要有：user表、db表、table_priv表、column_priv表、proc_priv表。当mysql启动时，服务器会将这些数据库表中的权限信息读入到内存中</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">msyql数据库的表名</th>
+          <th style="text-align: left">描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">user</td>
+          <td style="text-align: left">用户账号和权限信息</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">db</td>
+          <td style="text-align: left">数据库层级的权限</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">table_priv</td>
+          <td style="text-align: left">表层级的权限</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">columns_priv</td>
+          <td style="text-align: left">列层级的权限</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">procs_priv</td>
+          <td style="text-align: left">存储的过程和函数的权限</td>
+      </tr>
+  </tbody>
+</table></div>
+<h5 id="211user表">2.11user表
+</h5><p><strong>user表：是MySQL中最重要的一个权限表， 记录用户账号和权限信息。</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154814619-880344668.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5cmysql_01.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a>
+这些字段可以分成4类，分别是范围列（或用户列）、权限列、安全列和资源控制列。
+<strong>1、范围列（或用户列）</strong></p>
+<ul>
+<li>host：表示连接类型
+<code>1、% 表示所有远程通过 TCP方式的连接</code>
+<code>2、IP 地址 如 (192.168.1.2、127.0.0.1) 通过制定ip地址进行的TCP方式的连接</code>
+<code>3、机器名 通过制定网络中的机器名进行的TCP方式的连接</code>
+<code>4、::1 IPv6的本地ip地址，等同于IPv4的 127.0.0.1</code>
+<code>5、localhost 本地方式通过命令行方式的连接 ，比如mysql -u xxx -p xxx 方式的连接。</code></li>
+<li>user：表示用户名，同一用户通过不同方式链接的权限是不一样的。</li>
+<li>password：密码
+<code>1、所有密码串通过 password(明文字符串) 生成的密文字符串。mysql 5.7 及之后版本的密码保存到 authentication_string 字段中不再使用password字段。</code>
+<code>2、MySQL 8.0 在用户管理方面增加了角色管理，默认的密码加密方式也做了调整，由之前的 SHA1 改为了 SHA2 ，不可逆 。同时加上MySQL 5.7的禁用用户和用户过期的功能，MySQL在用户管理方面的功能和安全性都较之前版本大大的增强了。</code></li>
+</ul>
+<p><strong>2、权限列</strong></p>
+<ul>
+<li>Grant_priv字段：表示是否拥有GRANT权限</li>
+<li>Shutdown_priv字段：表示是否拥有停止MySQL服务的权限</li>
+<li>Super_priv字段：表示是否拥有超级权限</li>
+<li>Execute_priv字段：表示是否拥有EXECUTE权限。拥有EXECUTE权限，可以执行存储过程和函数。</li>
+<li>Select_priv , Insert_priv：为该用户所拥有的权限。</li>
+</ul>
+<p><strong>3、安全列</strong></p>
+<ul>
+<li>ssl_type、ssl_cipher：用于加密 ；</li>
+<li>x509_issuer、x509_subject：用于标识用户 ；</li>
+<li>Plugin字段：用于验证用户身份的插件，该字段不能为空。如果该字段为空，服务器就使用内建授权验证机制验证用户身份。</li>
+</ul>
+<p><strong>4、资源控制列</strong>
+<strong>资源控制列的字段用来限制用户使用的资源。</strong></p>
+<ul>
+<li>max_questions，用户每小时允许执行的查询操作次数；</li>
+<li>max_updates，用户每小时允许执行的更新操作次数；</li>
+<li>max_connections，用户每小时允许执行的连接操作次数；</li>
+<li>max_user_connections，用户允许同时建立的连接次数。</li>
+</ul>
+<h5 id="212db表">2.12db表
+</h5><p><strong>db表：记录数据库层级的权限</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152406519-649151221.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5c%e8%ae%b0%e5%bd%95%e6%95%b0%e6%8d%ae%e5%ba%93%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a>
+<strong>1、用户列</strong>
+db表用户列有3个字段，分别是Host、User、Db。这3个字段分别表示主机名、用户名和数据库
+名。表示从某个主机连接某个用户对某个数据库的操作权限，这3个字段的组合构成了db表的主键。
+<strong>2、权限列</strong>
+Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有创建和修改存储过程的权限。</p>
+<h5 id="213tables_priv表">2.13tables_priv表
+</h5><p><strong>tables_priv表：记录表层级的权限</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152825187-262801799.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5c%e8%ae%b0%e5%bd%95%e8%a1%a8%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a></p>
+<ul>
+<li>Host、Db、User 和 Table_name 四个字段分别表示主机名、数据库名、用户名和表名。表示从某个主机连接某个用户对某个数据库中的某个表的操作权限，这4个字段的组合构成了tables_priv表的主键。</li>
+<li>Grantor表示修改该记录的用户。</li>
+<li>Timestamp表示修改该记录的时间。</li>
+<li>Table_priv表示对表的操作权限。包括Select、Insert、Update、Delete、Create、Drop、Grant、References、Index和Alter。</li>
+<li>Column_priv表示对表中的列的操作权限，包括Select、Insert、Update和References。</li>
+</ul>
+<h5 id="214columns_priv表">2.14columns_priv表
+</h5><p><strong>columns_priv表：记录列层级的权限</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220153703503-765466053.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5c%e8%ae%b0%e5%bd%95%e5%88%97%e5%b1%82%e7%ba%a7%e7%9a%84%e6%9d%83%e9%99%90.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a></p>
+<ul>
+<li>Host、Db、User、Table_name和column_name 5个字段分别表示主机名、数据库名、用户名、表名和列名。表示从某个主机连接某个用户对某个数据库中的某个表中的某个列的操作权限，这5个字段的组合构成了columns_priv表的主键。</li>
+<li>Timestamp表示修改该记录的时间。</li>
+<li>Column_priv表示对表中的列的操作权限，包括Select、Insert、Update和References。</li>
+</ul>
+<h5 id="215procs_priv表">2.15procs_priv表
+</h5><p><strong>procs_priv表：存储的过程和函数的权限</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154121398-1977529702.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5c%e5%ad%98%e5%82%a8%e7%9a%84%e8%bf%87%e7%a8%8b%e5%92%8c%e5%87%bd%e6%95%b0%e7%9a%84%e6%9d%83%e9%99%90.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a></p>
+<ul>
+<li>Host、Db、User、Routine_name和Routine_type 5个字段分别表示主机名、数据库名、用户名、存储过程名和存储类型。表示从某个主机连接某个用户对某个数据库中的某个存储过程的操作权限，这5个字段的组合构成了procs_priv表的主键。</li>
+<li>Grantor表示修改该记录的用户。</li>
+<li>proc_priv表示对存储过程的操作权限，包括execute、alter routine、grant。</li>
+<li>Timestamp表示修改该记录的时间。</li>
+</ul>
+<h4 id="访问控制">访问控制
+</h4><h5 id="216连接核实阶段">2.16连接核实阶段
+</h5><p>客户端用户会在连接请求中提供用户名、主机地址、用户密码，MySQL服务器接收到用户请求后，<strong>会使用user表中的host、user和authentication_string这3个字段匹配客户端提供信息</strong>。如果连接核实没有通过，服务器就完全拒绝访问；否则，服务器接受连接，然后进入请求核实阶段。</p>
+<h5 id="217请求核实阶段">2.17请求核实阶段
+</h5><p>一旦建立了连接，服务器就进入请求核实阶段。对此连接上进来的每个请求，服务器检查该请求要执行什么操作、是否有足够的权限来执行它，这正是需要授权表中的权限列发挥作用的地方。这些权限可以来自user、db、table_priv和column_priv表。
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220161703950-393897996.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5c%e8%af%b7%e6%b1%82%e6%a0%b8%e5%ae%9e%e9%98%b6%e6%ae%b5%e6%b5%81%e7%a8%8b%e5%9b%be.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a></p>
+<h3 id="3mysql的数据目录结构">3、Mysql的数据目录结构
+</h3><h5 id="31查看mysql的主要目录结构">3.1查看mysql的主要目录结构
+</h5><p>通过命名查看mysql的目录结构：<code>find / -name mysql</code>
+[<img src="/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5cmysql%e4%b8%bb%e8%a6%81%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></p>
+<h5 id="32数据库文件的存放路径">3.2数据库文件的存放路径
+</h5><p>MySQL数据库文件的存放路径：/var/lib/mysql/
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163111437-1807887880.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e6%95%b0%e6%8d%ae%e5%ba%93%e6%96%87%e4%bb%b6%e7%9a%84%e5%ad%98%e6%94%be%e8%b7%af%e5%be%84.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a></p>
+<h5 id="33相关命令的存放路径">3.3相关命令的存放路径
+</h5><p>相关命令目录：/usr/bin和/usr/sbin。
+<strong>/usr/bin目录</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163537093-646907271.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e7%9b%b8%e5%85%b3%e5%91%bd%e4%bb%a4%e7%9a%84%e5%ad%98%e6%94%be%e8%b7%af%e5%be%84.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a>
+<strong>/usr/sbin目录</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163652279-1335793189.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e7%9b%ae%e5%bd%95.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a>
+<strong>启动命令能读取的配置文件选项组</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220175719237-1534110880.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c2345397-20220220175719237-1534110880.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a></p>
+<h5 id="34配置文件目录">3.4配置文件目录
+</h5><p>配置文件目录：/usr/share/mysql（命令及配置文件）和 /etc（如my.cnf）
+<strong>/usr/share/mysql（命令及配置文件）</strong>
+[<img src="/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e7%9b%ae%e5%bd%95.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+>
+<strong>/etc目录</strong>
+<a class="link" href="https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220164107873-1172310117.png"  target="_blank" rel="noopener"
+    ><img src="/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c2345397-20220220164107873-1172310117.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></a></p>
+<h4 id="数据库和文件系统的关系">数据库和文件系统的关系
+</h4><p>数据库的文件信息会存在磁盘上，文件系统来管理这些文件信息。</p>
+<h5 id="35查看默认的数据库">3.5查看默认的数据库
+</h5><p>查看命令：SHOW DATABASES;
+[<img src="/..%5cimg%5cdb%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e6%9f%a5%e7%9c%8b%e9%bb%98%e8%ae%a4%e7%9a%84%e6%95%b0%e6%8d%ae%e5%ba%93.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></p>
+<ul>
+<li><strong>mysql</strong>：MySQL系统自带的核心数据库，它存储了MySQL的<strong>用户账户和权限信息</strong>，一些<strong>存储过程、事件的定义信息</strong>，一些运行过程中产生的<strong>日志信息</strong>，一些帮助信息以及时区信息等。</li>
+<li><strong>information_schema</strong>：MySQL系统自带的数据库，<strong>这个数据库保存着MySQL服务器维护的所有其他数据库的信息 ，比如有哪些表、哪些视图、哪些触发器、哪些列、哪些索引</strong>。这些信息并不是真实的用户数据，而是<strong>一些描述性信息</strong>，有时候也称之为 元数据 。在系统数据库information_schema 中提供了一些以innodb_sys 开头的表，用于表示内部系统表。</li>
+<li><strong>performance_schema</strong>：MySQL系统自带的数据库，这个数据库里主要保存MySQL服务器运行过程中的一些状态信息，<strong>可以用来监控MySQL服务的各类性能指标</strong> 。包括统计最近执行了哪些语句，在执行过程的每个阶段都花费了多长时间，内存的使用情况等信息。</li>
+<li><strong>sys</strong>：MySQL系统自带的数据库，这个数据库主要是<strong>通过视图的形式把information_schema和performance_schema结合起来</strong>，帮助系统管理员和开发人员监控MySQL的技术性能。</li>
+</ul>
+<h5 id="36数据库在文件系统中的表示">3.6数据库在文件系统中的表示
+</h5><p>使用<code>create database 数据库名</code>语句创建一个数据库的时候，在数据库目录/var/lib/mysql下会创建一个和数据库同名的子目录。
+<strong>除了information_schema这个系统数据库外，其他的数据库在数据目录下都有对应的子目录。</strong>
+[<img src="/..%5cdb%5cmysql%5cmysql%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%5c%e6%95%b0%e6%8d%ae%e5%ba%93%e5%9c%a8%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f%e4%b8%ad%e8%a1%a8%e7%a4%ba.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></p>
+<h5 id="37表在文件系统中的标识">3.7表在文件系统中的标识
+</h5><p><strong>使用数据库a中的表b描述在INNODB和MYISAM中的区别。</strong></p>
+<ul>
+<li>db.opt：存储的是数据库的字符集和比较规则</li>
+<li>ibdata1：系统表空间，存储数据和索引信息</li>
+<li>b.frm：描述的是表结构文件、字段长度</li>
+<li>b.xxx.sdi：描述的是表结构文件、字段长度</li>
+<li>b.idb：独立表空间，存储数据和索引信息</li>
+<li>b.MYD(MYDATA)：存储数据信息</li>
+<li>b.MYI（MYINDEX）：存储索引信息</li>
+</ul>
+<p><strong>在INNODB中：聚簇索引（数据和索引在一起）</strong></p>
+<ul>
+<li>mysql5.5.7（包括）至mysql5.6.6（不包括）版本：使用的是系统表空间
+<code>存在的文件：db.opt、b.frm、ibdata1</code></li>
+<li>mysql5.6.6（包括）至mysql5.7（包括）版本：使用的是独立表空间
+<code>存在的文件：db.opt、b.frm、b.idb</code></li>
+<li>mysql5.7（不包括）至mysql8.0（不包括）版本：使用的是独立表空间
+<code>存在的文件：b.frm、b.idb</code></li>
+<li>mysql8.0以及之后的版本（把frm的信息合并到idb中）
+<code>存在的文件：b.idb</code>
+<code>在b.idb文件的目录下执行以下命令：idb2sdi --dump-flie=b.txt b.idb（查看b.txt存在表结构信息）</code></li>
+</ul>
+<p><strong>在MYISAM中：非聚簇索引（数据和索引不在一起）</strong></p>
+<ul>
+<li>
+<p>mysql5.5.7（包括）至mysql5.6.6（不包括）版本：使用的是系统表空间
+<code>存在的文件：db.opt、b.frm、ibdata1</code></p>
+</li>
+<li>
+<p>mysql5.6.6（包括）至mysql5.7（包括）版本：使用的是独立表空间
+<code>存在的文件：db.opt、b.frm、b.MYD、b.MYI</code></p>
+</li>
+<li>
+<p>mysql5.7（不包括）至mysql8.0（不包括）版本：使用的是独立表空间
+<code>存在的文件：b.frm、b.MYD、b.MYI</code></p>
+</li>
+<li>
+<p>mysql8.0以及之后的版本（把frm的信息移动到sdi）
+<code>存在的文件：b.xxx.sdi、b.MYD、b.MYI</code></p>
+<p>类型转换
+0 + CAST(cast(third_size as decimal) / 100 as char)
+0 + cast(substring_index(substring_index(specification, &lsquo;*&rsquo;, 1), &lsquo;δ&rsquo;, -1) as char)</p>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/db/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DB</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/mysql%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0--%E5%8F%82%E8%80%83/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">mysql系统配置参数--参考</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

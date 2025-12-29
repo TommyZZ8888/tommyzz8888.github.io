@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="1. ElasticSearch概述 2. ES与Solr的差别 2.1. Solr简介 2.2. Lucene简介 2.3. ES VS Solr 3. ElasticSearch 安装 官网\nElasticSearch: https://mirrors.huaweicloud.com/elasticsearch/?C=N&O=D logstash: https://mirrors.huaweicloud.com/logstash/?C=N&O=D kibana: https://mirrors.huaweicloud.com/kibana/?C=N&O=D\n">
+<title>ElasticSearch</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/elasticsearch/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="ElasticSearch">
+<meta property='og:description' content="1. ElasticSearch概述 2. ES与Solr的差别 2.1. Solr简介 2.2. Lucene简介 2.3. ES VS Solr 3. ElasticSearch 安装 官网\nElasticSearch: https://mirrors.huaweicloud.com/elasticsearch/?C=N&O=D logstash: https://mirrors.huaweicloud.com/logstash/?C=N&O=D kibana: https://mirrors.huaweicloud.com/kibana/?C=N&O=D\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/elasticsearch/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="ElasticSearch">
+<meta name="twitter:description" content="1. ElasticSearch概述 2. ES与Solr的差别 2.1. Solr简介 2.2. Lucene简介 2.3. ES VS Solr 3. ElasticSearch 安装 官网\nElasticSearch: https://mirrors.huaweicloud.com/elasticsearch/?C=N&O=D logstash: https://mirrors.huaweicloud.com/logstash/?C=N&O=D kibana: https://mirrors.huaweicloud.com/kibana/?C=N&O=D\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-elasticsearch概述">1. ElasticSearch概述</a></li>
+    <li><a href="#2-es与solr的差别">2. ES与Solr的差别</a>
+      <ol>
+        <li><a href="#21-solr简介">2.1. Solr简介</a></li>
+        <li><a href="#22-lucene简介">2.2. Lucene简介</a></li>
+        <li><a href="#23-es-vs-solr">2.3. ES VS Solr</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-elasticsearch-安装">3. ElasticSearch 安装</a></li>
+    <li><a href="#4-kibana安装">4. Kibana安装</a></li>
+    <li><a href="#5-es核心概念">5. ES核心概念</a></li>
+    <li><a href="#6-ik分词器">6. IK分词器</a></li>
+    <li><a href="#7-restful风格说明">7. Restful风格说明</a></li>
+    <li><a href="#8-关于文档的基本操作">8. 关于文档的基本操作</a></li>
+    <li><a href="#9-集成springboot">9. 集成SpringBoot</a></li>
+    <li><a href="#10-实战模拟全文搜索-京东搜索">10. 实战：模拟全文搜索-京东搜索</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" >
+            中间件
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/elasticsearch/">ElasticSearch</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 8 分钟
+                
+                
+                , 3736 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-elasticsearch概述">1. <a class="link" href="https://so.csdn.net/so/search?q=ElasticSearch&amp;spm=1001.2101.3001.7020"  target="_blank" rel="noopener"
+    >ElasticSearch</a>概述
+</h2><p><img src="https://i-blog.csdnimg.cn/blog_migrate/3ce0c53988eee6abbc742ebda78225b3.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/8d759c09b93d76ec6adc3a6c7f59aa89.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h2 id="2-es与solr的差别">2. ES与<a class="link" href="https://so.csdn.net/so/search?q=Solr&amp;spm=1001.2101.3001.7020"  target="_blank" rel="noopener"
+    >Solr</a>的差别
+</h2><h3 id="21-solr简介">2.1. Solr简介
+</h3><p><img src="https://i-blog.csdnimg.cn/blog_migrate/8da76b9b14e29e960d698f3c7fe539cc.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h3 id="22-lucene简介">2.2. <a class="link" href="https://so.csdn.net/so/search?q=Lucene&amp;spm=1001.2101.3001.7020"  target="_blank" rel="noopener"
+    >Lucene</a>简介
+</h3><p><img src="https://i-blog.csdnimg.cn/blog_migrate/bf9f41533017dfddbbed368b7bd000eb.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h3 id="23-es-vs-solr">2.3. ES VS Solr
+</h3><p><img src="https://i-blog.csdnimg.cn/blog_migrate/9f58633016e432af84900d894dae2773.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h2 id="3-elasticsearch-安装">3. ElasticSearch 安装
+</h2><p><img src="https://i-blog.csdnimg.cn/blog_migrate/b9c9a1b28f69fdf91e0eec232019b6c4.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><a class="link" href="https://www.elastic.co/cn/"  target="_blank" rel="noopener"
+    >官网</a></p>
+<p>ElasticSearch: <a class="link" href="https://mirrors.huaweicloud.com/elasticsearch/?C=N&amp;O=D"  target="_blank" rel="noopener"
+    >https://mirrors.huaweicloud.com/elasticsearch/?C=N&O=D</a> logstash: <a class="link" href="https://mirrors.huaweicloud.com/logstash/?C=N&amp;O=D"  target="_blank" rel="noopener"
+    >https://mirrors.huaweicloud.com/logstash/?C=N&O=D</a> kibana: <a class="link" href="https://mirrors.huaweicloud.com/kibana/?C=N&amp;O=D"  target="_blank" rel="noopener"
+    >https://mirrors.huaweicloud.com/kibana/?C=N&O=D</a></p>
+<ul>
+<li>认识目录</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/bad7732029bf4af6fb42eb564f2432b8.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<ol>
+<li>测试访问</li>
+</ol>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/1abe2ca0111564cab516b8522803ce0b.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/409d6d66db0ba110d4e7391762fec48b.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p>这个，没有测试，等后期回来再看！<a class="link" href="https://www.bilibili.com/video/BV17a4y1x7zq?p=5"  target="_blank" rel="noopener"
+    >head的插件</a></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/adf115af18112a22bbc4e04139841310.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h2 id="4-kibana安装">4. Kibana安装
+</h2><p>开箱即用</p>
+<p>配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">server</span><span class="p">.</span><span class="nv">port</span><span class="p">:</span> <span class="mi">5601</span><span class="nv">server</span><span class="p">.</span><span class="nv">host</span><span class="p">:</span> <span class="s2">&#34;0.0.0.0&#34;</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">hosts</span><span class="p">:</span> <span class="err">[</span><span class="s2">&#34;http://192.168.1.30:9201&#34;</span><span class="err">]</span><span class="nv">kibana</span><span class="p">.</span><span class="kp">index</span><span class="p">:</span> <span class="s2">&#34;.kibana&#34;</span><span class="nv">i18n</span><span class="p">.</span><span class="kp">locale</span><span class="p">:</span> <span class="s2">&#34;zh-CN&#34;</span>            <span class="err">#</span> <span class="err">中文汉化
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>访问测试</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/15ef9fcc39826b34f150b77182330ddc.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h2 id="5-es核心概念">5. ES核心概念
+</h2><ul>
+<li>索引</li>
+<li>字段类型（mapping）</li>
+<li>文档（document）</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/fe68fe3e2fd3eb1cf3224c0d2ec1d8d6.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/179128fd80e42dd0371260a92c3cab28.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/1a4f76b54d653bfc8869696e15313ecd.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/de50d480371a22bacfd673acb90f6547.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/9e07012ae1941dffb97080f9b039e3b1.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/f7f26de5b8a80bf6b820d554cd484967.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/25329d4430e9d59230adc1a363895c17.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h2 id="6-ik分词器">6. IK分词器
+</h2><ul>
+<li><a class="link" href="https://github.com/medcl/elasticsearch-analysis-ik/releases?after=v7.8.0"  target="_blank" rel="noopener"
+    >下载链接</a></li>
+<li>解压放入到es对应的plugins下即可</li>
+<li>重启观察ES，发现ik插件被加载了</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/d63954e4e10467bf60676fa0d8a7aa73.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<ul>
+<li>
+<p>也可以通过bin目录下elasticsearch-plugin list 查看已经加载的插件</p>
+</li>
+<li>
+<p>使用kibana测试</p>
+<ul>
+<li>ik_smart: 最少切分</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/d9b8dfa28fcba6e24381b4248f555e01.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<ul>
+<li>ik_max_word为最细粒度划分！穷尽词库的可能， 字典！</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/791b374a7aa3e44a83b0794dfbe0f034.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+</li>
+<li>
+<p>ik分词器增加自己的配置！</p>
+</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/d21907390cb9780c454c589acd2362a8.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<ul>
+<li>重启ES 和 Kibana</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/e393c6bfb2fc6b2bddb27137c5a5cd5b.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/afd5cd6513b9ab9f2e07b08b5c352ae6.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h2 id="7-restful风格说明">7. Restful风格说明
+</h2><p><img src="https://i-blog.csdnimg.cn/blog_migrate/caba83699511901581fa1c2ff3a5dbb7.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<blockquote>
+<p>基础测试</p>
+</blockquote>
+<ul>
+<li>创建一个索引！</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">PUT /索</span><span class="err">引名</span><span class="o">/</span><span class="err">~类型名~</span><span class="o">/</span><span class="err">文档</span><span class="nv">id</span><span class="err">{请求体}</span> <span class="err">#</span> <span class="nv">PUT</span> <span class="err">创建命令</span>  <span class="nv">test1</span> <span class="err">索引</span> <span class="nv">type1</span> <span class="err">类型</span> <span class="mi">1 </span><span class="nv">idPUT</span> <span class="nv">test1</span><span class="o">/</span><span class="nv">type1</span><span class="o">/</span><span class="mi">1</span><span class="err">{</span>  <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;xiaofan&#34;</span><span class="p">,</span>  <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="mi">28</span><span class="err">}</span> <span class="err">#</span> <span class="err">返回结果#</span> <span class="err">警告信息：</span> <span class="err">不支持在文档索引请求中的指定类型#</span> <span class="err">而是使用无类型的断点</span><span class="p">(</span><span class="o">/</span><span class="err">{</span><span class="kp">index</span><span class="err">}</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="err">{</span><span class="kp">id</span><span class="err">}</span><span class="p">,</span> <span class="o">/</span><span class="err">{</span><span class="kp">index</span><span class="err">}</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="p">,</span> <span class="ow">or </span><span class="o">/</span><span class="err">{</span><span class="kp">index</span><span class="err">}</span><span class="o">/</span><span class="err">_</span><span class="nv">create</span><span class="o">/</span><span class="err">{</span><span class="kp">id</span><span class="err">}</span><span class="p">).</span><span class="err">{</span>  <span class="s2">&#34;_index&#34;</span> <span class="p">:</span> <span class="s2">&#34;test1&#34;</span><span class="p">,</span>   <span class="err">#</span> <span class="err">索引</span>  <span class="s2">&#34;_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;type1&#34;</span><span class="p">,</span>    <span class="err">#</span> <span class="err">类型（已经废弃）</span>  <span class="s2">&#34;_id&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>          <span class="err">#</span> <span class="kp">id  </span><span class="s2">&#34;_version&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>       <span class="err">#</span> <span class="err">版本</span>  <span class="s2">&#34;result&#34;</span> <span class="p">:</span> <span class="s2">&#34;created&#34;</span><span class="p">,</span> <span class="err">#</span> <span class="err">操作类型</span>  <span class="s2">&#34;_shards&#34;</span> <span class="p">:</span> <span class="err">{</span>         <span class="err">#</span> <span class="err">分片信息</span>    <span class="s2">&#34;total&#34;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>    <span class="s2">&#34;successful&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s2">&#34;failed&#34;</span> <span class="p">:</span> <span class="mi">0  </span><span class="err">}</span><span class="p">,</span>  <span class="s2">&#34;_seq_no&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="s2">&#34;_primary_term&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="err">}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="https://i-blog.csdnimg.cn/blog_migrate/2bdd3880cec43117eb0fa74ef210ac64.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<ul>
+<li>指定字段的类型（创建规则）</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/fdfd5fd21f0711c713fcde606e5824de.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<ul>
+<li>获取具体的索引规则</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c"># GET </span><span class="nv">test2</span> <span class="err">{</span>  <span class="s2">&#34;test2&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;aliases&#34;</span> <span class="p">:</span> <span class="err">{</span> <span class="err">}</span><span class="p">,</span>    <span class="s2">&#34;mappings&#34;</span> <span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;properties&#34;</span> <span class="p">:</span> <span class="err">{</span>        <span class="s2">&#34;age&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;type&#34;</span> <span class="p">:</span> <span class="s2">&#34;integer&#34;</span>        <span class="err">}</span><span class="p">,</span>        <span class="s2">&#34;birthday&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;type&#34;</span> <span class="p">:</span> <span class="s2">&#34;date&#34;</span>        <span class="err">}</span><span class="p">,</span>        <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;type&#34;</span> <span class="p">:</span> <span class="s2">&#34;text&#34;</span>        <span class="err">}</span>      <span class="err">}</span>    <span class="err">}</span><span class="p">,</span>    <span class="s2">&#34;settings&#34;</span> <span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;index&#34;</span> <span class="p">:</span> <span class="err">{</span>        <span class="s2">&#34;creation_date&#34;</span> <span class="p">:</span> <span class="s2">&#34;1599708623941&#34;</span><span class="p">,</span>        <span class="s2">&#34;number_of_shards&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>        <span class="s2">&#34;number_of_replicas&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>        <span class="s2">&#34;uuid&#34;</span> <span class="p">:</span> <span class="s2">&#34;ANWnhwArSMSl8k8iipgH1Q&#34;</span><span class="p">,</span>        <span class="s2">&#34;version&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;created&#34;</span> <span class="p">:</span> <span class="s2">&#34;7080099&#34;</span>        <span class="err">}</span><span class="p">,</span>        <span class="s2">&#34;provided_name&#34;</span> <span class="p">:</span> <span class="s2">&#34;test2&#34;</span>      <span class="err">}</span>    <span class="err">}</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">查看默认的规则</span><span class="nv">PUT</span> <span class="o">/</span><span class="nv">test3</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">1</span><span class="err">{</span>  <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神说Java&#34;</span><span class="p">,</span>  <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>  <span class="s2">&#34;birthday&#34;</span><span class="p">:</span> <span class="s2">&#34;1997-01-05&#34;</span><span class="err">}</span> <span class="err">#</span> <span class="err">GET</span> <span class="nv">test3</span> <span class="err">{</span>  <span class="s2">&#34;test3&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;aliases&#34;</span> <span class="p">:</span> <span class="err">{</span> <span class="err">}</span><span class="p">,</span>    <span class="s2">&#34;mappings&#34;</span> <span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;properties&#34;</span> <span class="p">:</span> <span class="err">{</span>        <span class="s2">&#34;age&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;type&#34;</span> <span class="p">:</span> <span class="s2">&#34;long&#34;</span>        <span class="err">}</span><span class="p">,</span>        <span class="s2">&#34;birthday&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;type&#34;</span> <span class="p">:</span> <span class="s2">&#34;date&#34;</span>        <span class="err">}</span><span class="p">,</span>        <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;type&#34;</span> <span class="p">:</span> <span class="s2">&#34;text&#34;</span><span class="p">,</span>          <span class="s2">&#34;fields&#34;</span> <span class="p">:</span> <span class="err">{</span>            <span class="s2">&#34;keyword&#34;</span> <span class="p">:</span> <span class="err">{</span>              <span class="s2">&#34;type&#34;</span> <span class="p">:</span> <span class="s2">&#34;keyword&#34;</span><span class="p">,</span>              <span class="s2">&#34;ignore_above&#34;</span> <span class="p">:</span> <span class="mi">256            </span><span class="err">}</span>          <span class="err">}</span>        <span class="err">}</span>      <span class="err">}</span>    <span class="err">}</span><span class="p">,</span>    <span class="s2">&#34;settings&#34;</span> <span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;index&#34;</span> <span class="p">:</span> <span class="err">{</span>        <span class="s2">&#34;creation_date&#34;</span> <span class="p">:</span> <span class="s2">&#34;1599708906181&#34;</span><span class="p">,</span>        <span class="s2">&#34;number_of_shards&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>        <span class="s2">&#34;number_of_replicas&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>        <span class="s2">&#34;uuid&#34;</span> <span class="p">:</span> <span class="s2">&#34;LzPLCDgeQn6tdKo3xBBpbw&#34;</span><span class="p">,</span>        <span class="s2">&#34;version&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;created&#34;</span> <span class="p">:</span> <span class="s2">&#34;7080099&#34;</span>        <span class="err">}</span><span class="p">,</span>        <span class="s2">&#34;provided_name&#34;</span> <span class="p">:</span> <span class="s2">&#34;test3&#34;</span>      <span class="err">}</span>    <span class="err">}</span>  <span class="err">}}</span> <span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="https://i-blog.csdnimg.cn/blog_migrate/5a10bc9338093174e8a1e24c35bc29af.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<ul>
+<li>修改索引 POST</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c"># 只会修改</span><span class="err">指定项，其他内容保证不变</span><span class="nv">POST</span> <span class="o">/</span><span class="nv">test3</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="err">_</span><span class="nv">update</span><span class="err">{</span>  <span class="s2">&#34;doc&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;name&#34;</span><span class="p">:</span><span class="s2">&#34;暴徒狂神&#34;</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">GET</span> <span class="nv">test3</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">1 </span><span class="err">{</span>  <span class="s2">&#34;_index&#34;</span> <span class="p">:</span> <span class="s2">&#34;test3&#34;</span><span class="p">,</span>  <span class="s2">&#34;_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;_doc&#34;</span><span class="p">,</span>  <span class="s2">&#34;_id&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>  <span class="s2">&#34;_version&#34;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>  <span class="s2">&#34;_seq_no&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="s2">&#34;_primary_term&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="s2">&#34;found&#34;</span> <span class="p">:</span> <span class="nb">true</span><span class="p">,</span>  <span class="s2">&#34;_source&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;暴徒狂神&#34;</span><span class="p">,</span>    <span class="s2">&#34;age&#34;</span> <span class="p">:</span> <span class="mi">28</span><span class="p">,</span>    <span class="s2">&#34;birthday&#34;</span> <span class="p">:</span> <span class="s2">&#34;1997-01-05&#34;</span>  <span class="err">}}</span> <span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="https://i-blog.csdnimg.cn/blog_migrate/cd6ce0662880836a43e5ab31c99c9e10.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<h2 id="8-关于文档的基本操作">8. 关于文档的基本操作
+</h2><ul>
+<li>基本操作（简单的查询）</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">put /k</span><span class="nv">uangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="mi">1</span><span class="err">{</span>  <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神说&#34;</span><span class="p">,</span>  <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span>  <span class="s2">&#34;desc&#34;</span><span class="p">:</span> <span class="s2">&#34;一顿操作猛如虎，一看工资2500&#34;</span><span class="p">,</span>  <span class="s2">&#34;tags&#34;</span><span class="p">:</span> <span class="err">[</span><span class="s2">&#34;码农&#34;</span><span class="p">,</span> <span class="s2">&#34;技术宅&#34;</span><span class="p">,</span> <span class="s2">&#34;直男&#34;</span><span class="err">]}</span> <span class="nv">put</span> <span class="o">/</span><span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="mi">2</span><span class="err">{</span>  <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;张三&#34;</span><span class="p">,</span>  <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span>  <span class="s2">&#34;desc&#34;</span><span class="p">:</span> <span class="s2">&#34;法外狂徒&#34;</span><span class="p">,</span>  <span class="s2">&#34;tags&#34;</span><span class="p">:</span> <span class="err">[</span><span class="s2">&#34;旅游&#34;</span><span class="p">,</span> <span class="s2">&#34;渣男&#34;</span><span class="p">,</span> <span class="s2">&#34;交友&#34;</span><span class="err">]}</span> <span class="nv">put</span> <span class="o">/</span><span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="mi">3</span><span class="err">{</span>  <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;李四&#34;</span><span class="p">,</span>  <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>  <span class="s2">&#34;desc&#34;</span><span class="p">:</span> <span class="s2">&#34;不知道怎么描述&#34;</span><span class="p">,</span>  <span class="s2">&#34;tags&#34;</span><span class="p">:</span> <span class="err">[</span><span class="s2">&#34;旅游&#34;</span><span class="p">,</span> <span class="s2">&#34;靓女&#34;</span><span class="p">,</span> <span class="s2">&#34;唱歌&#34;</span><span class="err">]}</span> <span class="err">GET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="mi">1  </span><span class="err">GET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">?</span><span class="nv">q</span><span class="o">=</span><span class="nv">name</span><span class="p">:</span><span class="err">狂神
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>复杂操作(排序、分页、高亮、模糊查询、标准查询！)</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/cd883b35ba8175783e2ac1892a922dda.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c"># 模糊查询</span><span class="nv">GET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神&#34;</span>    <span class="err">}</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">对查询结果进行字段过滤</span><span class="nv">GET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神&#34;</span>    <span class="err">}</span>  <span class="err">}</span><span class="p">,</span>  <span class="s2">&#34;_source&#34;</span><span class="p">:</span> <span class="err">[</span><span class="s2">&#34;name&#34;</span><span class="p">,</span> <span class="s2">&#34;desc&#34;</span><span class="err">]}</span> <span class="err">#</span> <span class="err">排序</span><span class="nv">GET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神&#34;</span>    <span class="err">}</span>  <span class="err">}</span><span class="p">,</span>  <span class="s2">&#34;sort&#34;</span><span class="p">:</span><span class="err">[{</span>    <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="s2">&#34;asc&#34;</span>  <span class="err">}]}</span> <span class="err">#</span> <span class="err">分页</span><span class="nv">GET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神&#34;</span>    <span class="err">}</span>  <span class="err">}</span><span class="p">,</span>  <span class="s2">&#34;sort&#34;</span><span class="p">:</span><span class="err">[{</span>    <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="s2">&#34;asc&#34;</span>  <span class="err">}]</span><span class="p">,</span>   <span class="s2">&#34;from&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="s2">&#34;size&#34;</span><span class="p">:</span> <span class="mi">2</span><span class="err">}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>布尔值条件查询</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c"># 多条件查</span><span class="err">询</span> <span class="nv">must</span> <span class="err">相当于</span><span class="nv">andGET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;bool&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;must&#34;</span><span class="p">:</span> <span class="err">[</span>        <span class="err">{</span><span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神&#34;</span>        <span class="err">}}</span><span class="p">,</span>        <span class="err">{</span><span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="mi">23        </span><span class="err">}}</span>      <span class="err">]</span>    <span class="err">}</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">多条件查询</span> <span class="nv">should</span> <span class="err">相当于</span><span class="nv">orGET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;bool&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;should&#34;</span><span class="p">:</span> <span class="err">[</span>        <span class="err">{</span><span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神说&#34;</span>        <span class="err">}}</span><span class="p">,</span>        <span class="err">{</span><span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="mi">25        </span><span class="err">}}</span>      <span class="err">]</span>    <span class="err">}</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">多条件查询</span> <span class="nv">must_not</span> <span class="err">相当于</span> <span class="nv">notGET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;bool&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;must_not&#34;</span><span class="p">:</span> <span class="err">[</span>        <span class="err">{</span><span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="mi">25        </span><span class="err">}}</span>      <span class="err">]</span>    <span class="err">}</span>  <span class="err">}}</span>  <span class="err">#</span> <span class="err">过滤查询</span><span class="mi">1 </span><span class="nv">age</span> <span class="o">&gt;</span> <span class="mi">24</span><span class="nv">GET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;bool&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;must&#34;</span><span class="p">:</span> <span class="err">[</span>        <span class="err">{</span><span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神&#34;</span>        <span class="err">}}</span>      <span class="err">]</span><span class="p">,</span>      <span class="s2">&#34;filter&#34;</span><span class="p">:</span> <span class="err">[</span>        <span class="err">{</span><span class="s2">&#34;range&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="err">{</span>            <span class="s2">&#34;gt&#34;</span><span class="p">:</span> <span class="mi">24          </span><span class="err">}</span>        <span class="err">}}</span>      <span class="err">]</span>    <span class="err">}</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">过滤器</span><span class="mi">2  22</span><span class="o">&lt;</span><span class="nv">age</span><span class="o">&lt;</span><span class="mi">30 </span><span class="err">GET</span> <span class="nv">kuangshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;bool&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;must&#34;</span><span class="p">:</span> <span class="err">[</span>        <span class="err">{</span><span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神&#34;</span>        <span class="err">}}</span>      <span class="err">]</span><span class="p">,</span>      <span class="s2">&#34;filter&#34;</span><span class="p">:</span> <span class="err">[</span>        <span class="err">{</span><span class="s2">&#34;range&#34;</span><span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;age&#34;</span><span class="p">:</span> <span class="err">{</span>            <span class="s2">&#34;lt&#34;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>            <span class="s2">&#34;gt&#34;</span><span class="p">:</span> <span class="mi">22          </span><span class="err">}</span>        <span class="err">}}</span>      <span class="err">]</span>    <span class="err">}</span>  <span class="err">}}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>多条件查询</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">GET ku</span><span class="nv">angshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;tags&#34;</span><span class="p">:</span> <span class="s2">&#34;技术 男&#34;</span>    <span class="err">}</span>  <span class="err">}}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="https://i-blog.csdnimg.cn/blog_migrate/834026231c9cd1a9005cd308e2f21cc9.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/3559b8e14529881a11cf3192f5eafe59.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<blockquote>
+<p>keyword类型不会被分词器解析</p>
+<p>term: 精确匹配</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c"># 定义类型</span><span class="nv">PUT</span> <span class="nv">xiaofan_test_db</span><span class="err">{</span>  <span class="s2">&#34;mappings&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;properties&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="err">{</span>        <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;text&#34;</span>      <span class="err">}</span><span class="p">,</span>      <span class="s2">&#34;desc&#34;</span><span class="p">:</span> <span class="err">{</span>        <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;keyword&#34;</span>      <span class="err">}</span>    <span class="err">}</span>  <span class="err">}}</span>  <span class="nv">PUT</span> <span class="o">/</span><span class="nv">xiaofan_test_db</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">1</span><span class="err">{</span>  <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;小范说Java Name&#34;</span><span class="p">,</span>  <span class="s2">&#34;desc&#34;</span><span class="p">:</span> <span class="s2">&#34;小范说Java Desc&#34;</span><span class="err">}</span> <span class="nv">PUT</span> <span class="o">/</span><span class="nv">xiaofan_test_db</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">2</span><span class="err">{</span>  <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;小范说Java Name&#34;</span><span class="p">,</span>  <span class="s2">&#34;desc&#34;</span><span class="p">:</span> <span class="s2">&#34;小范说Java Desc 2&#34;</span><span class="err">}</span> <span class="err">#</span> <span class="err">按照</span><span class="nv">keyword类型精准匹配GET</span> <span class="nv">xiaofan_test_db</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;term&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;desc&#34;</span><span class="p">:</span> <span class="s2">&#34;小范说Java Desc&#34;</span>    <span class="err">}</span>  <span class="err">}}#</span> <span class="err">结果：{</span>  <span class="s2">&#34;took&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="s2">&#34;timed_out&#34;</span> <span class="p">:</span> <span class="nb">false</span><span class="p">,</span>  <span class="s2">&#34;_shards&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;total&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s2">&#34;successful&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s2">&#34;skipped&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>    <span class="s2">&#34;failed&#34;</span> <span class="p">:</span> <span class="mi">0  </span><span class="err">}</span><span class="p">,</span>  <span class="s2">&#34;hits&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;total&#34;</span> <span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;value&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>      <span class="s2">&#34;relation&#34;</span> <span class="p">:</span> <span class="s2">&#34;eq&#34;</span>    <span class="err">}</span><span class="p">,</span>    <span class="s2">&#34;max_score&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6931471</span><span class="p">,</span>    <span class="s2">&#34;hits&#34;</span> <span class="p">:</span> <span class="err">[</span>      <span class="err">{</span>        <span class="s2">&#34;_index&#34;</span> <span class="p">:</span> <span class="s2">&#34;test_db&#34;</span><span class="p">,</span>        <span class="s2">&#34;_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;_doc&#34;</span><span class="p">,</span>        <span class="s2">&#34;_id&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>        <span class="s2">&#34;_score&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6931471</span><span class="p">,</span>        <span class="s2">&#34;_source&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;小范说Java Name&#34;</span><span class="p">,</span>          <span class="s2">&#34;desc&#34;</span> <span class="p">:</span> <span class="s2">&#34;小范说Java Desc&#34;</span>        <span class="err">}</span>      <span class="err">}</span>    <span class="err">]</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">按照</span><span class="nv">text类型匹配GET</span> <span class="nv">xiaofan_test_db</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;term&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;小&#34;</span>    <span class="err">}</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">结果：{</span>  <span class="s2">&#34;took&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>  <span class="s2">&#34;timed_out&#34;</span> <span class="p">:</span> <span class="nb">false</span><span class="p">,</span>  <span class="s2">&#34;_shards&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;total&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s2">&#34;successful&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s2">&#34;skipped&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>    <span class="s2">&#34;failed&#34;</span> <span class="p">:</span> <span class="mi">0  </span><span class="err">}</span><span class="p">,</span>  <span class="s2">&#34;hits&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;total&#34;</span> <span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;value&#34;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>      <span class="s2">&#34;relation&#34;</span> <span class="p">:</span> <span class="s2">&#34;eq&#34;</span>    <span class="err">}</span><span class="p">,</span>    <span class="s2">&#34;max_score&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">18232156</span><span class="p">,</span>    <span class="s2">&#34;hits&#34;</span> <span class="p">:</span> <span class="err">[</span>      <span class="err">{</span>        <span class="s2">&#34;_index&#34;</span> <span class="p">:</span> <span class="s2">&#34;test_db&#34;</span><span class="p">,</span>        <span class="s2">&#34;_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;_doc&#34;</span><span class="p">,</span>        <span class="s2">&#34;_id&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>        <span class="s2">&#34;_score&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">18232156</span><span class="p">,</span>        <span class="s2">&#34;_source&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;小范说Java Name&#34;</span><span class="p">,</span>          <span class="s2">&#34;desc&#34;</span> <span class="p">:</span> <span class="s2">&#34;小范说Java Desc&#34;</span>        <span class="err">}</span>      <span class="err">}</span><span class="p">,</span>      <span class="err">{</span>        <span class="s2">&#34;_index&#34;</span> <span class="p">:</span> <span class="s2">&#34;test_db&#34;</span><span class="p">,</span>        <span class="s2">&#34;_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;_doc&#34;</span><span class="p">,</span>        <span class="s2">&#34;_id&#34;</span> <span class="p">:</span> <span class="s2">&#34;2&#34;</span><span class="p">,</span>        <span class="s2">&#34;_score&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">18232156</span><span class="p">,</span>        <span class="s2">&#34;_source&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;小范说Java Name&#34;</span><span class="p">,</span>          <span class="s2">&#34;desc&#34;</span> <span class="p">:</span> <span class="s2">&#34;小范说Java Desc 2&#34;</span>        <span class="err">}</span>      <span class="err">}</span>    <span class="err">]</span>  <span class="err">}}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>多个值匹配精确查询</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">PUT /t</span><span class="nv">est_db</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">3</span><span class="err">{</span>  <span class="s2">&#34;t1&#34;</span><span class="p">:</span> <span class="s2">&#34;22&#34;</span><span class="p">,</span>  <span class="s2">&#34;t2&#34;</span><span class="p">:</span> <span class="s2">&#34;2020-09-10&#34;</span><span class="err">}</span> <span class="nv">PUT</span> <span class="o">/</span><span class="nv">test_db</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">4</span><span class="err">{</span>  <span class="s2">&#34;t1&#34;</span><span class="p">:</span> <span class="s2">&#34;33&#34;</span><span class="p">,</span>  <span class="s2">&#34;t2&#34;</span><span class="p">:</span> <span class="s2">&#34;2020-09-11&#34;</span><span class="err">}</span> <span class="err">GET</span> <span class="nv">test_db</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;bool&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;should&#34;</span><span class="p">:</span> <span class="err">[</span>        <span class="err">{</span>          <span class="s2">&#34;term&#34;</span><span class="p">:</span> <span class="err">{</span>            <span class="s2">&#34;t1&#34;</span><span class="p">:</span> <span class="s2">&#34;22&#34;</span>          <span class="err">}</span>        <span class="err">}</span><span class="p">,</span>         <span class="err">{</span>          <span class="s2">&#34;term&#34;</span><span class="p">:</span> <span class="err">{</span>            <span class="s2">&#34;t1&#34;</span><span class="p">:</span> <span class="s2">&#34;33&#34;</span>          <span class="err">}</span>        <span class="err">}</span>      <span class="err">]</span>    <span class="err">}</span>  <span class="err">}}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>高亮查询</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">GET ku</span><span class="nv">angshen</span><span class="o">/</span><span class="nv">user</span><span class="o">/</span><span class="err">_</span><span class="nv">search</span><span class="err">{</span>  <span class="s2">&#34;query&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;狂神&#34;</span>    <span class="err">}</span>  <span class="err">}</span><span class="p">,</span>  <span class="s2">&#34;highlight&#34;</span><span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;pre_tags&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;p class=&#39;key&#39; style=&#39;color:red&#39;&gt;&#34;</span><span class="p">,</span>    <span class="s2">&#34;post_tags&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;/p&gt;&#34;</span><span class="p">,</span>     <span class="s2">&#34;fields&#34;</span><span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="err">{}</span>    <span class="err">}</span>  <span class="err">}}</span> <span class="err">#</span> <span class="err">结果显示：#!</span> <span class="nv">Deprecation</span><span class="p">:</span> <span class="err">[</span><span class="nv">types</span> <span class="kp">removal</span><span class="err">]</span> <span class="nv">Specifying</span> <span class="nv">types</span> <span class="kp">in</span> <span class="kr">search</span> <span class="nv">requests</span> <span class="kp">is</span> <span class="nv">deprecated</span><span class="p">.</span><span class="err">{</span>  <span class="s2">&#34;took&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="s2">&#34;timed_out&#34;</span> <span class="p">:</span> <span class="nb">false</span><span class="p">,</span>  <span class="s2">&#34;_shards&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;total&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s2">&#34;successful&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s2">&#34;skipped&#34;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>    <span class="s2">&#34;failed&#34;</span> <span class="p">:</span> <span class="mi">0  </span><span class="err">}</span><span class="p">,</span>  <span class="s2">&#34;hits&#34;</span> <span class="p">:</span> <span class="err">{</span>    <span class="s2">&#34;total&#34;</span> <span class="p">:</span> <span class="err">{</span>      <span class="s2">&#34;value&#34;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>      <span class="s2">&#34;relation&#34;</span> <span class="p">:</span> <span class="s2">&#34;eq&#34;</span>    <span class="err">}</span><span class="p">,</span>    <span class="s2">&#34;max_score&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">.</span><span class="mi">3862942</span><span class="p">,</span>    <span class="s2">&#34;hits&#34;</span> <span class="p">:</span> <span class="err">[</span>      <span class="err">{</span>        <span class="s2">&#34;_index&#34;</span> <span class="p">:</span> <span class="s2">&#34;kuangshen&#34;</span><span class="p">,</span>        <span class="s2">&#34;_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span>        <span class="s2">&#34;_id&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>        <span class="s2">&#34;_score&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">.</span><span class="mi">3862942</span><span class="p">,</span>        <span class="s2">&#34;_source&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;狂神说&#34;</span><span class="p">,</span>          <span class="s2">&#34;age&#34;</span> <span class="p">:</span> <span class="mi">23</span><span class="p">,</span>          <span class="s2">&#34;desc&#34;</span> <span class="p">:</span> <span class="s2">&#34;一顿操作猛如虎，一看工资2500&#34;</span><span class="p">,</span>          <span class="s2">&#34;tags&#34;</span> <span class="p">:</span> <span class="err">[</span>            <span class="s2">&#34;码农&#34;</span><span class="p">,</span>            <span class="s2">&#34;技术宅&#34;</span><span class="p">,</span>            <span class="s2">&#34;直男&#34;</span>          <span class="err">]</span>        <span class="err">}</span><span class="p">,</span>        <span class="s2">&#34;highlight&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="err">[</span>            <span class="s2">&#34;&lt;p class=&#39;key&#39; style=&#39;color:red&#39;&gt;狂&lt;/p&gt;&lt;p class=&#39;key&#39; style=&#39;color:red&#39;&gt;神&lt;/p&gt;说&#34;</span>          <span class="err">]</span>        <span class="err">}</span>      <span class="err">}</span><span class="p">,</span>      <span class="err">{</span>        <span class="s2">&#34;_index&#34;</span> <span class="p">:</span> <span class="s2">&#34;kuangshen&#34;</span><span class="p">,</span>        <span class="s2">&#34;_type&#34;</span> <span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span>        <span class="s2">&#34;_id&#34;</span> <span class="p">:</span> <span class="s2">&#34;4&#34;</span><span class="p">,</span>        <span class="s2">&#34;_score&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0892314</span><span class="p">,</span>        <span class="s2">&#34;_source&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="s2">&#34;狂神说前端&#34;</span><span class="p">,</span>          <span class="s2">&#34;age&#34;</span> <span class="p">:</span> <span class="mi">25</span><span class="p">,</span>          <span class="s2">&#34;desc&#34;</span> <span class="p">:</span> <span class="s2">&#34;大王叫我来巡山&#34;</span><span class="p">,</span>          <span class="s2">&#34;tags&#34;</span> <span class="p">:</span> <span class="err">[</span>            <span class="s2">&#34;码农1&#34;</span><span class="p">,</span>            <span class="s2">&#34;技术宅1&#34;</span><span class="p">,</span>            <span class="s2">&#34;直男1&#34;</span>          <span class="err">]</span>        <span class="err">}</span><span class="p">,</span>        <span class="s2">&#34;highlight&#34;</span> <span class="p">:</span> <span class="err">{</span>          <span class="s2">&#34;name&#34;</span> <span class="p">:</span> <span class="err">[</span>            <span class="s2">&#34;&lt;p class=&#39;key&#39; style=&#39;color:red&#39;&gt;狂&lt;/p&gt;&lt;p class=&#39;key&#39; style=&#39;color:red&#39;&gt;神&lt;/p&gt;说前端&#34;</span>          <span class="err">]</span>        <span class="err">}</span>      <span class="err">}</span>    <span class="err">]</span>  <span class="err">}}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="9-集成springboot">9. 集成SpringBoot
+</h2><ul>
+<li>
+<p><a class="link" href="https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high.html"  target="_blank" rel="noopener"
+    >官网</a></p>
+</li>
+<li>
+<p>添加依赖</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">&lt;depen</span><span class="nv">dency</span><span class="o">&gt;</span>    <span class="o">&lt;</span><span class="nv">groupId</span><span class="o">&gt;</span><span class="nv">org</span><span class="p">.</span><span class="nv">springframework</span><span class="p">.</span><span class="nv">boot</span><span class="o">&lt;/</span><span class="nv">groupId</span><span class="o">&gt;</span>    <span class="o">&lt;</span><span class="nv">artifactId</span><span class="o">&gt;</span><span class="nv">spring-boot-starter-data-elasticsearch</span><span class="o">&lt;/</span><span class="nv">artifactId</span><span class="o">&gt;&lt;/</span><span class="nv">dependency</span><span class="o">&gt;</span><span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>自定义配置</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">package</span> <span class="nn">com.xiaofan.config;</span> <span class="k">import</span> <span class="nn">org.apache.http.HttpHost;import</span> <span class="n">org</span><span class="p">.</span><span class="n">elasticsearch</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="n">RestClient</span><span class="p">;</span><span class="k">import</span> <span class="nn">org.elasticsearch.client.RestHighLevelClient;import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="k">annotation</span><span class="p">.</span><span class="n">Bean</span><span class="p">;</span><span class="k">import</span> <span class="nn">org.springframework.context.annotation.Configuration;</span> <span class="nd">@Configurationpublic</span> <span class="k">class</span> <span class="nc">ElasticSearchClientConfig</span> <span class="p">{</span>     <span class="nd">@Bean</span>    <span class="k">public</span> <span class="n">RestHighLevelClient</span> <span class="n">restHighLevelClient</span><span class="p">()</span> <span class="p">{</span>        <span class="n">RestHighLevelClient</span> <span class="n">client</span> <span class="p">=</span> <span class="n">new</span> <span class="n">RestHighLevelClient</span><span class="p">(</span>            <span class="nc">RestClient</span><span class="p">.</span><span class="n">builder</span><span class="p">(</span>                <span class="n">new</span> <span class="n">HttpHost</span><span class="p">(</span><span class="s2">&#34;192.168.1.30&#34;</span><span class="p">,</span> <span class="mi">9201</span><span class="p">,</span> <span class="s2">&#34;http&#34;</span><span class="p">)</span>            <span class="p">)</span>        <span class="p">);</span>         <span class="k">return</span> <span class="n">client</span><span class="p">;</span>    <span class="p">}</span>  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>编写测试类</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">packag</span><span class="nv">e</span> <span class="nv">com</span><span class="p">.</span><span class="nv">xiaofan</span><span class="p">;</span> <span class="nv">import</span> <span class="nv">com</span><span class="p">.</span><span class="nv">alibaba</span><span class="p">.</span><span class="nv">fastjson</span><span class="p">.</span><span class="nv">JSON</span><span class="p">;</span><span class="nv">import</span> <span class="nv">com</span><span class="p">.</span><span class="nv">xiaofan</span><span class="p">.</span><span class="nv">pojo</span><span class="p">.</span><span class="nv">User</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">apache</span><span class="p">.</span><span class="nv">http</span><span class="p">.</span><span class="nv">entity</span><span class="p">.</span><span class="nv">ContentType</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="nv">admin</span><span class="p">.</span><span class="nv">indices</span><span class="p">.</span><span class="kr">delete</span><span class="p">.</span><span class="nv">DeleteIndexRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="nv">bulk</span><span class="p">.</span><span class="nv">BulkRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="nv">bulk</span><span class="p">.</span><span class="nv">BulkResponse</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="kr">delete</span><span class="p">.</span><span class="nv">DeleteRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="kr">delete</span><span class="p">.</span><span class="nv">DeleteResponse</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="err">get</span><span class="p">.</span><span class="nv">GetRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="err">get</span><span class="p">.</span><span class="nv">GetResponse</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="kp">index</span><span class="p">.</span><span class="nv">IndexRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="kp">index</span><span class="p">.</span><span class="nv">IndexResponse</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="kr">search</span><span class="p">.</span><span class="nv">SearchRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="kr">search</span><span class="p">.</span><span class="nv">SearchResponse</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="nv">support</span><span class="p">.</span><span class="nv">master</span><span class="p">.</span><span class="nv">AcknowledgedResponse</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="kp">update</span><span class="p">.</span><span class="nv">UpdateRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">action</span><span class="p">.</span><span class="kp">update</span><span class="p">.</span><span class="nv">UpdateResponse</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">client</span><span class="p">.</span><span class="nv">RequestOptions</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">client</span><span class="p">.</span><span class="nv">RestHighLevelClient</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">client</span><span class="p">.</span><span class="nv">indices</span><span class="p">.</span><span class="nv">CreateIndexRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">client</span><span class="p">.</span><span class="nv">indices</span><span class="p">.</span><span class="nv">CreateIndexResponse</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">client</span><span class="p">.</span><span class="nv">indices</span><span class="p">.</span><span class="nv">GetIndexRequest</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="kp">common</span><span class="p">.</span><span class="kp">unit</span><span class="p">.</span><span class="nv">TimeValue</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="kp">common</span><span class="p">.</span><span class="nv">xcontent</span><span class="p">.</span><span class="nv">XContentType</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="kp">index</span><span class="p">.</span><span class="nv">query</span><span class="p">.</span><span class="nv">MatchAllQueryBuilder</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="kp">index</span><span class="p">.</span><span class="nv">query</span><span class="p">.</span><span class="nv">QueryBuilders</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="kp">index</span><span class="p">.</span><span class="nv">query</span><span class="p">.</span><span class="nv">TermQueryBuilder</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="kr">search</span><span class="p">.</span><span class="nv">SearchHit</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="kr">search</span><span class="p">.</span><span class="nv">builder</span><span class="p">.</span><span class="nv">SearchSourceBuilder</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="kr">search</span><span class="p">.</span><span class="nv">fetch</span><span class="p">.</span><span class="nv">subphase</span><span class="p">.</span><span class="nv">FetchSourceContext</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">junit</span><span class="p">.</span><span class="nv">jupiter</span><span class="p">.</span><span class="nv">api</span><span class="p">.</span><span class="kp">Test</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">springframework</span><span class="p">.</span><span class="nv">beans</span><span class="p">.</span><span class="err">factory</span><span class="p">.</span><span class="nv">annotation</span><span class="p">.</span><span class="nv">Autowired</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">springframework</span><span class="p">.</span><span class="nv">beans</span><span class="p">.</span><span class="err">factory</span><span class="p">.</span><span class="nv">annotation</span><span class="p">.</span><span class="nv">Qualifier</span><span class="p">;</span><span class="nv">import</span> <span class="nv">org</span><span class="p">.</span><span class="nv">springframework</span><span class="p">.</span><span class="nv">boot</span><span class="p">.</span><span class="kp">test</span><span class="p">.</span><span class="nv">context</span><span class="p">.</span><span class="nv">SpringBootTest</span><span class="p">;</span> <span class="nv">import</span> <span class="nv">java</span><span class="p">.</span><span class="nv">io</span><span class="p">.</span><span class="nv">IOException</span><span class="p">;</span><span class="nv">import</span> <span class="nv">java</span><span class="p">.</span><span class="nv">util</span><span class="p">.</span><span class="nv">ArrayList</span><span class="p">;</span><span class="nv">import</span> <span class="nv">java</span><span class="p">.</span><span class="nv">util</span><span class="p">.</span><span class="nv">concurrent</span><span class="p">.</span><span class="nv">TimeUnit</span><span class="p">;</span> <span class="err">@</span><span class="nv">SpringBootTestclass</span> <span class="nv">EsApiApplicationTests</span> <span class="err">{</span>     <span class="nv">public</span> <span class="nv">static</span> <span class="kp">final</span> <span class="kr">String</span> <span class="kp">INDEX </span><span class="o">=</span> <span class="s2">&#34;xiaofan_test_index&#34;</span><span class="p">;</span>     <span class="err">@</span><span class="nv">Autowired</span>    <span class="err">@</span><span class="nv">Qualifier</span><span class="p">(</span><span class="kp">value </span><span class="o">=</span> <span class="s2">&#34;restHighLevelClient&#34;</span><span class="p">)</span>    <span class="nv">private</span> <span class="nv">RestHighLevelClient</span> <span class="nv">client</span><span class="p">;</span>     <span class="o">//</span> <span class="err">创建索引</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testCreateIndex</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="o">//</span> <span class="mi">1</span><span class="p">.</span> <span class="err">创建索引请求</span>        <span class="nv">CreateIndexRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">CreateIndexRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">);</span>        <span class="o">//</span> <span class="mi">2</span><span class="p">.</span> <span class="err">客户端执行请求，</span> <span class="nv">IndicesClient</span><span class="err">，请求后获得响应</span>        <span class="nv">CreateIndexResponse</span> <span class="nv">createIndexResponse</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="nv">indices</span><span class="p">().</span><span class="nv">create</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">createIndexResponse</span><span class="p">);</span>    <span class="err">}</span>     <span class="o">//</span> <span class="err">测试索引存在</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testExistsIndex</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">GetIndexRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">GetIndexRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">);</span>        <span class="err">boolean</span> <span class="nv">exists</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="nv">indices</span><span class="p">().</span><span class="nv">exists</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">exists</span><span class="p">);</span>    <span class="err">}</span>     <span class="o">//</span> <span class="err">删除索引</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testDeleteIndex</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">DeleteIndexRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">DeleteIndexRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">);</span>        <span class="nv">AcknowledgedResponse</span> <span class="nv">acknowledgedResponse</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="nv">indices</span><span class="p">().</span><span class="kr">delete</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">acknowledgedResponse</span><span class="p">.</span><span class="nv">isAcknowledged</span><span class="p">());</span>    <span class="err">}</span>     <span class="o">//</span> <span class="err">添加文档</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testAddDocument</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">User</span> <span class="nv">user</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">User</span><span class="p">(</span><span class="s2">&#34;狂神说&#34;</span><span class="p">,</span> <span class="mi">28</span><span class="p">);</span>        <span class="nv">IndexRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">IndexRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">);</span>        <span class="o">//</span> <span class="err">规则</span> <span class="nv">PUT</span> <span class="o">/</span><span class="kp">index</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">1        </span><span class="nv">request</span><span class="p">.</span><span class="kp">id</span><span class="p">(</span><span class="s2">&#34;1&#34;</span><span class="p">);</span>        <span class="nv">request</span><span class="p">.</span><span class="nv">timeout</span><span class="p">(</span><span class="nv">TimeValue</span><span class="p">.</span><span class="nv">timeValueSeconds</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>        <span class="o">//</span> <span class="err">将数据放入请求</span> <span class="nv">json</span>        <span class="nv">request</span><span class="p">.</span><span class="kp">source</span><span class="p">(</span><span class="nv">JSON</span><span class="p">.</span><span class="nv">toJSONString</span><span class="p">(</span><span class="nv">user</span><span class="p">),</span> <span class="nv">XContentType</span><span class="p">.</span><span class="nv">JSON</span><span class="p">);</span>        <span class="nv">IndexResponse</span> <span class="nv">response</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="kp">index</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">response</span><span class="p">.</span><span class="nv">toString</span><span class="p">());</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">response</span><span class="p">.</span><span class="kp">status</span><span class="p">());</span>    <span class="err">}</span>     <span class="o">//</span> <span class="err">获取文档</span> <span class="err">判断是否存在</span> <span class="err">GET </span><span class="o">/</span><span class="kp">index</span><span class="o">/</span><span class="err">_</span><span class="nv">doc</span><span class="o">/</span><span class="mi">1    </span><span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testIsExists</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">GetRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">GetRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">,</span> <span class="s2">&#34;1&#34;</span><span class="p">);</span>        <span class="o">//</span> <span class="err">不获取返回的</span> <span class="err">_</span><span class="nv">source</span> <span class="err">的上下文了</span>        <span class="nv">request</span><span class="p">.</span><span class="nv">fetchSourceContext</span><span class="p">(</span><span class="nv">new</span> <span class="nv">FetchSourceContext</span><span class="p">(</span><span class="nb">false</span><span class="p">));</span>        <span class="nv">request</span><span class="p">.</span><span class="nv">storedFields</span><span class="p">(</span><span class="s2">&#34;_none_&#34;</span><span class="p">);</span>         <span class="err">boolean</span> <span class="nv">exists</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="nv">exists</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">exists</span><span class="p">);</span>    <span class="err">}</span>     <span class="o">//</span> <span class="err">获取文档</span>     <span class="o">/**</span>     <span class="o">*</span> <span class="err">返回结果：</span>     <span class="o">*</span> <span class="err">{</span><span class="s2">&#34;age&#34;</span><span class="p">:</span><span class="mi">28</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="p">:</span><span class="s2">&#34;狂神说&#34;</span><span class="err">}</span>     <span class="o">*</span> <span class="err">{</span><span class="s2">&#34;_index&#34;</span><span class="p">:</span><span class="s2">&#34;xiaofan_test_index&#34;</span><span class="p">,</span><span class="s2">&#34;_type&#34;</span><span class="p">:</span><span class="s2">&#34;_doc&#34;</span><span class="p">,</span><span class="s2">&#34;_id&#34;</span><span class="p">:</span><span class="s2">&#34;1&#34;</span><span class="p">,</span><span class="s2">&#34;_version&#34;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&#34;_seq_no&#34;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&#34;_primary_term&#34;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&#34;found&#34;</span><span class="p">:</span><span class="nb">true</span><span class="p">,</span><span class="s2">&#34;_source&#34;</span><span class="p">:</span><span class="err">{</span><span class="s2">&#34;age&#34;</span><span class="p">:</span><span class="mi">28</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="p">:</span><span class="s2">&#34;狂神说&#34;</span><span class="err">}}</span>     <span class="o">*/</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testGetDocument</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">GetRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">GetRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">,</span> <span class="s2">&#34;1&#34;</span><span class="p">);</span>        <span class="nv">GetResponse</span> <span class="nv">response</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="err">get</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">response</span><span class="p">.</span><span class="nv">getSourceAsString</span><span class="p">());</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">response</span><span class="p">);</span>    <span class="err">}</span>     <span class="o">//</span> <span class="err">更新文档</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testUpdateDocument</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">UpdateRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">UpdateRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">,</span> <span class="s2">&#34;1&#34;</span><span class="p">);</span>        <span class="nv">request</span><span class="p">.</span><span class="nv">timeout</span><span class="p">(</span><span class="s2">&#34;1s&#34;</span><span class="p">);</span>         <span class="nv">User</span> <span class="nv">user</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">User</span><span class="p">(</span><span class="s2">&#34;小范说Java&#34;</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span>        <span class="nv">request</span><span class="p">.</span><span class="nv">doc</span><span class="p">(</span><span class="nv">JSON</span><span class="p">.</span><span class="nv">toJSONString</span><span class="p">(</span><span class="nv">user</span><span class="p">),</span> <span class="nv">XContentType</span><span class="p">.</span><span class="nv">JSON</span><span class="p">);</span>         <span class="nv">UpdateResponse</span> <span class="nv">updateResponse</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="kp">update</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">updateResponse</span><span class="p">);</span>    <span class="err">}</span>     <span class="o">//</span> <span class="err">删除文档</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testDeleteDocument</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">DeleteRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">DeleteRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">,</span> <span class="s2">&#34;1&#34;</span><span class="p">);</span>        <span class="nv">request</span><span class="p">.</span><span class="nv">timeout</span><span class="p">(</span><span class="s2">&#34;1s&#34;</span><span class="p">);</span>         <span class="nv">DeleteResponse</span> <span class="nv">deleteResponse</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="kr">delete</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">deleteResponse</span><span class="p">);</span>     <span class="err">}</span>     <span class="o">//</span> <span class="err">批量插入数据（修改，删除类似操作）</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testBulkRequest</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">BulkRequest</span> <span class="nv">request</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">BulkRequest</span><span class="p">();</span>        <span class="nv">request</span><span class="p">.</span><span class="nv">timeout</span><span class="p">(</span><span class="s2">&#34;10s&#34;</span><span class="p">);</span>         <span class="nv">ArrayList</span><span class="o">&lt;</span><span class="nv">User</span><span class="o">&gt;</span> <span class="nv">users</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>        <span class="nv">users</span><span class="p">.</span><span class="kr">add</span><span class="p">(</span><span class="nv">new</span> <span class="nv">User</span><span class="p">(</span><span class="s2">&#34;kuangshen1&#34;</span><span class="p">,</span> <span class="mi">21</span><span class="p">));</span>        <span class="nv">users</span><span class="p">.</span><span class="kr">add</span><span class="p">(</span><span class="nv">new</span> <span class="nv">User</span><span class="p">(</span><span class="s2">&#34;kuangshen2&#34;</span><span class="p">,</span> <span class="mi">22</span><span class="p">));</span>        <span class="nv">users</span><span class="p">.</span><span class="kr">add</span><span class="p">(</span><span class="nv">new</span> <span class="nv">User</span><span class="p">(</span><span class="s2">&#34;kuangshen3&#34;</span><span class="p">,</span> <span class="mi">23</span><span class="p">));</span>        <span class="nv">users</span><span class="p">.</span><span class="kr">add</span><span class="p">(</span><span class="nv">new</span> <span class="nv">User</span><span class="p">(</span><span class="s2">&#34;xiaofan1&#34;</span><span class="p">,</span> <span class="mi">18</span><span class="p">));</span>        <span class="nv">users</span><span class="p">.</span><span class="kr">add</span><span class="p">(</span><span class="nv">new</span> <span class="nv">User</span><span class="p">(</span><span class="s2">&#34;xiaofan2&#34;</span><span class="p">,</span> <span class="mi">19</span><span class="p">));</span>         <span class="o">//</span> <span class="err">批处理请求，</span> <span class="err">修改，删除，只要在这里修改相应的请求就可以</span>        <span class="kp">for </span><span class="p">(</span><span class="nv">int</span> <span class="nv">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">i</span> <span class="o">&lt;</span> <span class="nv">users</span><span class="p">.</span><span class="kp">size</span><span class="p">();</span> <span class="nv">i</span><span class="o">++</span><span class="p">)</span> <span class="err">{</span>            <span class="nv">request</span><span class="p">.</span><span class="kr">add</span><span class="p">(</span><span class="nv">new</span> <span class="nv">IndexRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">)</span>                    <span class="p">.</span><span class="kp">id</span><span class="p">(</span><span class="kr">String</span><span class="p">.</span><span class="nv">valueOf</span><span class="p">(</span><span class="nv">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>                    <span class="p">.</span><span class="kp">source</span><span class="p">(</span><span class="nv">JSON</span><span class="p">.</span><span class="nv">toJSONString</span><span class="p">(</span><span class="nv">users</span><span class="p">.</span><span class="err">get</span><span class="p">(</span><span class="nv">i</span><span class="p">)),</span> <span class="nv">XContentType</span><span class="p">.</span><span class="nv">JSON</span><span class="p">));</span>        <span class="err">}</span>         <span class="nv">BulkResponse</span> <span class="nv">bulkResponse</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="nv">bulk</span><span class="p">(</span><span class="nv">request</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="o">//</span><span class="err">是否失败，返回</span><span class="nv">false</span><span class="err">表示成功</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">bulkResponse</span><span class="p">.</span><span class="nv">hasFailures</span><span class="p">());</span>    <span class="err">}</span>     <span class="o">//</span> <span class="err">查询文档</span>    <span class="err">@</span><span class="kp">Test   </span> <span class="nv">void</span> <span class="nv">testSearch</span><span class="p">()</span> <span class="nv">throws</span> <span class="nv">IOException</span> <span class="err">{</span>        <span class="nv">SearchRequest</span> <span class="nv">searchRequest</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">SearchRequest</span><span class="p">(</span><span class="kp">INDEX</span><span class="p">);</span>        <span class="o">//</span> <span class="err">构建搜索条件</span>        <span class="nv">SearchSourceBuilder</span> <span class="nv">sourceBuilder</span> <span class="o">=</span> <span class="nv">new</span> <span class="nv">SearchSourceBuilder</span><span class="p">();</span>         <span class="o">//</span> <span class="err">查询条件，</span> <span class="err">可以使用</span><span class="nv">QueryBuilders</span><span class="err">工具类实现</span>        <span class="o">//</span> <span class="nv">QueryBuilders</span><span class="p">.</span><span class="nv">termQuery</span> <span class="err">精确</span>        <span class="o">//</span> <span class="nv">QueryBuilders</span><span class="p">.</span><span class="nv">matchLLQuery</span><span class="p">()</span> <span class="err">匹配所有</span>        <span class="nv">TermQueryBuilder</span> <span class="nv">termQueryBuilder</span> <span class="o">=</span> <span class="nv">QueryBuilders</span><span class="p">.</span><span class="nv">termQuery</span><span class="p">(</span><span class="s2">&#34;name&#34;</span><span class="p">,</span> <span class="s2">&#34;kuangshen1&#34;</span><span class="p">);</span>        <span class="o">//</span> <span class="nv">MatchAllQueryBuilder</span> <span class="nv">matchAllQueryBuilder</span> <span class="o">=</span> <span class="nv">QueryBuilders</span><span class="p">.</span><span class="nv">matchAllQuery</span><span class="p">();</span>        <span class="nv">sourceBuilder</span><span class="p">.</span><span class="nv">query</span><span class="p">(</span><span class="nv">termQueryBuilder</span><span class="p">);</span>        <span class="nv">sourceBuilder</span><span class="p">.</span><span class="nv">timeout</span><span class="p">(</span><span class="nv">new</span> <span class="nv">TimeValue</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="nv">TimeUnit</span><span class="p">.</span><span class="err">SECONDS</span><span class="p">));</span>         <span class="nv">searchRequest</span><span class="p">.</span><span class="kp">source</span><span class="p">(</span><span class="nv">sourceBuilder</span><span class="p">);</span>         <span class="nv">SearchResponse</span> <span class="nv">searchResponse</span> <span class="o">=</span> <span class="nv">client</span><span class="p">.</span><span class="kr">search</span><span class="p">(</span><span class="nv">searchRequest</span><span class="p">,</span> <span class="nv">RequestOptions</span><span class="p">.</span><span class="kp">DEFAULT</span><span class="p">);</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">JSON</span><span class="p">.</span><span class="nv">toJSON</span><span class="p">(</span><span class="nv">searchResponse</span><span class="p">.</span><span class="nv">getHits</span><span class="p">()));</span>        <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="s2">&#34;======================================&#34;</span><span class="p">);</span>        <span class="kp">for </span><span class="p">(</span><span class="nv">SearchHit</span> <span class="nv">documentFields</span> <span class="p">:</span> <span class="nv">searchResponse</span><span class="p">.</span><span class="nv">getHits</span><span class="p">().</span><span class="nv">getHits</span><span class="p">())</span> <span class="err">{</span>            <span class="nv">System</span><span class="p">.</span><span class="nv">out</span><span class="p">.</span><span class="nv">println</span><span class="p">(</span><span class="nv">documentFields</span><span class="p">.</span><span class="nv">getSourceAsMap</span><span class="p">());</span>        <span class="err">}</span>     <span class="err">}</span> <span class="err">}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="10-实战模拟全文搜索-京东搜索">10. 实战：模拟全文搜索-京东搜索
+</h2><ul>
+<li>
+<p>github链接：https://github.com/fanjianhai/CODE/tree/main/SpringBoot/springboot-11-elasticsearch-jd</p>
+</li>
+<li>
+<p>搭建springboot项目，添加依赖，修改es版本</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cobol" data-lang="cobol"><span class="line"><span class="cl"><span class="c">&lt;prope</span><span class="nv">rties</span><span class="o">&gt;</span>    <span class="o">&lt;</span><span class="nv">java</span><span class="p">.</span><span class="nv">version</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">.</span><span class="mi">8</span><span class="o">&lt;/</span><span class="nv">java</span><span class="p">.</span><span class="nv">version</span><span class="o">&gt;</span>    <span class="o">&lt;</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">version</span><span class="o">&gt;</span><span class="mi">7</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">2</span><span class="o">&lt;/</span><span class="nv">elasticsearch</span><span class="p">.</span><span class="nv">version</span><span class="o">&gt;&lt;/</span><span class="nv">properties</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nv">dependencies</span><span class="o">&gt;</span>    <span class="o">&lt;</span><span class="nv">dependency</span><span class="o">&gt;</span>        <span class="o">&lt;</span><span class="nv">groupId</span><span class="o">&gt;</span><span class="nv">com</span><span class="p">.</span><span class="nv">alibaba</span><span class="o">&lt;/</span><span class="nv">groupId</span><span class="o">&gt;</span>        <span class="o">&lt;</span><span class="nv">artifactId</span><span class="o">&gt;</span><span class="nv">fastjson</span><span class="o">&lt;/</span><span class="nv">artifactId</span><span class="o">&gt;</span>        <span class="o">&lt;</span><span class="nv">version</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="p">.</span><span class="mi">73</span><span class="o">&lt;/</span><span class="nv">version</span><span class="o">&gt;</span>    <span class="o">&lt;/</span><span class="nv">dependency</span><span class="o">&gt;</span>    <span class="o">&lt;</span><span class="nv">dependency</span><span class="o">&gt;</span>        <span class="o">&lt;</span><span class="nv">groupId</span><span class="o">&gt;</span><span class="nv">org</span><span class="p">.</span><span class="nv">jsoup</span><span class="o">&lt;/</span><span class="nv">groupId</span><span class="o">&gt;</span>        <span class="o">&lt;</span><span class="nv">artifactId</span><span class="o">&gt;</span><span class="nv">jsoup</span><span class="o">&lt;/</span><span class="nv">artifactId</span><span class="o">&gt;</span>        <span class="o">&lt;</span><span class="nv">version</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">.</span><span class="mi">13</span><span class="p">.</span><span class="mi">1</span><span class="o">&lt;/</span><span class="nv">version</span><span class="o">&gt;</span>    <span class="o">&lt;/</span><span class="nv">dependency</span><span class="o">&gt;&lt;/</span><span class="nv">dependencies</span><span class="o">&gt;</span><span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>整体效果</li>
+</ul>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/f005d352217a93f365b1f0f85369cd67.png#pic_center"
+	
+	
+	
+	loading="lazy"
+	
+		alt="在这里插入图片描述"
+	
+	
+></p>
+<p>本文转自 <a class="link" href="https://blog.csdn.net/qq_21197507/article/details/115076913"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/qq_21197507/article/details/115076913</a>，如有侵权，请联系删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/kafka/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kafka</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/kafka%E9%9D%A2%E8%AF%95%E9%A2%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kafka面试题</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/nginx/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Nginx</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/nginx%E7%9A%84%E5%8F%98%E9%87%8F%E6%8F%90%E5%8F%96/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">nginx的变量提取</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/nginx%E7%9F%A5%E8%AF%86%E7%82%B9%E6%95%B4%E7%90%86/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">nginx知识点整理</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

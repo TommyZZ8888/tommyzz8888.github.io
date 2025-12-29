@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="spring 1、Bean的生命周期 在spring项目中，bean是最重要的存在。\nbean的生命周期分为三部分：==生产== &raquo; ==使用== &raquo; ==销毁==\n其中生产部分比较复杂。\n生产部分分为四部分： 实例化 &raquo; 填充属性 &raquo; 初始化 &raquo; 销毁\n">
+<title>spring</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/spring/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="spring">
+<meta property='og:description' content="spring 1、Bean的生命周期 在spring项目中，bean是最重要的存在。\nbean的生命周期分为三部分：==生产== &raquo; ==使用== &raquo; ==销毁==\n其中生产部分比较复杂。\n生产部分分为四部分： 实例化 &raquo; 填充属性 &raquo; 初始化 &raquo; 销毁\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/spring/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="spring">
+<meta name="twitter:description" content="spring 1、Bean的生命周期 在spring项目中，bean是最重要的存在。\nbean的生命周期分为三部分：==生产== &raquo; ==使用== &raquo; ==销毁==\n其中生产部分比较复杂。\n生产部分分为四部分： 实例化 &raquo; 填充属性 &raquo; 初始化 &raquo; 销毁\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#1bean的生命周期">1、Bean的生命周期</a></li>
+        <li><a href="#2spring-configuration-和-component-区别">2、Spring @Configuration 和 @Component 区别</a></li>
+        <li><a href="#3springboot配置文件的加载位置和优先顺序">3、springboot配置文件的加载位置和优先顺序</a></li>
+        <li><a href="#4springboot自动装配">4、springboot自动装配</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/java-%E5%9F%BA%E7%A1%80/" >
+            Java 基础
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/spring/">spring</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 9 分钟
+                
+                
+                , 4244 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="spring">spring
+</h1><h3 id="1bean的生命周期">1、Bean的生命周期
+</h3><p>在spring项目中，bean是最重要的存在。</p>
+<p>bean的生命周期分为三部分：==<strong>生产</strong>==  &raquo;    ==<strong>使用</strong>==  &raquo;    ==<strong>销毁</strong>==</p>
+<p>其中生产部分比较复杂。</p>
+<p>生产部分分为四部分： <strong>实例化</strong>  &raquo;  <strong>填充属性</strong>  &raquo;  <strong>初始化</strong>  &raquo;  <strong>销毁</strong></p>
+<p>普通java创建对象和spring创建bean实例不同。</p>
+<p>java创建对象分为四部分：将java文件编译为class文件，等到类需要被初始化时（new或者反射），将class文件通过类加载器加载到jvm，，最后初始化对象供我们使用。</p>
+<p>spring所管理的bean不同，除了class对象，还会使用beandefinition的实例描述对象信息。</p>
+<p>我们可以在spring管理的bean对象上添加一系列描述：比如@scope，@lazy，@DependOn。</p>
+<p>java是描述类的信息，spring是描述对象的信息。</p>
+<p>在spring启动时，会通过xml/注解/javaconfig来查询需要被spring管理的bean信息。然后将这些查询到的bean封装成beanDefinition，，最后把这些信息放到BeanDefinitionmap中，到这里只是把定义的元数据加载起来，还没有进行实例化。</p>
+<p>这个map中的key是beanname，value是bean。</p>
+<p>然后通过<strong>createBean</strong>去遍历<strong>beanDefinitionmap</strong>,执行<strong>BeanFactoryPostProcessor</strong>的bean工厂后置处理器的逻辑。我们可以自定义BeanFactoryPostProcessor来对我们定义好的<strong>bean元数据进行获取或者修改</strong>。</p>
+<p>接下来就是实例化对象了，通过<strong>doCreateBean</strong>方法对bean进行实例化，spring一般是通过<strong>反射</strong>来选择合适的构造器对bean进行实例化。</p>
+<p>实例化之后将对象放到<strong>三级缓存</strong>中。</p>
+<p>这里的实例化只是把bean对象创建出来，还没有进行属性填充的。比如我的对象是A，A又依赖B对象，此时B对象还是null。</p>
+<p>接下来通过<strong>populateBean</strong>方法来对bean进行属性填充。</p>
+<p>填充之后开始进行初始化，通过<strong>InvokeAwareMethod</strong>方法来对实现了aware相关接口的bean填充相关的资源。比如我们在项目中会抽取出来一个实现了ApplicationContextAware接口的工具类，来通过获取ApplicationContext对象来获取相关的bean。</p>
+<p>之后会通过<strong>BeanPostProcesser</strong>后置处理器，该处理器有两个方法，<strong>before和after</strong>。先执行<strong>BeanPostBeforeProcessor</strong>方法，之后执行<strong>InvokeInitMethod</strong>方法，比如**@PostConstruct**，实现了tializatingBean接口的方法。最后执行<strong>beanPostProcessor的after</strong>方法。这里就初始化完了。然后会把二级缓存给remove掉，塞到一级缓存中。我们自己去getBean的时候，实际上拿到的是一级缓存的。</p>
+<p>销毁的时候就看有没有配置相关的destroy方法，执行就完事了</p>
+<p>最后总结：</p>
+<p>在Spring Bean的生命周期，Spring预留了很多的hook给我们去扩展</p>
+<p>Bean实例化之前有BeanFactoryPostProcessor</p>
+<p>Bean实例化之后，初始化时，有相关的Aware接口供我们去拿到Context相关信息</p>
+<p>环绕着初始化阶段，有BeanPostProcessor（AOP的关键）</p>
+<p>在初始化阶段，有各种的init方法供我们去自定义</p>
+<p>而循环依赖的解决主要通过三级的缓存</p>
+<p>在实例化后，会把自己扔到三级缓存（此时的key是BeanName，Value是ObjectFactory）</p>
+<p>在注入属性时，发现需要依赖B，也会走B的实例化过程，B属性注入依赖A，从三级缓存找到A</p>
+<p>删掉三级缓存，放到二级缓存</p>
+<p>关键源码方法（强烈建议自己去撸一遍）</p>
+<ul>
+<li><code>org.springframework.context.support.AbstractApplicationContext#refresh</code>(入口)</li>
+<li><code>org.springframework.context.support.AbstractApplicationContext#finishBeanFactoryInitialization</code>(初始化单例对象入口)</li>
+<li><code>org.springframework.beans.factory.config.ConfigurableListableBeanFactory#preInstantiateSingletons</code>(初始化单例对象入口)</li>
+<li><code>org.springframework.beans.factory.support.AbstractBeanFactory#getBean(java.lang.String)</code>（万恶之源，获取并创建Bean的入口）</li>
+<li><code>org.springframework.beans.factory.support.AbstractBeanFactory#doGetBean</code>（实际的获取并创建Bean的实现）</li>
+<li><code>org.springframework.beans.factory.support.DefaultSingletonBeanRegistry#getSingleton(java.lang.String)</code>（从缓存中尝试获取）</li>
+<li><code>org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean(java.lang.String, org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Object[])</code>（实例化Bean）</li>
+<li><code>org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean</code>（实例化Bean具体实现）</li>
+<li><code>org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBeanInstance</code>（具体实例化过程）</li>
+<li><code>org.springframework.beans.factory.support.DefaultSingletonBeanRegistry#addSingletonFactory</code>（将实例化后的Bean添加到三级缓存）</li>
+<li><code>org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#populateBean</code>（实例化后属性注入）</li>
+<li><code>org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#initializeBean(java.lang.String, java.lang.Object, org.springframework.beans.factory.support.RootBeanDefinition)</code>（初始化入口）</li>
+</ul>
+<h3 id="2spring-configuration-和-component-区别">2、Spring @<a class="link" href="https://so.csdn.net/so/search?q=Configuration&amp;spm=1001.2101.3001.7020"  target="_blank" rel="noopener"
+    >Configuration</a> 和 @Component 区别
+</h3><blockquote>
+<p>一句话概括就是 <code>@Configuration</code> 中所有带 <code>@Bean</code> 注解的方法都会被动态代理，因此调用该方法返回的都是同一个实例。</p>
+<p>Spring 注解中 @Configuration 和 @Component 的区别总结为一句话就是：</p>
+<pre><code>    @Configuration 中所有带 @Bean 注解的方法都会被动态代理（cglib），因此调用该方法返回的都是同一个实例。而 @Conponent 修饰的类不会被代理，每实例化一次就会创建一个新的对象。
+</code></pre>
+<p>在 @Configuration 注解的源代码中，使用了 @Component 注解：</p>
+<p>从定义来看， @Configuration 注解本质上还是 @Component，因此 <a class="link" href="context:component-scan/" >context:component-scan/</a> 或者 @ComponentScan 都能处理 @Configuration 注解的类。</p>
+<p>下面我们通过一个例子来说明上述情况：</p>
+<p>// 使用@Configuration和@Bean注解创建Room实例和People实例，并注入进spring容器
+@Configuration
+public class RoomPeopleConfig {</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Room</span><span class="w"> </span><span class="nf">room</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Room</span><span class="w"> </span><span class="n">room</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Room</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">room</span><span class="p">.</span><span class="na">setId</span><span class="p">(</span><span class="n">1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">room</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">&#34;房间&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">room</span><span class="p">.</span><span class="na">setPeople</span><span class="p">(</span><span class="n">people</span><span class="p">());</span><span class="c1">// 在创建Room实例时，再调用一次People()创建一个People实例</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">room</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">People</span><span class="w"> </span><span class="nf">people</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">People</span><span class="w"> </span><span class="n">people</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">People</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">people</span><span class="p">.</span><span class="na">setId</span><span class="p">(</span><span class="n">1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">people</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">&#34;小明&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">people</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@SpringBootTest</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@ContextConfiguration</span><span class="p">(</span><span class="n">classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Application</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ConfigurationTests</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Autowired</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">Room</span><span class="w"> </span><span class="n">room</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Autowired</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">People</span><span class="w"> </span><span class="n">people</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Test</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">test</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">people</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">room</span><span class="p">.</span><span class="na">getPeople</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&#34;是同一个实例&#34;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#34;不是同一个实例&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出结果：同一个</p>
+<p>如果将 @Configuration 换成 @Component ，则输出：不同</p>
+<p>从上面的结果可以发现使用 @Configuration 时在 people 和 spring 容器之中的是同一个对象，而使用 @Component 时是不同的对象。这就是因为 @Configuration 使用了 cglib 动态代理，返回的是同一个实例对象。</p>
+<p>虽然 @Component 注解也会当做配置类，但是并不会为其生成 CGLIB 代理 Class，所以在生成 room 对象时和生成 people 对象时调用 people( ) 方法执行了两次 new 操作，所以是不同的对象。当使用 @Configuration 注解时，生成当前对象的子类 Class，并对方法拦截，第二次调用 people（）方法时直接从 BeanFactory 之中获取对象，所以得到的是同一个对象</p>
+</blockquote>
+<h3 id="3springboot配置文件的加载位置和优先顺序">3、springboot配置文件的加载位置和优先顺序
+</h3><p>springboot会按照下面优先级顺序寻找application.properties文件和application.yml文件。高优先级覆盖低优先级的文件内容。</p>
+<p>file:./config 文件路径下和src同级别新建一个文件夹
+file:./
+classpath:/config/ 类路径下
+classpath:
+spring.config.location可以用来改变加载文件位置。在项目打包后，可以用命令行参数的形式指定配置文件的新位置。和默认加载的文件形成互补，共同起作用。
+java -jar XXX.jar &ndash;server.port=8007</p>
+<p><img src="/..%5cimg%5cjavabase%5cspring%5c%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e5%8a%a0%e8%bd%bd%e9%a1%ba%e5%ba%8f.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230704145759440"
+	
+	
+></p>
+<p>外部配置文件加载顺序，由jar包外向jar包内寻找配置文件，高优先级覆盖低优先级。
+红色是file:路径，也就是项目根路径。
+蓝色是classpath路径，也就是和类根目录平级的位置。</p>
+<h3 id="4springboot自动装配">4、springboot自动装配
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">主配置类启动</span><span class="err">，</span><span class="n">通过</span><span class="nd">@SringBootApplication</span><span class="w"> </span><span class="n">中的</span><span class="nd">@EnableAutoConfguration</span><span class="w"> </span><span class="n">加载所需的所有自动配置类</span><span class="err">，</span><span class="n">然后自动配置类生效并给容器添加各种组件</span><span class="err">。</span><span class="n">那么</span><span class="nd">@EnableAutoConfguration</span><span class="w"> </span><span class="n">其实是通过它里面的</span><span class="nd">@AutoConfigurationPackage</span><span class="w"> </span><span class="n">注解</span><span class="err">，</span><span class="n">将主配置类的所在包下面所有子包里面的所有组件扫描加载到</span><span class="w"> </span><span class="n">Spring</span><span class="w"> </span><span class="n">容器中</span><span class="p">;</span><span class="w"> </span><span class="n">还通过</span><span class="w"> </span><span class="nd">@EnableAutoConfguration</span><span class="w"> </span><span class="n">里面的</span><span class="w"> </span><span class="n">AutoConfigurationImportSelector</span><span class="w"> </span><span class="n">选择器中的</span><span class="w"> </span><span class="n">SringFactoriesLoader</span><span class="p">.</span><span class="na">loadFactoryNames</span><span class="p">()</span><span class="n">方法</span><span class="err">，</span><span class="n">获取类路径下的</span><span class="w"> </span><span class="n">META</span><span class="o">-</span><span class="n">INF</span><span class="o">/</span><span class="n">spring</span><span class="p">.</span><span class="na">factories</span><span class="w"> </span><span class="n">中的资源并经过一些列判断之后作为自动配置类生效到容器中</span><span class="err">，</span><span class="n">自动配置类生效后帮我们进行自动配置工作</span><span class="err">，</span><span class="n">就会给容器中添加各种组件</span><span class="p">:</span><span class="n">这些组件的属性是从对应的</span><span class="w"> </span><span class="n">Properties</span><span class="w"> </span><span class="n">类中获取的</span><span class="err">，</span><span class="n">这些</span><span class="w"> </span><span class="n">Properties</span><span class="w"> </span><span class="n">类里面的属性又是通过</span><span class="nd">@ConfigurationProperties</span><span class="w"> </span><span class="n">和配置文件绑定的</span><span class="err">，</span><span class="n">所以</span><span class="w"> </span><span class="n">我们能配置的属性也都是来源于这个功能的</span><span class="w"> </span><span class="n">Properties</span><span class="w"> </span><span class="n">类</span><span class="err">。</span><span class="n">SpringBoot</span><span class="w"> </span><span class="n">在自动配置很多组件的时候</span><span class="err">，</span><span class="n">先判断容器中有没有用户自己配置的</span><span class="p">(</span><span class="nd">@Bean</span><span class="err">、</span><span class="nd">@Component</span><span class="p">)</span><span class="n">如果有就用用户配置的</span><span class="err">，</span><span class="n">如果没有</span><span class="err">，</span><span class="n">才自动配置</span><span class="p">;</span><span class="n">如果有些组件可以有多个就将用户配置和默认配置的组合起来</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/frame/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">frame</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/java-se/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">java se</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/java-%E7%9F%A5%E8%AF%86%E7%82%B9/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">java 知识点</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/list/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">list</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/ssm/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ssm</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 系统包管理（YUM/APT）安装：默认路径即可，方便管理。 手动安装（TAR 包）： 放在 /usr/local/ 或 /opt/ 下。 数据目录单独存放（如 /data/mysql、/var/lib/redis）。 环境变量：手动安装时，配置 JAVA_HOME、PATH 等。 JDK yum方式 1 2 3 4 5 6 7 8 9 10 # 查看可用版本 yum search openjdk yum list|grep java-11 # 安装jdk11 yum -y install java-11-openjdk # 验证 java -version 离线安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 # 安装包下载地址 https://www.oracle.com/java/technologies/javase-jdk11-downloads.html #上传到服务器/opt目录 # 解压安装包 tar -zxvf jdk-11.0.17_linux-x64_bin.tar.gz # 修改环境变量配置文件（vi /etc/profile），在文件末尾加入下面的内容 export JAVA_HOME=/opt/jdk-11.0.17 export PATH=$PATH:$JAVA_HOME/bin export CLASSPATH=.:$JAVA_HIOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 保存退出，执行下面命令使环境变量生效 source /etc/profile ##############################################################################################################\n">
+<title>软件环境安装部署</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/%E8%BD%AF%E4%BB%B6%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="软件环境安装部署">
+<meta property='og:description' content=" 系统包管理（YUM/APT）安装：默认路径即可，方便管理。 手动安装（TAR 包）： 放在 /usr/local/ 或 /opt/ 下。 数据目录单独存放（如 /data/mysql、/var/lib/redis）。 环境变量：手动安装时，配置 JAVA_HOME、PATH 等。 JDK yum方式 1 2 3 4 5 6 7 8 9 10 # 查看可用版本 yum search openjdk yum list|grep java-11 # 安装jdk11 yum -y install java-11-openjdk # 验证 java -version 离线安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 # 安装包下载地址 https://www.oracle.com/java/technologies/javase-jdk11-downloads.html #上传到服务器/opt目录 # 解压安装包 tar -zxvf jdk-11.0.17_linux-x64_bin.tar.gz # 修改环境变量配置文件（vi /etc/profile），在文件末尾加入下面的内容 export JAVA_HOME=/opt/jdk-11.0.17 export PATH=$PATH:$JAVA_HOME/bin export CLASSPATH=.:$JAVA_HIOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 保存退出，执行下面命令使环境变量生效 source /etc/profile ##############################################################################################################\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/%E8%BD%AF%E4%BB%B6%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="软件环境安装部署">
+<meta name="twitter:description" content=" 系统包管理（YUM/APT）安装：默认路径即可，方便管理。 手动安装（TAR 包）： 放在 /usr/local/ 或 /opt/ 下。 数据目录单独存放（如 /data/mysql、/var/lib/redis）。 环境变量：手动安装时，配置 JAVA_HOME、PATH 等。 JDK yum方式 1 2 3 4 5 6 7 8 9 10 # 查看可用版本 yum search openjdk yum list|grep java-11 # 安装jdk11 yum -y install java-11-openjdk # 验证 java -version 离线安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 # 安装包下载地址 https://www.oracle.com/java/technologies/javase-jdk11-downloads.html #上传到服务器/opt目录 # 解压安装包 tar -zxvf jdk-11.0.17_linux-x64_bin.tar.gz # 修改环境变量配置文件（vi /etc/profile），在文件末尾加入下面的内容 export JAVA_HOME=/opt/jdk-11.0.17 export PATH=$PATH:$JAVA_HOME/bin export CLASSPATH=.:$JAVA_HIOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar # 保存退出，执行下面命令使环境变量生效 source /etc/profile ##############################################################################################################\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#yum方式">yum方式</a></li>
+        <li><a href="#离线安装">离线安装</a></li>
+      </ol>
+    </li>
+  </ol>
+
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#yum方式-1">yum方式</a></li>
+        <li><a href="#rpm">rpm</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/%E9%83%A8%E7%BD%B2/" >
+            部署
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E8%BD%AF%E4%BB%B6%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/">软件环境安装部署</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 5 分钟
+                
+                
+                , 2166 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <ol start="2">
+<li></li>
+<li><strong>系统包管理（YUM/APT）安装</strong>：默认路径即可，方便管理。</li>
+<li><strong>手动安装（TAR 包）</strong>：
+<ul>
+<li>放在 <code>/usr/local/</code> 或 <code>/opt/</code> 下。</li>
+<li>数据目录单独存放（如 <code>/data/mysql</code>、<code>/var/lib/redis</code>）。</li>
+</ul>
+</li>
+<li><strong>环境变量</strong>：手动安装时，配置 <code>JAVA_HOME</code>、<code>PATH</code> 等。</li>
+</ol>
+<h1 id="jdk">JDK
+</h1><h3 id="yum方式">yum方式
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 查看可用版本</span>
+</span></span><span class="line"><span class="cl">yum search openjdk
+</span></span><span class="line"><span class="cl">yum list<span class="p">|</span>grep java-11
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装jdk11</span>
+</span></span><span class="line"><span class="cl">yum -y install java-11-openjdk
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 验证</span>
+</span></span><span class="line"><span class="cl">java -version
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="离线安装">离线安装
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 安装包下载地址</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">https://www.oracle.com/java/technologies/javase-jdk11-downloads.html
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#上传到服务器/opt目录</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 解压安装包</span>
+</span></span><span class="line"><span class="cl">tar -zxvf jdk-11.0.17_linux-x64_bin.tar.gz
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改环境变量配置文件（vi /etc/profile），在文件末尾加入下面的内容</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">JAVA_HOME</span><span class="o">=</span>/opt/jdk-11.0.17
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$JAVA_HOME</span>/bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">CLASSPATH</span><span class="o">=</span>.:<span class="nv">$JAVA_HIOME</span>/jre/lib/rt.jar:<span class="nv">$JAVA_HOME</span>/lib/dt.jar:<span class="nv">$JAVA_HOME</span>/lib/tools.jar
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 保存退出，执行下面命令使环境变量生效</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> /etc/profile
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>##############################################################################################################</p>
+<h1 id="mysql">MySQL
+</h1><p><strong>前置工作</strong>：安装之前先卸载mysql相关MariaDB</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 检查系统中有无安装过</span>
+</span></span><span class="line"><span class="cl">mysqlrpm -qa<span class="p">|</span>grep mysql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 删除、 强制删除不管依赖 -rpm -ev --nodeps </span>
+</span></span><span class="line"><span class="cl">rpm -ev mysql-community-client-8.0.36-1.el7.x86_64
+</span></span><span class="line"><span class="cl">rpm -ev mysql-community-libs-8.0.36-1.el7.x86_64
+</span></span><span class="line"><span class="cl">rpm -ev mysql-community-common-8.0.36-1.el7.x86_64
+</span></span><span class="line"><span class="cl">rpm -ev mysql-community-server-8.0.36-1.el7.x86_64
+</span></span><span class="line"><span class="cl">rpm -ev mysql80-community-release-el7-6.noarch
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/..%5c..%5c..%5cnotes%5cimg%5c%e9%83%a8%e7%bd%b2%5cmysql-grep.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20250712150441887"
+	
+	
+></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 查询所有mysql 对应的文件夹，全部删除</span>
+</span></span><span class="line"><span class="cl">whereis mysql
+</span></span><span class="line"><span class="cl">find / -name mysql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">rpm -qa<span class="p">|</span>grep mariadb
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 卸载</span>
+</span></span><span class="line"><span class="cl">rpm -e --nodeps 文件名
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="yum方式-1">yum方式
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">wget https://dev.mysql.com/get/mysql80-community-release-el7-7.noarch.rpm
+</span></span><span class="line"><span class="cl">sudo yum -y install mysql80-community-release-el7-7.noarch.rpm
+</span></span><span class="line"><span class="cl">yum -y install mysql-community-server
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 开启mysql服务</span>
+</span></span><span class="line"><span class="cl">systemctl start mysqld.service
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看mysq默认密码并登录</span>
+</span></span><span class="line"><span class="cl">cat /var/log/mysqld.log <span class="p">|</span> grep password
+</span></span><span class="line"><span class="cl">mysql -uroot -p
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="rpm">rpm
+</h3><p>相关配置修改</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 修改初始密码</span>
+</span></span><span class="line"><span class="cl">SHOW variables LIKE <span class="s1">&#39;validate_password%&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 将密码验证策略改为LOW，密码长度4位以上</span>
+</span></span><span class="line"><span class="cl"><span class="nb">set</span> global validate_password.policy<span class="o">=</span>0<span class="p">;</span>    <span class="c1">#有的MySQL版本为validate_password_policy,此处请以上一步查询到的字段名称为准</span>
+</span></span><span class="line"><span class="cl"><span class="nb">set</span> global validate_password.length<span class="o">=</span>4<span class="p">;</span> <span class="c1">#重启MySQL后失效</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ALTER USER <span class="s1">&#39;root&#39;</span>@<span class="s1">&#39;localhost&#39;</span> IDENTIFIED BY <span class="s1">&#39;your password&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 关闭检查</span>
+</span></span><span class="line"><span class="cl"> <span class="nb">set</span> global validate_password.check_user_name <span class="o">=</span> 0<span class="p">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> <span class="c1"># 创建用户</span>
+</span></span><span class="line"><span class="cl">CREATE user <span class="s1">&#39;root&#39;</span>@<span class="s1">&#39;%&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置首次密码</span>
+</span></span><span class="line"><span class="cl">ALTER USER <span class="s1">&#39;root&#39;</span>@<span class="s1">&#39;%&#39;</span> IDENTIFIED WITH mysql_native_password BY <span class="s1">&#39;密码&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 授权用户所有权限，刷新权限</span>
+</span></span><span class="line"><span class="cl">GRANT ALL PRIVILEGES ON *.* TO <span class="s1">&#39;root&#39;</span>@<span class="s1">&#39;%&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">FLUSH PRIVILEGES<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置远程连接(前提：关闭防火墙或开放3306端口)</span>
+</span></span><span class="line"><span class="cl">firewall-cmd --state
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看开放的端口号</span>
+</span></span><span class="line"><span class="cl">firewall-cmd --list-all
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 重启防火墙并查看是否生效</span>
+</span></span><span class="line"><span class="cl">firewall-cmd --reload       
+</span></span><span class="line"><span class="cl">firewall-cmd --list-all
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 将localhost改为%允许任意地址访问即可</span>
+</span></span><span class="line"><span class="cl">update user <span class="nb">set</span> <span class="nv">host</span> <span class="o">=</span> <span class="s1">&#39;%&#39;</span> where <span class="nv">user</span> <span class="o">=</span> <span class="s1">&#39;root&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">flush privileges<span class="p">;</span>             <span class="c1"># 刷新权限 权限更新后刷新才会起作用</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果使用客户端连接提示了plugin caching_sha2_password错误，这是因为MySQL8.0的密码策略默认为caching_sha2_password(MySQL5.7无此问题)</span>
+</span></span><span class="line"><span class="cl">update user <span class="nb">set</span> <span class="nv">plugin</span> <span class="o">=</span> <span class="s1">&#39;mysql_native_password&#39;</span> where <span class="nv">user</span> <span class="o">=</span> <span class="s1">&#39;root&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">flush privileges<span class="p">;</span>             <span class="c1"># 刷新权限 权限更新后刷新才会起作用</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># my.cnf文件配置</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 若使用rpm方式安装，可能无/etc/my.cnf配置文件，需将/usr/share/mysql目录下配置文件复制至/etc目录下</span>
+</span></span><span class="line"><span class="cl">cp /usr/share/mysql/my-large.cnf /etc/my.cnf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="o">[</span>mysql<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 默认字符集</span>
+</span></span><span class="line"><span class="cl">default-character-set<span class="o">=</span>utf8mb4
+</span></span><span class="line"><span class="cl"><span class="o">[</span>client<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">port</span>       <span class="o">=</span> <span class="m">3306</span>
+</span></span><span class="line"><span class="cl"><span class="nv">socket</span>     <span class="o">=</span> /tmp/mysql.sock
+</span></span><span class="line"><span class="cl"><span class="o">[</span>mysqld<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">port</span>       <span class="o">=</span> <span class="m">3306</span>
+</span></span><span class="line"><span class="cl">server-id  <span class="o">=</span> <span class="m">3306</span>
+</span></span><span class="line"><span class="cl"><span class="nv">user</span>       <span class="o">=</span> mysql
+</span></span><span class="line"><span class="cl"><span class="nv">socket</span>     <span class="o">=</span> /tmp/mysql.sock
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装目录</span>
+</span></span><span class="line"><span class="cl"><span class="nv">basedir</span>    <span class="o">=</span> /usr/local/mysql8
+</span></span><span class="line"><span class="cl"><span class="c1"># 数据存放目录</span>
+</span></span><span class="line"><span class="cl"><span class="nv">datadir</span>    <span class="o">=</span> /data/mysql8_data/mysql
+</span></span><span class="line"><span class="cl">log-bin    <span class="o">=</span> /data/mysql8_data/mysql/mysql-bin
+</span></span><span class="line"><span class="cl"><span class="nv">innodb_data_home_dir</span>      <span class="o">=</span>/data/mysql8_data/mysql
+</span></span><span class="line"><span class="cl"><span class="nv">innodb_log_group_home_dir</span> <span class="o">=</span>/data/mysql8_data/mysql
+</span></span><span class="line"><span class="cl"><span class="c1"># 日志及进程数据的存放目录</span>
+</span></span><span class="line"><span class="cl">log-error <span class="o">=</span>/data/mysql8_data/mysql/mysql.log
+</span></span><span class="line"><span class="cl">pid-file  <span class="o">=</span>/data/mysql8_data/mysql/mysql.pid
+</span></span><span class="line"><span class="cl"><span class="c1"># 服务端字符集</span>
+</span></span><span class="line"><span class="cl">character-set-server<span class="o">=</span>utf8mb4
+</span></span><span class="line"><span class="cl"><span class="nv">lower_case_table_names</span><span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="nv">autocommit</span> <span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##### 以上涉及文件夹明，注意修改</span>
+</span></span><span class="line"><span class="cl">skip-external-locking
+</span></span><span class="line"><span class="cl"><span class="nv">key_buffer_size</span> <span class="o">=</span> 256M
+</span></span><span class="line"><span class="cl"><span class="nv">max_allowed_packet</span> <span class="o">=</span> 1M
+</span></span><span class="line"><span class="cl"><span class="nv">table_open_cache</span> <span class="o">=</span> <span class="m">1024</span>
+</span></span><span class="line"><span class="cl"><span class="nv">sort_buffer_size</span> <span class="o">=</span> 4M
+</span></span><span class="line"><span class="cl"><span class="nv">net_buffer_length</span> <span class="o">=</span> 8K
+</span></span><span class="line"><span class="cl"><span class="nv">read_buffer_size</span> <span class="o">=</span> 4M
+</span></span><span class="line"><span class="cl"><span class="nv">read_rnd_buffer_size</span> <span class="o">=</span> 512K
+</span></span><span class="line"><span class="cl"><span class="nv">myisam_sort_buffer_size</span> <span class="o">=</span> 64M
+</span></span><span class="line"><span class="cl"><span class="nv">thread_cache_size</span> <span class="o">=</span> <span class="m">128</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#query_cache_size = 128M</span>
+</span></span><span class="line"><span class="cl"><span class="nv">tmp_table_size</span> <span class="o">=</span> 128M
+</span></span><span class="line"><span class="cl"><span class="nv">explicit_defaults_for_timestamp</span> <span class="o">=</span> <span class="nb">true</span>
+</span></span><span class="line"><span class="cl"><span class="nv">max_connections</span> <span class="o">=</span> <span class="m">500</span>
+</span></span><span class="line"><span class="cl"><span class="nv">max_connect_errors</span> <span class="o">=</span> <span class="m">100</span>
+</span></span><span class="line"><span class="cl"><span class="nv">open_files_limit</span> <span class="o">=</span> <span class="m">65535</span>
+</span></span><span class="line"><span class="cl"><span class="nv">binlog_format</span><span class="o">=</span>mixed
+</span></span><span class="line"><span class="cl"><span class="nv">binlog_expire_logs_seconds</span> <span class="o">=</span><span class="m">864000</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建表时使用的默认存储引擎</span>
+</span></span><span class="line"><span class="cl"><span class="nv">default_storage_engine</span> <span class="o">=</span> InnoDB
+</span></span><span class="line"><span class="cl"><span class="nv">innodb_data_file_path</span> <span class="o">=</span> ibdata1:10M:autoextend
+</span></span><span class="line"><span class="cl"><span class="nv">innodb_buffer_pool_size</span> <span class="o">=</span> 1024M
+</span></span><span class="line"><span class="cl"><span class="nv">innodb_log_file_size</span> <span class="o">=</span> 256M
+</span></span><span class="line"><span class="cl"><span class="nv">innodb_log_buffer_size</span> <span class="o">=</span> 8M
+</span></span><span class="line"><span class="cl"><span class="nv">innodb_flush_log_at_trx_commit</span> <span class="o">=</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="nv">innodb_lock_wait_timeout</span> <span class="o">=</span> <span class="m">50</span>
+</span></span><span class="line"><span class="cl">transaction-isolation<span class="o">=</span>READ-COMMITTED
+</span></span><span class="line"><span class="cl"><span class="o">[</span>mysqldump<span class="o">]</span>
+</span></span><span class="line"><span class="cl">quick
+</span></span><span class="line"><span class="cl"><span class="nv">max_allowed_packet</span> <span class="o">=</span> 16M
+</span></span><span class="line"><span class="cl"><span class="o">[</span>myisamchk<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">key_buffer_size</span> <span class="o">=</span> 256M
+</span></span><span class="line"><span class="cl"><span class="nv">sort_buffer_size</span> <span class="o">=</span> 4M
+</span></span><span class="line"><span class="cl"><span class="nv">read_buffer</span> <span class="o">=</span> 2M
+</span></span><span class="line"><span class="cl"><span class="nv">write_buffer</span> <span class="o">=</span> 2M
+</span></span><span class="line"><span class="cl"><span class="o">[</span>mysqlhotcopy<span class="o">]</span>
+</span></span><span class="line"><span class="cl">interactive-timeout
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置文件说明：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="p">[</span><span class="n">client</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">port</span> <span class="o">=</span> <span class="mi">3306</span>
+</span></span><span class="line"><span class="cl"><span class="n">socket</span> <span class="o">=</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">mysql</span><span class="o">/</span><span class="n">mysql</span><span class="o">.</span><span class="n">sock</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">mysqldump</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">quick</span>
+</span></span><span class="line"><span class="cl"><span class="n">max_allowed_packet</span> <span class="o">=</span> <span class="mi">16</span><span class="n">M</span>
+</span></span><span class="line"><span class="cl"><span class="err">以上参数会被</span> <span class="n">MySQL</span> <span class="err">客户端应用读取，参数说明如下：</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">port</span><span class="err">：</span><span class="n">MySQL</span> <span class="err">客户端连接服务器端时使用的端口号，默认为</span> <span class="mi">3306</span>
+</span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="err">：套接字文件所在目录</span>
+</span></span><span class="line"><span class="cl"><span class="n">quick</span><span class="err">：支持较大的数据库转储，导出非常巨大的表时需要此项。</span>
+</span></span><span class="line"><span class="cl"><span class="n">max_allowed_packet</span><span class="err">：服务所能处理的请求包的最大大小以及服务所能处理的最大的请求大小（当与大的</span><span class="n">BLOB字段一起工作时相当必要</span><span class="err">），每个连接独立的大小，大小动态增加。</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">mysqld</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">user</span> <span class="o">=</span> <span class="n">mysql</span>
+</span></span><span class="line"><span class="cl"><span class="n">basedir</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">mysql</span>
+</span></span><span class="line"><span class="cl"><span class="n">datadir</span> <span class="o">=</span> <span class="o">/</span><span class="n">mydata</span><span class="o">/</span><span class="n">mysql</span><span class="o">/</span><span class="n">data</span>
+</span></span><span class="line"><span class="cl"><span class="n">port</span> <span class="o">=</span> <span class="mi">3306</span>
+</span></span><span class="line"><span class="cl"><span class="n">server</span><span class="o">-</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">socket</span> <span class="o">=</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">mysql</span><span class="o">/</span><span class="n">mysql</span><span class="o">.</span><span class="n">sock</span>
+</span></span><span class="line"><span class="cl"><span class="err">上述参数说明如下：</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">user</span><span class="err">：</span><span class="n">mysqld</span> <span class="err">程序在启动后将在给定</span> <span class="n">UNIX</span><span class="o">/</span><span class="n">Linux</span> <span class="err">账户下执行。</span><span class="n">mysqld</span> <span class="err">必须从</span> <span class="n">root</span> <span class="err">账户启动才能在启动后切换到另一个账户下执行。</span><span class="n">mysqld_safe</span> <span class="err">脚本将默认使用</span> <span class="n">user</span><span class="o">=</span><span class="n">mysql</span> <span class="err">选项来启动</span> <span class="n">mysqld</span> <span class="err">程序。</span>
+</span></span><span class="line"><span class="cl"><span class="n">basedir</span><span class="err">：指定</span> <span class="n">MySQL</span> <span class="err">安装的绝对路径；</span>
+</span></span><span class="line"><span class="cl"><span class="n">datadir</span><span class="err">：指定</span> <span class="n">MySQL</span> <span class="err">数据存放的绝对路径；</span>
+</span></span><span class="line"><span class="cl"><span class="n">port</span><span class="err">：服务端口号，默认为</span> <span class="mi">3306</span>
+</span></span><span class="line"><span class="cl"><span class="n">server</span><span class="o">-</span><span class="n">id</span><span class="err">：</span><span class="n">MySQL</span> <span class="err">服务的唯一编号，每个</span> <span class="n">MySQL</span> <span class="err">服务的</span> <span class="n">id</span> <span class="err">需唯一。</span>
+</span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="err">：</span><span class="n">socket</span> <span class="err">文件所在目录</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">character</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">server</span> <span class="o">=</span> <span class="n">utf8mb4</span>
+</span></span><span class="line"><span class="cl"><span class="n">collation</span><span class="o">-</span><span class="n">server</span> <span class="o">=</span> <span class="n">utf8mb4_general_ci</span>
+</span></span><span class="line"><span class="cl"><span class="n">init_connect</span> <span class="o">=</span> <span class="s1">&#39;SET NAMES utf8mb4&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">lower_case_table_names</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">key_buffer_size</span> <span class="o">=</span> <span class="mi">16</span><span class="n">M</span>
+</span></span><span class="line"><span class="cl"><span class="n">max_allowed_packet</span> <span class="o">=</span> <span class="mi">8</span><span class="n">M</span>
+</span></span><span class="line"><span class="cl"><span class="n">no</span><span class="o">-</span><span class="n">auto</span><span class="o">-</span><span class="n">rehash</span>
+</span></span><span class="line"><span class="cl"><span class="n">sql_mode</span><span class="o">=</span><span class="n">TRADITIONAL</span>
+</span></span><span class="line"><span class="cl"><span class="n">skip</span><span class="o">-</span><span class="n">grant</span><span class="o">-</span><span class="n">tables</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">character</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">server</span><span class="err">：数据库默认字符集</span>
+</span></span><span class="line"><span class="cl"><span class="n">collation</span><span class="o">-</span><span class="n">server</span><span class="err">：数据库字符集对应一些排序等规则，注意要和</span><span class="n">character</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">server对应</span>
+</span></span><span class="line"><span class="cl"><span class="n">init_connect</span><span class="err">：设置</span><span class="n">client连接mysql时的字符集</span><span class="err">，防止乱码</span>
+</span></span><span class="line"><span class="cl"><span class="n">lower_case_table_names</span><span class="err">：是否对</span><span class="n">sql语句大小写敏感</span><span class="err">，</span><span class="mi">1</span><span class="err">表示不敏感</span><span class="p">(</span><span class="n">MySQL8</span><span class="o">.</span><span class="mi">0</span><span class="o">+</span><span class="err">需要初始化之前设置</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">key_buffer_size</span><span class="err">：用于指定索引缓冲区的大小</span>
+</span></span><span class="line"><span class="cl"><span class="n">max_allowed_packet</span><span class="err">：设置一次消息传输的最大值</span>
+</span></span><span class="line"><span class="cl"><span class="n">no</span><span class="o">-</span><span class="n">auto</span><span class="o">-</span><span class="n">rehash</span><span class="err">：仅仅允许使用键值的</span><span class="n">UPDATES和DELETES</span>
+</span></span><span class="line"><span class="cl"><span class="n">sql_mode</span><span class="err">：表示</span> <span class="n">SQL</span> <span class="err">模式的参数，通过这个参数可以设置检验</span> <span class="n">SQL</span> <span class="err">语句的严格程度</span>
+</span></span><span class="line"><span class="cl"><span class="n">skip</span><span class="o">-</span><span class="n">grant</span><span class="o">-</span><span class="n">tables</span><span class="err">：跳过密码验证</span> <span class="p">(</span><span class="err">平时不要开启，忘记</span><span class="n">root密码时再使用</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="redis">Redis
+</h1><h1 id="nginx">Nginx
+</h1><h1 id="tomcat">Tomcat
+</h1>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/docker/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Docker</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/centos7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">centos7</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/centos7-%E5%AE%89%E8%A3%85-mysql-8%E8%AF%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">centos7 安装 `MySQL 8`（详）</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/centos7-%E5%AE%89%E8%A3%85jdkmysqlredisnginxnacos/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">centos7 安装jdk、mysql、redis、nginx、nacos</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/debian%E4%BD%BF%E7%94%A8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">debian使用</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="[TOC]\n之前根据 Sun 的内存管理白皮书介绍了在 HotSpot JVM 分代算法中的几个垃圾收集器，本文将介绍 G1 垃圾收集器。\nG1 的主要关注点在于达到可控的停顿时间，在这个基础上尽可能提高吞吐量，这一点非常重要。\n">
+<title>G1 垃圾收集器介绍</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/g1-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%BB%8B%E7%BB%8D/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="G1 垃圾收集器介绍">
+<meta property='og:description' content="[TOC]\n之前根据 Sun 的内存管理白皮书介绍了在 HotSpot JVM 分代算法中的几个垃圾收集器，本文将介绍 G1 垃圾收集器。\nG1 的主要关注点在于达到可控的停顿时间，在这个基础上尽可能提高吞吐量，这一点非常重要。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/g1-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%BB%8B%E7%BB%8D/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-01-20T19:40:04&#43;00:00'/><meta property='article:modified_time' content='2024-01-20T19:40:04&#43;00:00'/>
+<meta name="twitter:title" content="G1 垃圾收集器介绍">
+<meta name="twitter:description" content="[TOC]\n之前根据 Sun 的内存管理白皮书介绍了在 HotSpot JVM 分代算法中的几个垃圾收集器，本文将介绍 G1 垃圾收集器。\nG1 的主要关注点在于达到可控的停顿时间，在这个基础上尽可能提高吞吐量，这一点非常重要。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#g1-总览">G1 总览</a></li>
+    <li><a href="#g1-工作流程">G1 工作流程</a>
+      <ol>
+        <li><a href="#年轻代收集">年轻代收集</a></li>
+        <li><a href="#old-gc--并发标记周期">Old GC / 并发标记周期</a></li>
+        <li><a href="#混合垃圾回收周期">混合垃圾回收周期</a></li>
+        <li><a href="#full-gc">Full GC</a></li>
+        <li><a href="#简单小结">简单小结</a></li>
+      </ol>
+    </li>
+    <li><a href="#g1-参数配置和最佳实践">G1 参数配置和最佳实践</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/g1-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%BB%8B%E7%BB%8D/">G1 垃圾收集器介绍</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">01月20日, 2024年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 9 分钟
+                
+                
+                , 4110 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>[TOC]</p>
+<p>之前根据 Sun 的内存管理白皮书介绍了在 HotSpot JVM 分代算法中的几个垃圾收集器，本文将介绍 G1 垃圾收集器。</p>
+<p>G1 的主要关注点在于达到<strong>可控的停顿时间</strong>，在这个基础上尽可能提高吞吐量，这一点非常重要。</p>
+<p>G1 被设计用来长期取代 CMS 收集器，和 CMS 相同的地方在于，它们都属于并发收集器，在大部分的收集阶段都不需要挂起应用程序。区别在于，G1 没有 CMS 的碎片化问题（或者说不那么严重），同时提供了更加可控的停顿时间。</p>
+<p>如果你的应用使用了较大的堆（如 6GB 及以上）而且还要求有较低的垃圾收集停顿时间（如 0.5 秒），那么 G1 是你绝佳的选择，是时候放弃 CMS 了。</p>
+<p><strong>阅读建议</strong>：本文力求用简单的话介绍清楚 G1 收集器，但是并不会重复介绍每一个细节，所以希望读者了解其他几个收集器的工作过程，尤其是 CMS 收集器。</p>
+<!-- toc -->
+<h2 id="g1-总览">G1 总览
+</h2><p>首先是内存划分上，之前介绍的分代收集器将整个堆分为年轻代、老年代和永久代，每个代的空间是确定的。</p>
+<p>而 G1 将整个堆划分为一个个大小相等的小块（每一块称为一个 region），每一块的内存是连续的。和分代算法一样，G1 中每个块也会充当 Eden、Survivor、Old 三种角色，但是它们不是固定的，这使得内存使用更加地灵活。</p>
+<p><img src="https://www.javadoop.com/blogimages/g1/3.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1"
+	
+	
+></p>
+<p>执行垃圾收集时，和 CMS 一样，G1 收集线程在标记阶段和应用程序线程<strong>并发</strong>执行，标记结束后，G1 也就知道哪些区块基本上是垃圾，存活对象极少，G1 会先从这些区块下手，因为从这些区块能很快释放得到很大的可用空间，<strong>这也是为什么 G1 被取名为 Garbage-First 的原因</strong>。</p>
+<blockquote>
+<p>这里只不过是先介绍些概念，没看懂没关系，往下看</p>
+</blockquote>
+<p>在 G1 中，目标停顿时间非常非常重要，用 -XX:MaxGCPauseMillis=200 指定期望的停顿时间。</p>
+<p>G1 使用了<strong>停顿预测模型</strong>来满足用户指定的停顿时间目标，并基于目标来选择进行垃圾回收的区块数量。G1 采用增量回收的方式，每次回收一些区块，而不是整堆回收。</p>
+<p>我们要知道 G1 不是一个实时收集器，它会尽力满足我们的停顿时间要求，但也不是绝对的，它基于之前垃圾收集的数据统计，估计出在用户指定的停顿时间内能收集多少个区块。</p>
+<p>**注意：**G1 有和应用程序一起运行的并发阶段，也有 stop-the-world 的并行阶段。但是，<strong>Full GC 的时候还是单线程运行的</strong>，所以我们应该尽量避免发生 Full GC，后面我们也会介绍什么时候会触发 Full GC。</p>
+<p><strong>G1 内存占用</strong></p>
+<p>G1 比 ParallelOld 和 CMS 会需要更多的内存消耗，那是因为有部分内存消耗于簿记（accounting）上，如以下两个数据结构：</p>
+<ul>
+<li><strong>Remembered Sets</strong>：每个区块都有一个 RSet，用于记录进入该区块的对象引用（如区块 A 中的对象引用了区块 B，区块 B 的 Rset 需要记录这个信息），它用于实现收集过程的并行化以及使得区块能进行独立收集。总体上 Remembered Sets 消耗的内存小于 5%。</li>
+<li><strong>Collection Sets</strong>：将要被回收的区块集合。GC 时，在这些区块中的对象会被复制到其他区块中，总体上 Collection Sets 消耗的内存小于 1%。</li>
+</ul>
+<h2 id="g1-工作流程">G1 工作流程
+</h2><p>前面啰里啰嗦说了挺多的，唯一要记住的就是，G1 的设计目标就是尽力满足我们的目标停顿时间上的要求。</p>
+<p>本节介绍 G1 的收集过程，G1 收集器主要包括了以下 4 种操作：</p>
+<ul>
+<li>1、年轻代收集</li>
+<li>2、并发收集，和应用线程同时执行</li>
+<li>3、混合式垃圾收集</li>
+<li>*、必要时的 Full GC</li>
+</ul>
+<p>接下来，我们进行一一介绍。</p>
+<h3 id="年轻代收集">年轻代收集
+</h3><p>首先，我们来看下 G1 的堆结构：</p>
+<p><img src="https://www.javadoop.com/blogimages/g1/1.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="3"
+	
+	
+></p>
+<p>年轻代中的垃圾收集流程（Young GC）：</p>
+<p><img src="https://www.javadoop.com/blogimages/g1/2.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="4"
+	
+	
+></p>
+<p>我们可以看到，年轻代收集概念上和之前介绍的其他分代收集器大差不差的，但是它的年轻代会动态调整。</p>
+<h3 id="old-gc--并发标记周期">Old GC / 并发标记周期
+</h3><p>接下来是 Old GC 的流程（含 Young GC 阶段），其实把 Old GC  理解为<strong>并发周期</strong>是比较合理的，不要单纯地认为是清理老年代的区块，因为这一步和年轻代收集也是相关的。下面我们介绍主要流程：</p>
+<ol>
+<li>
+<p>初始标记：stop-the-world，它伴随着一次普通的 Young GC 发生，然后对 Survivor 区（root region）进行标记，因为该区可能存在对老年代的引用。</p>
+<blockquote>
+<p>因为 Young GC 是需要 stop-the-world 的，所以并发周期直接重用这个阶段，虽然会增加 CPU 开销，但是停顿时间只是增加了一小部分。</p>
+</blockquote>
+</li>
+<li>
+<p>扫描根引用区：因为先进行了一次 YGC，所以当前年轻代只有 Survivor 区有存活对象，它被称为根引用区。扫描 Survivor 到老年代的引用，该阶段必须在下一次 Young GC 发生前结束。</p>
+<blockquote>
+<p>这个阶段不能发生年轻代收集，如果中途 Eden 区真的满了，也要等待这个阶段结束才能进行 Young GC。</p>
+</blockquote>
+</li>
+<li>
+<p>并发标记：寻找整个堆的存活对象，该阶段可以被 Young GC 中断。</p>
+<blockquote>
+<p>这个阶段是并发执行的，中间可以发生多次 Young GC，Young GC 会中断标记过程</p>
+</blockquote>
+</li>
+<li>
+<p>重新标记：stop-the-world，完成最后的存活对象标记。使用了比 CMS 收集器更加高效的 snapshot-at-the-beginning (SATB) 算法。</p>
+<blockquote>
+<p>Oracle 的资料显示，这个阶段会回收完全空闲的区块</p>
+</blockquote>
+</li>
+<li>
+<p>清理：清理阶段真正回收的内存很少。</p>
+</li>
+</ol>
+<p>到这里，G1 的一个并发周期就算结束了，其实就是主要完成了垃圾定位的工作，定位出了哪些分区是垃圾最多的。因为整堆一般比较大，所以这个周期应该会比较长，中间可能会被多次 stop-the-world 的 Young GC 打断。</p>
+<h3 id="混合垃圾回收周期">混合垃圾回收周期
+</h3><p>并发周期结束后是混合垃圾回收周期，不仅进行年轻代垃圾收集，而且回收之前标记出来的老年代的垃圾最多的部分区块。</p>
+<p>混合垃圾回收周期会持续进行，直到几乎所有的被标记出来的分区（垃圾占比大的分区）都得到回收，然后恢复到常规的年轻代垃圾收集，最终再次启动并发周期。</p>
+<h3 id="full-gc">Full GC
+</h3><p>到这里我们已经说了年轻代收集、并发周期、混合回收周期了，大家要熟悉这几个阶段的工作。</p>
+<p>下面我们来介绍特殊情况，那就是会导致 <strong>Full GC</strong> 的情况，也是我们需要极力避免的：</p>
+<ol>
+<li>
+<p>concurrent mode failure：并发模式失败，CMS 收集器也有同样的概念。G1 并发标记期间，如果在标记结束前，老年代被填满，G1 会放弃标记。</p>
+<blockquote>
+<p>这个时候说明</p>
+<ul>
+<li>堆需要增加了，</li>
+<li>或者需要调整并发周期，如增加并发标记的线程数量，让并发标记尽快结束</li>
+<li>或者就是更早地进行并发周期，默认是整堆内存的 45% 被占用就开始进行并发周期。</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>晋升失败：并发周期结束后，是混合垃圾回收周期，伴随着年轻代垃圾收集，进行清理老年代空间，如果这个时候清理的速度小于消耗的速度，导致老年代不够用，那么会发生晋升失败。</p>
+<blockquote>
+<p>说明混合垃圾回收需要更迅速完成垃圾收集，也就是说在混合回收阶段，每次年轻代的收集应该处理更多的老年代已标记区块。</p>
+</blockquote>
+</li>
+<li>
+<p>疏散失败：年轻代垃圾收集的时候，如果 Survivor 和 Old 区没有足够的空间容纳所有的存活对象。这种情况肯定是非常致命的，因为基本上已经没有多少空间可以用了，这个时候会触发 Full GC 也是很合理的。</p>
+<blockquote>
+<p>最简单的就是增加堆大小</p>
+</blockquote>
+</li>
+<li>
+<p>大对象分配失败，我们应该尽可能地不创建大对象，尤其是大于一个区块大小的那种对象。</p>
+</li>
+</ol>
+<h3 id="简单小结">简单小结
+</h3><p>看完上面的 Young GC 和 Old GC 等，很多读者可能还是很懵的，这里说几句不严谨的白话文帮助读者进行理解：</p>
+<p>首先，最好不要把上面的 Old GC 当做是一次 GC 来看，而应该当做<strong>并发标记周期</strong>来理解，虽然它确实会释放出一些内存。</p>
+<p>并发标记结束后，G1 也就知道了哪些区块是最适合被回收的，那些完全空闲的区块会在这这个阶段被回收。如果这个阶段释放了足够的内存出来，其实也就可以认为结束了一次 GC。</p>
+<p>我们假设并发标记结束了，那么下次 GC 的时候，还是会先回收年轻代，如果从年轻代中得到了足够的内存，那么结束；过了几次后，年轻代垃圾收集不能满足需要了，那么就需要利用之前并发标记的结果，选择一些活跃度最低的老年代区块进行回收。直到最后，老年代会进入下一个并发周期。</p>
+<p>那么什么时候会启动并发标记周期呢？这个是通过参数控制的，下面马上要介绍这个参数了，此参数默认值是 45，也就是说当堆空间使用了 45% 后，G1 就会进入并发标记周期。</p>
+<h2 id="g1-参数配置和最佳实践">G1 参数配置和最佳实践
+</h2><p>G1 调优的目标是尽量避免出现 Full GC，其实就是给老年代足够的空间，或相对更多的空间。</p>
+<p>有以下几点我们可以进行调整的方向：</p>
+<ul>
+<li>增加堆大小，或调整老年代和年轻代的比例，这个很好理解</li>
+<li>增加并发周期的线程数量，其实就是为了加快并发周期快点结束</li>
+<li>让并发周期尽早开始，这个是通过设置堆使用占比来调整的（默认 45%）</li>
+<li>在混合垃圾回收周期中回收更多的老年代区块</li>
+</ul>
+<p>G1 的很重要的目标是达到可控的停顿时间，所以很多的行为都以这个目标为出发点开展的。</p>
+<p>我们通过设置 -XX:MaxGCPauseMillis=N 来指定停顿时间（单位 ms，默认 200ms），如果没有达到这个目标，G1 会通过各种方式来补救：调整年轻代和老年代的比例，调整堆大小，调整晋升的年龄阈值，调整混合垃圾回收周期中处理的老年代的区块数量等等。</p>
+<p>当然了，调整每个参数满足了一个条件的同时往往也会引入另一个问题，比如为了降低停顿时间，我们可以减小年轻代的大小，可是这样的话就会增加年轻代垃圾收集的频率。如果我们减少混合垃圾回收周期处理的老年代区块数量，虽然可以更容易满足停顿时间要求，可是这样就会增加 Full GC 的风险等等。</p>
+<p>下面介绍最常用也是最基础的一些参数的设置，涉及到更高级的调优参数设置，请读者自行参阅其他资料。</p>
+<p><strong>参数介绍</strong>：</p>
+<ul>
+<li>
+<p><strong>-XX:+UseG1GC</strong></p>
+<p>使用 G1 收集器</p>
+</li>
+<li>
+<p><strong>-XX:MaxGCPauseMillis=200</strong></p>
+<p>指定目标停顿时间，默认值 200 毫秒。</p>
+<blockquote>
+<p>在设置 -XX:MaxGCPauseMillis 值的时候，不要指定为平均时间，而应该指定为满足 90% 的停顿在这个时间之内。记住，停顿时间目标是我们的目标，不是每次都一定能满足的。</p>
+</blockquote>
+</li>
+<li>
+<p><strong>-XX:InitiatingHeapOccupancyPercent=45</strong></p>
+<p>整堆使用达到这个比例后，触发并发 GC 周期，默认 45%。</p>
+<blockquote>
+<p>如果要降低晋升失败的话，通常可以调整这个数值，使得并发周期提前进行</p>
+</blockquote>
+</li>
+<li>
+<p><strong>-XX:NewRatio=n</strong></p>
+<p>老年代/年轻代，默认值 2，即 1/3 的年轻代，2/3 的老年代</p>
+<blockquote>
+<p>不要设置年轻代为固定大小，否则：</p>
+<ul>
+<li>G1 不再需要满足我们的停顿时间目标</li>
+<li>不能再按需扩容或缩容年轻代大小</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p><strong>-XX:SurvivorRatio=n</strong></p>
+<p>Eden/Survivor，默认值 8，这个和其他分代收集器是一样的</p>
+</li>
+<li>
+<p><strong>-XX:MaxTenuringThreshold =n</strong></p>
+<p>从年轻代晋升到老年代的年龄阈值，也是和其他分代收集器一样的</p>
+</li>
+<li>
+<p><strong>-XX:ParallelGCThreads=n</strong></p>
+<p>并行收集时候的垃圾收集线程数</p>
+</li>
+<li>
+<p><strong>-XX:ConcGCThreads=n</strong></p>
+<p>并发标记阶段的垃圾收集线程数</p>
+<blockquote>
+<p>增加这个值可以让并发标记更快完成，如果没有指定这个值，JVM 会通过以下公式计算得到：</p>
+<p>ConcGCThreads=(ParallelGCThreads + 2) / 4^3</p>
+</blockquote>
+</li>
+<li>
+<p><strong>-XX:G1ReservePercent=n</strong></p>
+<p>堆内存的预留空间百分比，默认 10，用于降低晋升失败的风险，即默认地会将 10% 的堆内存预留下来。</p>
+</li>
+<li>
+<p><strong>-XX:G1HeapRegionSize=n</strong></p>
+<p>每一个 region 的大小，默认值为根据堆大小计算出来，取值 1MB~32MB，这个我们通常指定整堆大小就好了。</p>
+</li>
+</ul>
+<h2 id="小结">小结
+</h2><p>我自己仔细检查了几遍，主要内容都囊括了，我也不知道读者看完本文会不会是一脸懵逼。</p>
+<p>如果有什么问题，可以在留言板上给我留言，<strong>我是 GC 的门外汉</strong>，如果有些问题我觉得自己能解答，我会尽力帮助大家。</p>
+<p>最后，在这里推荐一些资料给感兴趣的读者：</p>
+<p>Oracle 官方出品，本文的很多内容是翻译并解读这篇文章的：</p>
+<p><a class="link" href="http://www.oracle.com/technetwork/tutorials/tutorials-1876574.html"  target="_blank" rel="noopener"
+    >Getting Started with the G1 Garbage Collector</a></p>
+<p>帮助大家理解 G1 的日志：</p>
+<p><a class="link" href="https://blogs.oracle.com/poonam/understanding-g1-gc-logs"  target="_blank" rel="noopener"
+    >Understanding G1 GC Logs</a></p>
+<p>这里介绍 GC 的内容非常好：</p>
+<p><a class="link" href="https://plumbr.io/handbook/garbage-collection-algorithms-implementations#g1"  target="_blank" rel="noopener"
+    >https://plumbr.io/handbook/garbage-collection-algorithms-implementations#g1</a></p>
+<p>《Java 性能权威指南》：非常好的一本书，建议读者有时间可以看看这本书中关于 GC 的介绍。</p>
+<p>（全文完）</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

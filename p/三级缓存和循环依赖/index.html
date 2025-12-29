@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="1.循环依赖 首先我们需要明白什么是循环依赖 ， 打个比方 ， 就是说A对象在创建的过程中 ， 需要依赖注入B对象 ， 但是B对象没有 ， 就需要去创建 ， 而在创建B对象的过程中又需要注入A对象 ， A对象此时还在创建中，所以就构成了一个死循环 ， A，B相互依赖 这样的关系被成为循环依赖（当然 ， 可能还会有其他的情况），下面我们就来看看Spring是如何让解决循环依赖的\n">
+<title>三级缓存和循环依赖</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E5%92%8C%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="三级缓存和循环依赖">
+<meta property='og:description' content="1.循环依赖 首先我们需要明白什么是循环依赖 ， 打个比方 ， 就是说A对象在创建的过程中 ， 需要依赖注入B对象 ， 但是B对象没有 ， 就需要去创建 ， 而在创建B对象的过程中又需要注入A对象 ， A对象此时还在创建中，所以就构成了一个死循环 ， A，B相互依赖 这样的关系被成为循环依赖（当然 ， 可能还会有其他的情况），下面我们就来看看Spring是如何让解决循环依赖的\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E5%92%8C%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="三级缓存和循环依赖">
+<meta name="twitter:description" content="1.循环依赖 首先我们需要明白什么是循环依赖 ， 打个比方 ， 就是说A对象在创建的过程中 ， 需要依赖注入B对象 ， 但是B对象没有 ， 就需要去创建 ， 而在创建B对象的过程中又需要注入A对象 ， A对象此时还在创建中，所以就构成了一个死循环 ， A，B相互依赖 这样的关系被成为循环依赖（当然 ， 可能还会有其他的情况），下面我们就来看看Spring是如何让解决循环依赖的\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1循环依赖">1.循环依赖</a></li>
+    <li><a href="#2一二三级缓存">2.一二三级缓存</a>
+      <ol>
+        <li><a href="#一级singletonobjects">一级：singletonObjects</a></li>
+        <li><a href="#二级earlysingletonobject">二级：earlySingletonObject</a></li>
+        <li><a href="#三级singletonfactories">三级：singletonFactories</a></li>
+      </ol>
+    </li>
+    <li><a href="#3情况一">3.情况一</a>
+      <ol>
+        <li><a href="#bean的生命周期">Bean的生命周期</a></li>
+      </ol>
+    </li>
+    <li><a href="#4情况二"><strong>4.情况二</strong></a></li>
+    <li><a href="#5总结"><strong>5.总结：</strong></a>
+      <ol>
+        <li><a href="#51singletonobjects单例池--一级缓存">5.1.singletonObjects：单例池 ， 一级缓存</a></li>
+        <li><a href="#52earlysingletonobjects二级缓存">5.2 earlySingletonObjects：二级缓存</a></li>
+        <li><a href="#53singletonfactories三级缓存"><strong>5.3</strong> <strong>singletonFactories：三级缓存</strong></a></li>
+        <li><a href="#54-earlyproxyreferences"><strong>5.4 earlyProxyReferences</strong></a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/spring/" >
+            Spring
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E5%92%8C%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/">三级缓存和循环依赖</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 9 分钟
+                
+                
+                , 4313 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1循环依赖">1.<a class="link" href="https://so.csdn.net/so/search?q=%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96&amp;spm=1001.2101.3001.7020"  target="_blank" rel="noopener"
+    >循环依赖</a>
+</h2><p>首先我们需要明白什么是循环依赖 ， 打个比方 ， 就是说A对象在创建的过程中 ， 需要<a class="link" href="https://so.csdn.net/so/search?q=%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5&amp;spm=1001.2101.3001.7020"  target="_blank" rel="noopener"
+    >依赖注入</a>B对象 ， 但是B对象没有 ， 就需要去创建 ， 而在创建B对象的过程中又需要注入A对象 ， A对象此时还在创建中，所以就构成了一个死循环 ， A，B相互依赖 这样的关系被成为<strong>循环依赖</strong>（当然 ， 可能还会有其他的情况），下面我们就来看看Spring是如何让解决循环依赖的</p>
+<h2 id="2一二三级缓存">2.一二三级缓存
+</h2><p>三个缓存对应着三个不同的Map</p>
+<h3 id="一级singletonobjects">一级：singletonObjects
+</h3><p>这个缓存也就是单例池 ， 它存放的是完整的经过Bean生命周期的Bean</p>
+<h3 id="二级earlysingletonobject">二级：earlySingletonObject
+</h3><p>这个缓存存放的一个残疾Bean ， 怎么理解呢？就是创建到一半就放进去了</p>
+<h3 id="三级singletonfactories">三级：singletonFactories
+</h3><p>这个缓存存放的是ObjectFactory ， 表示用来 创建早期Bean 对象的工厂</p>
+<h2 id="3情况一">3.情况一
+</h2><p>A ， B对象相互依赖</p>
+<p>比如现在有两个Service ， 分别是AService和BService</p>
+<p>AService：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Componentpublic</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AService</span><span class="w"> </span><span class="p">{</span><span class="w">     </span><span class="nd">@Resource</span><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BService</span><span class="w"> </span><span class="n">bService</span><span class="p">;</span><span class="w">     </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">test</span><span class="p">(){</span><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;AService test() -&gt; &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">bService</span><span class="p">);</span><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>BService：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-typescript" data-lang="typescript"><span class="line"><span class="cl"><span class="kd">@Componentpublic</span> <span class="kr">class</span> <span class="nx">BService</span> <span class="p">{</span>     <span class="kd">@Resource</span>    <span class="kr">private</span> <span class="nx">AService</span> <span class="nx">aService</span><span class="p">;</span>     <span class="kr">public</span> <span class="k">void</span> <span class="nx">test</span><span class="p">(){</span>        <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">println</span><span class="p">(</span><span class="s2">&#34;BService test() -&gt; &#34;</span> <span class="o">+</span> <span class="nx">aService</span><span class="p">);</span>    <span class="p">}</span> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果不考虑Spring的话 ， 循环依赖是很正常的事情 ， 比如</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">AService</span><span class="w"> </span><span class="n">aService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AService</span><span class="p">();</span><span class="n">BService</span><span class="w"> </span><span class="n">bService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BService</span><span class="p">();</span><span class="n">aService</span><span class="p">.</span><span class="na">bService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bService</span><span class="p">;</span><span class="n">bService</span><span class="p">.</span><span class="na">aService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aService</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>但是 ， 如果考虑Spring的话这就是一个问题 ， 因为如果使用Spring ， 那么就会有控制反转， 这个对象就不在是由你自己去创建了 ， 而是在Spring内部经过一系列Bean的生命周期 ， 就是因为有了Bean的生命周期 ， 所以才会出现循环依赖  ，那我们简单回顾一下<strong>Bean的生命周期</strong></p>
+<h3 id="bean的生命周期">Bean的生命周期
+</h3><p>Bean的生命周期具体指的就是一个Bean对象从创建到销毁的过程 ， 其生成步骤如下</p>
+<p>1.Spring会通过扫描Class得到BeanDefintion（Bean的定义）</p>
+<p>2.根据BeanDefintion去生成对象</p>
+<p>3.首先通过Class来进行构造方法的推断（推断构造方法）</p>
+<p>4.根据推断出来的构造方法然后反射得到一个对象（暂时叫做原始对象）</p>
+<p>5.填充原始对象的属性（属性填充 ， 依赖注入）</p>
+<p>6.如果原始对象中的某个方法被AOP了 ， 那么就需要根据原始对象生成一个代理对象</p>
+<p>7.把最终生成的原始对象放入单例池 ， 也就是上面的一级缓存(singletonObjects) , 下次getBean从此Map获取就行</p>
+<p>这是一个大致的过程 ， 对于Spring而言 ， Bean的生命周期不止这么7步 ， 还包括Aware回调 ， 初始化等等 ，可以发现在Spring中构造一个Bean包括了new这个步骤（第四步），生成一个原始对象之后再来进行<strong>属性注入</strong> , 那么对于<strong>情况1</strong>而言他的属性注入的过程大概是这样的: </p>
+<blockquote>
+<p>创建AService得到原始对象 ， 然后去给BService属性赋值 ， 此时就会根据BService属性的类型或名字在BeanFactory寻找BService所对应的单例Bean ， 如果存在 ， 直接赋值给BService ， 如果不存在则需要生成一个BService对应的Bean ， 然后赋值给BService 如下图</p>
+</blockquote>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/8c8051b5e2e62385bb18dc0f6284e328.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>通过上图 ， 我们可以很清晰的看出来循环依赖出现的原因 ， 如何打破这个循环呢？在中间加一层缓存 ， 如下图</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/09fce9c494ca263b4d57e5470b238111.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>流程我就不必多做解释了 ， 此时从缓存中获取的AService为原始对象 ， 还不是最终的Bean ， BService的原始对象依赖注入完后 ， BService的生命周期结束 ， 那么AService的生命周期也结束</p>
+<p>因为在整个过程中AService都是单例的 ， 所以即使从缓存中拿到的AService的原始对象也没有关系 ， 因为在后续的Bean生命周期中 ，AService在堆内存中没有发生变化</p>
+<p>所以<strong>情况一的循环依赖</strong>也就完美的解决了 , 那么又会产生新的问题：</p>
+<p>1.一个缓存就可以解决循环依赖， 为什么要三级缓存？</p>
+<p>用下面情况二的例子来分析分析</p>
+<h2 id="4情况二"><strong>4.情况二</strong>
+</h2><p>还是AService ， BService相互依赖的场景 ， 但是多了一层AOP ， 就是AService的原始对象赋值给BService时 ， 进行了<strong>AOP ,</strong> 那么AService进行AOP之后 ， 它的真实对象是代理对象 ， 那么BService中AService的值是原始对象的值 ，那么就会产生<strong>BService的AService值和AService的实际值不符的问题</strong></p>
+<p>AOP就是通过一个<strong>BeanPostProcessor</strong>来实现的 ， 而这个BeanPostProcessor就是</p>
+<p><strong>AnnotationAwareAspectJAutoProxyCreator，</strong> 它的父类是<strong>AbstractAutoProxyCreator（如下图）,<strong>而在SpringAOP中要么利用</strong>JDK动态代理</strong> ， 要么利用<strong>CGLib的动态代理</strong> ， 所以如果给这个类中的某一个方法设置了切面 ， 那么它最后都会生成一个代理对象</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/c3e726d3a12166732b7ce8551b0476af.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p> 基本流程看下图</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/646a8d9195656d1b9e378219ee2d2162.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p> 而我们都知道 ， AOP是Spring除开IOC的另外一大功能 ， 而循环依赖又属于IOC的范围 ， 所以如果想要这两者功能共存 ， 就必须使用其他的手段：<strong>三级缓存 singletonFactories</strong></p>
+<p>首先 这个缓存存放的是（beanName：ObjectFactory），在Bean的生命周期中 ， 构造完一个原始对象就生成一个ObjectFactory , 然后缓存起来 ，这个ObjectFactory是一个函数式接口 ， 所以支持lambda表达式 ， <strong>() -&gt; getEarlyBeanReference(beanName, mbd, bean);<strong>而这个lambda就表示是一个ObjectFactory ， 他会去执行这个方法 ， 这个方法在</strong>SmartInstantiationAwareBeanPostProcessor中</strong></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/22ba1efbca8fa7e7ad2fabfafc088fa1.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>代码的大概意思就是说  ，找到继承了<strong>InstantiationAwareBeanPostProcessor</strong>这个类的<strong>BeanPostProcessor</strong>，就表示你需要进行AOP ，然后获取 <strong>SmartInstantiationAwareBeanPostProcessor</strong>这个 <strong>BeanPostProcessor ，</strong> 然后执行**getEarlyBeanReference()**方法 ， 由于这是一个接口 ， 我们直接看实现类是如何实现的</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/b8acd3cddf16b2d533c07ce381ad41c4.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p> 1.首先是执行getCacheKey()获取key的名称 ， 如下</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/ab05c8f64580e9653a8b23e6ef2fe0ac.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>他会判断beanName是否为null ， 如果不为空 ， 那么判断是否是FactoryBean ， 如果是就拼接&amp;符号 ， 否则直接返回 ， 如果beanName为null ， 最直接返回</p>
+<p>2.然后把cacheKey当作key ， bean当作value ， 放入<strong>earlyProxyReferences（关于</strong>earlyProxyReferences下面有解释**），<strong>然后执行</strong>wrapIfNecessary()**进行AOP</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/e07c82c6fca8b412b20f3df961a26514.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p> 3.该方法大概意思就是如果你符合AOP的条件 ， 那么我就创建一个代理对象返回 ， 如果不需要，那么返回原始对象</p>
+<p>到这其实可以体会到<strong>二级缓存为什么放的是残级Bean，因为此时创建一个代理对象 ， 还没有完成Bean的生命周期 ， 而三级缓存的ObjectFactory的lambda也可以理解为一段逻辑（大概就是需要AOP的时候， 那么返回一个代理对象 ， 如果不需要AOP我还是返回的原始对象），但是不管返回什么对象都是没有完成Bean生命周期的</strong></p>
+<p>那么什么时候调用**getEarlyBeanReference()**这个方法呢？回到循环依赖场景，用一张图就大概可以理清这个思路了</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/a73318999a8dcef57163ecb21818b0c8.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p> 就是创建AService ， 然后会产生一个AService的原始对象 ， 并且key为beanName ， Value为<strong>lambda</strong>表达式放入三级缓存 ， 然后注入BService ， 生成BService原始对象 ， 此时需要注入AService就要从单例池获取 ， 取不到 ， 从二级缓存获取 ， 取不到 ， 然后从三级缓存获取 ， 并执行<strong>lambda</strong>表达式，如果符合AOP的条件 ， 那么返回代理对象 ， 如果不符合 ， 返回原始对象 ， 然后赋值给BService的AService ， 然后BService完成创建</p>
+<p>源码如下：</p>
+<p>1.放入三级缓存</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/f0541ef2d7a1443a052c0660c2092a91.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>2. 从一二三级缓存获取，然后执行表达式</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/d514a7027f7768faefcb17ccca6ec3d9.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p> 这是getSingletion方法</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/64af6d291a819a2cdcf22444ef3966f5.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>此时AService正常进行AOP，但是前面已经执行过AOP了 ， 所以对于AServicec本身而言就不需要AOP了所以就又产生了一个问题：<strong>怎么判断是否执行过AOP了？</strong></p>
+<p>会利用**earlyProxyReferences，**就是上面方法提到的</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/b8acd3cddf16b2d533c07ce381ad41c4.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>再<strong>AbstractAutoProxyCreator</strong>类中的**postProcessAfterInitialization()**会判断</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/fcb792b958e37686f3862da7899c671a.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>如果成功移除 ， 表示不需要AOP了， 否则就需要AOP</p>
+<p>对于AService而言 ， 进行了AOP的判断之后 ， 以及执行了BeanPostProcessor之后 ， 就需要把AService对应的对象放入单例池了 ，但是我们知道 ，如果进行AOP之后那么就要把代理对象放入单例池 ， 那么代理对象就可以在二级缓存拿到了 ， 然后放入单例池</p>
+<p><strong>但也不是所有情况的循环依赖都能解决 ， 比如AService和BService都是原型的等</strong></p>
+<h2 id="5总结"><strong>5.总结：</strong>
+</h2><h3 id="51singletonobjects单例池--一级缓存">5.1.singletonObjects：单例池 ， 一级缓存
+</h3><p>缓存的是经历了<strong>完整的Bean生命周期</strong>的Bean</p>
+<h3 id="52earlysingletonobjects二级缓存">5.2 earlySingletonObjects：二级缓存
+</h3><p>缓存的是<strong>未经过完整的Bean生命周期</strong>的Bean，如果出现了循环依赖 ， 那么就会提前把这个暂时未经过Bean生命周期的Bean放入这个缓存 ， 如果这个Bean需要经过AOP ， 那么就会把代理对象放入这个缓存 ， 就算是经过了AOP ， 那么这个代理对象代理的真实对象也是是未完成生命周期的 ， 所以我称它为<strong>残疾Bean ，</strong> 这个缓存可以理解为存放的是<strong>未经过完成的Bean生命周期的Bean</strong></p>
+<h3 id="53singletonfactories三级缓存"><strong>5.3</strong> <strong>singletonFactories：三级缓存</strong>
+</h3><p>缓存的是ObjectFactory ， 也就是一个<strong>Lambda表达式</strong> ， 这个表示在存入的时候不会执行 ， 在get的时候会执行，在每个Bean生成一个原始对象的时候 ， 都会基于这个原始对象暴露一个lambda表达式 ， 然后放到这个缓存 ， <strong>这个lambda可能用到 ， 也可能用不到 ,</strong> 如果当前Bean没有出现循环依赖的情况 ， 那么这个表达式就没用 ， 按照自己的生命周期正常执行 ， 执行完之后把这个对象放入单例池 ， 如果出现了循环依赖（<strong>当前创建的Bean被其他的Bean依赖了</strong>） ， 那么就会把这个表达式取出来 ， 然后执行得到一个对象 ， 并把得到的缓存放入二级缓存 ， （如果当前Bean需要AOP ， 那么执行完lambda之后得到的就是一个代理对象 ，如果无需AOP ， 那就是原始对象）</p>
+<h3 id="54-earlyproxyreferences"><strong>5.4 earlyProxyReferences</strong>
+</h3><p>其实还有这个缓存 ， 用来记录某个原始对象是否进行了AOP</p>
+<p>本文转自 <a class="link" href="https://blog.csdn.net/qq_45001002/article/details/124420213?spm=1001.2014.3001.5506"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/qq_45001002/article/details/124420213?spm=1001.2014.3001.5506</a>，如有侵权，请联系删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/open-feign%E4%B8%80/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Open Feign(一)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/open-feign%E4%B8%89/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Open Feign(三)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/open-feign%E4%BA%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Open Feign(二)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/open-feign%E5%9B%9B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Open Feign(四)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">bean的生命周期</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

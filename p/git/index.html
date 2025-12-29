@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Git Git概述 版本系统 SVN 是集中式版本控制系统，版本库是集中放在中央服务器的，而开发人员工作的时候，用的都是自己的电脑，所以首先要从中央服务器下载最新的版本，然后开发，开发完后，需要把自己开发的代码提交到中央服务器。\n">
+<title>Git</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/git/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="Git">
+<meta property='og:description' content="Git Git概述 版本系统 SVN 是集中式版本控制系统，版本库是集中放在中央服务器的，而开发人员工作的时候，用的都是自己的电脑，所以首先要从中央服务器下载最新的版本，然后开发，开发完后，需要把自己开发的代码提交到中央服务器。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/git/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="Git">
+<meta name="twitter:description" content="Git Git概述 版本系统 SVN 是集中式版本控制系统，版本库是集中放在中央服务器的，而开发人员工作的时候，用的都是自己的电脑，所以首先要从中央服务器下载最新的版本，然后开发，开发完后，需要把自己开发的代码提交到中央服务器。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#git概述">Git概述</a>
+      <ol>
+        <li><a href="#版本系统">版本系统</a></li>
+        <li><a href="#工作流程">工作流程</a></li>
+        <li><a href="#git安装">Git安装</a></li>
+        <li><a href="#代码托管">代码托管</a></li>
+      </ol>
+    </li>
+    <li><a href="#环境配置">环境配置</a></li>
+    <li><a href="#本地仓库">本地仓库</a>
+      <ol>
+        <li><a href="#获取仓库">获取仓库</a></li>
+        <li><a href="#工作过程">工作过程</a></li>
+        <li><a href="#文件操作">文件操作</a>
+          <ol>
+            <li><a href="#常用命令">常用命令</a></li>
+            <li><a href="#文件状态">文件状态</a></li>
+            <li><a href="#文件忽略">文件忽略</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#远程仓库">远程仓库</a>
+      <ol>
+        <li><a href="#工作流程-1">工作流程</a></li>
+        <li><a href="#查看仓库">查看仓库</a></li>
+        <li><a href="#添加仓库">添加仓库</a></li>
+        <li><a href="#克隆仓库">克隆仓库</a></li>
+        <li><a href="#删除仓库">删除仓库</a></li>
+        <li><a href="#拉取仓库">拉取仓库</a></li>
+        <li><a href="#推送仓库">推送仓库</a></li>
+      </ol>
+    </li>
+    <li><a href="#版本管理">版本管理</a></li>
+    <li><a href="#分支管理">分支管理</a>
+      <ol>
+        <li><a href="#查看分支">查看分支</a></li>
+        <li><a href="#创建分支">创建分支</a></li>
+        <li><a href="#推送分支">推送分支</a></li>
+        <li><a href="#切换分支">切换分支</a></li>
+        <li><a href="#合并分支">合并分支</a></li>
+        <li><a href="#删除分支">删除分支</a></li>
+      </ol>
+    </li>
+    <li><a href="#标签管理">标签管理</a>
+      <ol>
+        <li><a href="#查看标签">查看标签</a></li>
+        <li><a href="#新建标签">新建标签</a></li>
+        <li><a href="#推送标签">推送标签</a></li>
+        <li><a href="#切换标签">切换标签</a></li>
+        <li><a href="#删除标签">删除标签</a></li>
+      </ol>
+    </li>
+    <li><a href="#idea操作">IDEA操作</a>
+      <ol>
+        <li><a href="#环境配置-1">环境配置</a></li>
+        <li><a href="#创建仓库">创建仓库</a></li>
+        <li><a href="#文件操作-1">文件操作</a></li>
+        <li><a href="#版本管理-1">版本管理</a></li>
+        <li><a href="#分支管理-1">分支管理</a></li>
+        <li><a href="#推送仓库-1">推送仓库</a></li>
+        <li><a href="#克隆仓库-1">克隆仓库</a></li>
+        <li><a href="#1git基本操作流程">1.git基本操作流程</a></li>
+        <li><a href="#2git命令">2.git命令</a>
+          <ol>
+            <li></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#问题点">问题点</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#1master分支和main分支的问题">1.master分支和main分支的问题</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/tool/" >
+            Tool
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/git/">Git</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 10 分钟
+                
+                
+                , 4770 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="git">Git
+</h1><h2 id="git概述">Git概述
+</h2><h3 id="版本系统">版本系统
+</h3><p>SVN 是集中式版本控制系统，版本库是集中放在中央服务器的，而开发人员工作的时候，用的都是自己的电脑，所以首先要从中央服务器下载最新的版本，然后开发，开发完后，需要把自己开发的代码提交到中央服务器。</p>
+<p>集中式版本控制工具缺点：服务器单点故障、容错性差</p>
+<p>Git 是分布式版本控制系统（Distributed Version Control System，简称 DVCS） ，分为两种类型的仓库：</p>
+<p>本地仓库和远程仓库：</p>
+<ul>
+<li>本地仓库：是在开发人员自己电脑上的 Git 仓库</li>
+<li>远程仓库：是在远程服务器上的 Git 仓库</li>
+</ul>
+<hr>
+<h3 id="工作流程">工作流程
+</h3><p>1．从远程仓库中克隆代码到本地仓库</p>
+<p>2．从本地仓库中 checkout 代码然后进行代码修改</p>
+<p>3．在提交前先将代码提交到<strong>暂存区</strong></p>
+<p>4．提交到本地仓库。本地仓库中保存修改的各个历史版本</p>
+<p>5．修改完成后，需要和团队成员共享代码时，将代码 push 到远程仓库</p>
+<h3 id="git安装">Git安装
+</h3><p>下载地址： <a class="link" href="https://git-scm.com/download"  target="_blank" rel="noopener"
+    >https://git-scm.com/download</a></p>
+<h3 id="代码托管">代码托管
+</h3><p>Git 中存在两种类型的仓库，即本地仓库和远程仓库。那么我们如何搭建Git远程仓库呢？我们可以借助互联网上提供的一些代码托管服务来实现，其中比较常用的有 GitHub、码云、GitLab 等。</p>
+<p>GitHub（地址：https://github.com/）是一个面向开源及私有软件项目的托管平台，因为只支持 Git 作为唯一的版本库格式进行托管，故名 GitHub</p>
+<p>码云（地址： <a class="link" href="https://gitee.com/"  target="_blank" rel="noopener"
+    >https://gitee.com/</a>）是国内的一个代码托管平台，由于服务器在国内，所以相比于 GitHub，码云速度会更快</p>
+<p>GitLab（地址： <a class="link" href="https://about.gitlab.com/"  target="_blank" rel="noopener"
+    >https://about.gitlab.com/</a> ）是一个用于仓库管理系统的开源项目，使用 Git 作为代码管理工具，并在此基础上搭建起来的 web 服务</p>
+<hr>
+<h2 id="环境配置">环境配置
+</h2><p>安装 Git 后首先要设置用户名称和 email 地址，因为每次 Git 提交都会使用该用户信息，此信息和注册的代码托管平台的信息无关</p>
+<p>设置用户信息：</p>
+<ul>
+<li>git config &ndash;global user.name “Seazean”</li>
+<li>git config &ndash;global user.email &ldquo;<a class="link" href="mailto:imseazean@gmail.com" >imseazean@gmail.com</a>&rdquo;  //用户名和邮箱可以随意填写，不会校对</li>
+</ul>
+<p>查看配置信息：</p>
+<ul>
+<li>git config &ndash;list</li>
+<li>git config user.name</li>
+</ul>
+<p>通过上面的命令设置的信息会保存在用户目录下 /.gitconfig 文件中</p>
+<hr>
+<h2 id="本地仓库">本地仓库
+</h2><h3 id="获取仓库">获取仓库
+</h3><ul>
+<li>
+<p><strong>本地仓库初始化</strong></p>
+<ol>
+<li>
+<p>在电脑的任意位置创建一个空目录（例如 repo1）作为本地 Git 仓库</p>
+</li>
+<li>
+<p>进入这个目录中，点击右键打开 Git bash 窗口</p>
+</li>
+<li>
+<p>执行命令 <strong>git init</strong></p>
+<p>如果在当前目录中看到 .git 文件夹（此文件夹为隐藏文件夹）则说明 Git 仓库创建成功</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>远程仓库克隆</strong>
+通过 Git 提供的命令从远程仓库进行克隆，将远程仓库克隆到本地</p>
+<p>命令：git clone 远程 Git 仓库地址（HTTPS 或者 SSH）</p>
+</li>
+<li>
+<p>生成 SSH 公钥步骤</p>
+<ul>
+<li>设置账户</li>
+<li>cd ~/.ssh（查看是否生成过 SSH 公钥）user 目录下</li>
+<li>生成 SSH 公钥：<code>ssh-keygen -t rsa -C &quot;email&quot;</code>
+<ul>
+<li>-t 指定密钥类型，默认是 rsa ，可以省略</li>
+<li>-C 设置注释文字，比如邮箱</li>
+<li>-f 指定密钥文件存储文件名</li>
+</ul>
+</li>
+<li>查看命令：cat ~/.ssh/id_rsa.pub</li>
+<li>公钥测试命令：ssh -T <a class="link" href="mailto:git@github.com" >git@github.com</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="工作过程">工作过程
+</h3><p><img src="/..%5cimg%5ctool%5cgit%5cGit%e5%9f%ba%e6%9c%ac%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>版本库：.git 隐藏文件夹就是版本库，版本库中存储了很多配置信息、日志信息和文件版本信息等</p>
+<p>工作目录（工作区）：包含 .git 文件夹的目录就是工作目录，主要用于存放开发的代码</p>
+<p>暂存区：.git 文件夹中有很多文件，其中有一个 index 文件就是暂存区，也可以叫做 stage，暂存区是一个临时保存修改文件的地方</p>
+<p><img src="/..%5cimg%5ctool%5cgit%5c%e6%96%87%e4%bb%b6%e6%b5%81%e7%a8%8b%e5%9b%be.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<hr>
+<h3 id="文件操作">文件操作
+</h3><h4 id="常用命令">常用命令
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>命令</th>
+          <th>作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>git status</td>
+          <td>查看 git 状态 （文件是否进行了添加、提交操作）</td>
+      </tr>
+      <tr>
+          <td>git add filename</td>
+          <td>添加，将指定文件添加到暂存区</td>
+      </tr>
+      <tr>
+          <td>git commit -m &lsquo;message&rsquo;</td>
+          <td>提交，将暂存区文件提交到本地仓库，删除暂存区的该文件</td>
+      </tr>
+      <tr>
+          <td>git commit &ndash;amend</td>
+          <td>修改 commit 的 message</td>
+      </tr>
+      <tr>
+          <td>git rm filename</td>
+          <td>删除，删除工作区的文件，不是仓库，需要提交</td>
+      </tr>
+      <tr>
+          <td>git mv filename</td>
+          <td>移动或重命名工作区文件</td>
+      </tr>
+      <tr>
+          <td>git reset filename</td>
+          <td>使用当前分支上的修改覆盖暂存区，<strong>将暂存区的文件取消暂存</strong></td>
+      </tr>
+      <tr>
+          <td>git checkout filename</td>
+          <td>使用暂存区的修改覆盖工作目录，用来撤销本次修改(危险)</td>
+      </tr>
+      <tr>
+          <td>git log</td>
+          <td>查看日志（ git 提交的历史日志）</td>
+      </tr>
+      <tr>
+          <td>git reflog</td>
+          <td>可以查看所有分支的所有操作记录（包括已经被删除的 commit 记录的操作）</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>其他指令</strong>：可以跳过暂存区域直接从分支中取出修改，或者直接提交修改到分支中</p>
+<ul>
+<li>git commit -a 直接把所有文件的修改添加到暂存区然后执行提交</li>
+<li>git checkout HEAD &ndash; files 取出最后一次修改，可以用来进行回滚操作</li>
+</ul>
+<hr>
+<h4 id="文件状态">文件状态
+</h4><ul>
+<li>
+<p>Git 工作目录下的文件存在两种状态：</p>
+<ul>
+<li>untracked 未跟踪（未被纳入版本控制）</li>
+<li>tracked 已跟踪（被纳入版本控制）
+<ul>
+<li>Unmodified 未修改状态</li>
+<li>Modified 已修改状态</li>
+<li>Staged 已暂存状态</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>查看文件状态：文件的状态会随着我们执行 Git 的命令发生变化</p>
+<ul>
+<li>git status 查看文件状态</li>
+<li>git status –s 查看更简洁的文件状态</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="文件忽略">文件忽略
+</h4><p>一般我们总会有些文件无需纳入Git 的管理，也不希望它们总出现在未跟踪文件列表。 通常都是些自动生成的文件，比如日志文件，或者编译过程中创建的临时文件等。 在这种情况下，我们可以在工作目录中创建一个名为 .gitignore 的文件（文件名称固定），列出要忽略的文件模式。下面是一个示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># no .a files</span>
+</span></span><span class="line"><span class="cl">*.a
+</span></span><span class="line"><span class="cl"><span class="c1"># but do track lib.a, even though you&#39;re ignoring .a files above</span>
+</span></span><span class="line"><span class="cl">!lib.a
+</span></span><span class="line"><span class="cl"><span class="c1"># only ignore the TODO file in the current directory, not subdir/TODO</span>
+</span></span><span class="line"><span class="cl">/TODO
+</span></span><span class="line"><span class="cl"><span class="c1"># ignore all files in the build/ directory</span>
+</span></span><span class="line"><span class="cl">build/
+</span></span><span class="line"><span class="cl"><span class="c1"># ignore doc/notes.txt, but not doc/server/arch.txt</span>
+</span></span><span class="line"><span class="cl">doc/*.txt
+</span></span><span class="line"><span class="cl"><span class="c1"># ignore all .pdf files in the doc/ directory</span>
+</span></span><span class="line"><span class="cl">doc/**/*.pdf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="远程仓库">远程仓库
+</h2><h3 id="工作流程-1">工作流程
+</h3><p>Git 有四个工作空间的概念，分别为 工作空间、暂存区、本地仓库、远程仓库。</p>
+<p>pull = fetch + merge</p>
+<p>fetch 是从远程仓库更新到本地仓库，pull是从远程仓库直接更新到工作空间中</p>
+<p><img src="/..%5cimg%5ctool%5cgit%5c%e5%9b%be%e8%a7%a3%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<hr>
+<h3 id="查看仓库">查看仓库
+</h3><p>git remote：显示所有远程仓库的简写</p>
+<p>git remote -v：显示所有远程仓库</p>
+<p>git remote show <shortname>：显示某个远程仓库的详细信息</p>
+<h3 id="添加仓库">添加仓库
+</h3><p>git remote add <shortname><url>：添加一个新的远程仓库，并指定一个可以引用的简写</p>
+<h3 id="克隆仓库">克隆仓库
+</h3><p>git clone <url>(HTTPS or SSH)：克隆远程仓库</p>
+<p>Git 克隆的是该 Git 仓库服务器上的几乎所有数据（包括日志信息、历史记录等），而不仅仅是复制工作所需要的文件，当你执行 git clone 命令的时候，默认配置下远程 Git 仓库中的每一个文件的每一个版本都将被拉取下来。</p>
+<h3 id="删除仓库">删除仓库
+</h3><p>git remote rm <shortname>：移除远程仓库，从本地移除远程仓库的记录，并不会影响到远程仓库</p>
+<h3 id="拉取仓库">拉取仓库
+</h3><p>git fetch  <shortname>：从远程仓库获取最新版本到本地仓库，不会自动 merge</p>
+<p>git pull <shortname> <branchname>：从远程仓库获取最新版本并 merge 到本地仓库</p>
+<p>注意：如果当前本地仓库不是从远程仓库克隆，而是本地创建的仓库，并且<strong>仓库中存在文件</strong>，此时再从远程仓库拉取文件的时候会报错（fatal: refusing to merge unrelated histories ），解决此问题可以在 git pull 命令后加入参数 &ndash;allow-unrelated-histories</p>
+<h3 id="推送仓库">推送仓库
+</h3><p>git push <shortname><branchname>：上传本地指定分支到远程仓库</p>
+<hr>
+<h2 id="版本管理">版本管理
+</h2><p><img src="/..%5cimg%5ctool%5cgit%5c%e7%89%88%e6%9c%ac%e5%88%87%e6%8d%a2.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>命令：git reset &ndash;hard 版本唯一索引值</p>
+<hr>
+<h2 id="分支管理">分支管理
+</h2><h3 id="查看分支">查看分支
+</h3><p>git branch：列出所有本地分支</p>
+<p>git branch -r：列出所有远程分支</p>
+<p>git branch -a：列出所有本地分支和远程分支</p>
+<h3 id="创建分支">创建分支
+</h3><p>git branch  branch-name：新建一个分支，但依然停留在当前分支</p>
+<p>git checkout -b branch-name：新建一个分支，并切换到该分支</p>
+<h3 id="推送分支">推送分支
+</h3><p>git push origin branch-name：推送到远程仓库，origin 是引用名</p>
+<h3 id="切换分支">切换分支
+</h3><p>git checkout branch-name：切换到 branch-name 分支</p>
+<h3 id="合并分支">合并分支
+</h3><p>git merge branch-name：合并指定分支到当前分支</p>
+<p>有时候合并操作不会如此顺利。 如果你在两个不同的分支中，对同一个文件的同一个部分进行了不同的修改，Git 就没办法合并它们，同时会提示文件冲突。此时需要我们打开冲突的文件并修复冲突内容，最后执行 git add 命令来标识冲突已解决</p>
+<p>​	<img src="/..%5cimg%5ctool%5cgit%5c%e5%90%88%e5%b9%b6%e5%88%86%e6%94%af%e5%86%b2%e7%aa%81.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<h3 id="删除分支">删除分支
+</h3><p>git branch -d branch-name：删除分支</p>
+<p>git push origin –d branch-name：删除远程仓库中的分支   （origin 是引用名）</p>
+<p>如果要删除的分支中进行了开发动作，此时执行删除命令并不会删除分支，如果坚持要删除此分支，可以将命令中的 -d 参数改为 -D：git branch -D branch-name</p>
+<hr>
+<h2 id="标签管理">标签管理
+</h2><h3 id="查看标签">查看标签
+</h3><p>git tag：列出所有 tag</p>
+<p>git show tag-name：查看 tag 详细信息</p>
+<p>标签作用：在开发的一些关键时期，使用标签来记录这些关键时刻，保存快照，例如发布版本、有重大修改、升级的时候、会使用标签记录这些时刻，来永久标记项目中的关键历史时刻</p>
+<h3 id="新建标签">新建标签
+</h3><p>git tag tag-name：新建标签，如（git tag v1.0.1）</p>
+<h3 id="推送标签">推送标签
+</h3><p>git push [remotename] [tagname]：推送到远程仓库</p>
+<p>git push [remotename] &ndash;tags：推送所有的标签</p>
+<h3 id="切换标签">切换标签
+</h3><p>git checkout tag-name：切换标签</p>
+<h3 id="删除标签">删除标签
+</h3><p>git tag -d tag-name：删除本地标签</p>
+<p>git push origin :refs/tags/ tag-name：删除远程标签</p>
+<hr>
+<h2 id="idea操作">IDEA操作
+</h2><h3 id="环境配置-1">环境配置
+</h3><p>File → Settings 打开设置窗口，找到 Version Control 下的 git 选项</p>
+<p>选择 git 的安装目录后可以点击 Test 按钮测试是否正确配置：D:\Program Files\Git\cmd\git.exe</p>
+<h3 id="创建仓库">创建仓库
+</h3><p>1、VCS → Import into Version Control → Create Git Repository</p>
+<p>2、选择工程所在的目录,这样就创建好本地仓库了</p>
+<p>3、点击git后边的对勾,将当前项目代码提交到本地仓库</p>
+<p>​	注意: 项目中的配置文件不需要提交到本地仓库中,提交时,忽略掉即可</p>
+<h3 id="文件操作-1">文件操作
+</h3><p>右键项目名打开菜单 Git → Add → commit</p>
+<h3 id="版本管理-1">版本管理
+</h3><ul>
+<li>
+<p>版本对比
+<img src="/..%5cimg%5ctool%5cgit%5c%e7%89%88%e6%9c%ac%e5%af%b9%e6%af%94.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+<li>
+<p>版本切换方式一：控制台 Version Control → Log → 右键 Reset Current Branch → Reset，这种切换会抛弃原来的提交记录
+<img src="/..%5cimg%5ctool%5cgit%5c%e7%89%88%e6%9c%ac%e5%88%87%e6%8d%a2%e6%96%b9%e5%bc%8f%e4%b8%80.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+<li>
+<p>版本切换方式二：控制台 Version Control → Log → Revert Commit → Merge → 处理代码 → commit，这种切换会当成一个新的提交记录，之前的提交记录也都保留
+<img src="/..%5cimg%5ctool%5cgit%5c%e7%89%88%e6%9c%ac%e5%88%87%e6%8d%a2%e6%96%b9%e5%bc%8f%e4%ba%8c.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+</li>
+</ul>
+<p>​           <img src="/..%5cimg%5ctool%5cgit%5c%e7%89%88%e6%9c%ac%e5%88%87%e6%8d%a2%e6%96%b9%e5%bc%8f%e4%ba%8c%281%29.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<hr>
+<h3 id="分支管理-1">分支管理
+</h3><ul>
+<li>创建分支：VCS → Git → Branches → New Branch → 给分支起名字 → ok</li>
+<li>切换分支：idea 右下角 Git → 选择要切换的分支 → checkout</li>
+<li>合并分支：VCS → Git → Merge changes → 选择要合并的分支 → merge</li>
+<li>删除分支：idea 右下角 → 选中要删除的分支 → Delete</li>
+</ul>
+<hr>
+<h3 id="推送仓库-1">推送仓库
+</h3><ol>
+<li>VCS → Git → Push → 点击 master Define remote</li>
+<li>将远程仓库的 url 路径复制过来 → Push
+<img src="/..%5cimg%5ctool%5cgit%5c%e6%9c%ac%e5%9c%b0%e4%bb%93%e5%ba%93%e6%8e%a8%e9%80%81%e5%88%b0%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></li>
+</ol>
+<hr>
+<h3 id="克隆仓库-1">克隆仓库
+</h3><p>File → Close Project → Checkout from Version Control → Git → 指定远程仓库的路径 → 指定本地存放的路径 → clone</p>
+<p><img src="/..%5cimg%5ctool%5cgit%5c%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93%e5%85%8b%e9%9a%86%e5%88%b0%e6%9c%ac%e5%9c%b0%e4%bb%93%e5%ba%93.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<h3 id="1git基本操作流程">1.git基本操作流程
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">1</span><span class="p">.</span><span class="na">1</span><span class="err">、</span><span class="n">创建本地项目</span><span class="err">，</span><span class="n">创建远程仓库</span><span class="err">，</span><span class="n">在本地项目路径下</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">init</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">1</span><span class="p">.</span><span class="na">2</span><span class="err">、</span><span class="n">git</span><span class="w"> </span><span class="n">remote</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="s">&#34;your name&#34;</span><span class="w"> </span><span class="s">&#34;remote url&#34;</span><span class="w">  </span><span class="o">==&gt;</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">remote</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="c1">//github.com/TommyZZ8888/Tommy.git</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">1</span><span class="p">.</span><span class="na">3</span><span class="err">、</span><span class="n">git</span><span class="w"> </span><span class="n">remote</span><span class="w"> </span><span class="o">-</span><span class="n">v</span><span class="w">  </span><span class="o">==&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">1</span><span class="p">.</span><span class="na">4</span><span class="err">、</span><span class="n">git</span><span class="w"> </span><span class="n">pull</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">1</span><span class="p">.</span><span class="na">5</span><span class="err">、</span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="p">.</span><span class="w">  </span><span class="o">==&gt;</span><span class="w"> </span><span class="n">添加所有文件</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">1</span><span class="p">.</span><span class="na">6</span><span class="err">、</span><span class="n">git</span><span class="w"> </span><span class="n">commit</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="s">&#34;提交信息&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">1</span><span class="p">.</span><span class="na">7</span><span class="err">、</span><span class="n">git</span><span class="w"> </span><span class="n">push</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">main</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2git命令">2.git命令
+</h3><h5 id="git-init">git init
+</h5><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="err">（</span><span class="n">在当前新目录新建一个git代码库</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="o">[</span><span class="n">project</span><span class="o">-</span><span class="n">name</span><span class="o">]</span><span class="w"> </span><span class="err">（</span><span class="n">新建一个目录</span><span class="err">，</span><span class="n">将其初始化为First代码库</span><span class="err">）</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="git-clone">git clone
+</h5><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="o">[</span><span class="n">url</span><span class="o">]</span><span class="w"> </span><span class="err">（</span><span class="n">下载一个项目和它的整个代码史</span><span class="err">）</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="git-config">git config
+</h5><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">--</span><span class="n">list</span><span class="w">  </span><span class="p">(</span><span class="n">显示当前的Git配置</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">-</span><span class="n">e</span><span class="w"> </span><span class="o">[--</span><span class="n">global</span><span class="o">]</span><span class="w"> </span><span class="p">(</span><span class="n">编辑Git配置文件</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">[--</span><span class="n">global</span><span class="o">]</span><span class="w"> </span><span class="n">user</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="s">&#34;[name]&#34;</span><span class="n">$</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">[--</span><span class="n">global</span><span class="o">]</span><span class="w"> </span><span class="n">user</span><span class="p">.</span><span class="na">email</span><span class="w"> </span><span class="s">&#34;[email address]&#34;</span><span class="w"> </span><span class="p">(</span><span class="n">设置提交代码时的用户信息</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="git-addrm">git add/rm
+</h5><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">[</span><span class="n">file1</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">file2</span><span class="o">]</span><span class="w"> </span><span class="p">...</span><span class="w">  </span><span class="p">(</span><span class="n">添加指定文件到暂存区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="na">html</span><span class="w"> </span><span class="p">(</span><span class="n">添加指定类型文件</span><span class="p">(</span><span class="n">使用通配符方式批量提交</span><span class="p">)</span><span class="n">到暂存区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">[</span><span class="n">dir</span><span class="o">]</span><span class="w"> </span><span class="p">(</span><span class="n">添加指定目录到暂存区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="p">(</span><span class="n">添加当前目录下的所有存在更改文件到暂存区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="p">(</span><span class="n">添加已经被add的文件且存在更改的文件</span><span class="p">(</span><span class="n">Git根路径以下所有文件</span><span class="p">)</span><span class="n">到暂存区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">--</span><span class="n">all</span><span class="w"> </span><span class="n">$</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">-</span><span class="n">A</span><span class="w"> </span><span class="c1">// 简写 (添加所有变化(Git根路径以下所有文件)到暂存区)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w">  </span><span class="p">(</span><span class="n">添加每个变化前</span><span class="err">，</span><span class="n">都会要求确认</span><span class="err">，</span><span class="n">对于同一个文件的多处变化</span><span class="err">，</span><span class="n">可以实现分次提交</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">rm</span><span class="w"> </span><span class="o">[</span><span class="n">file1</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">file2</span><span class="o">]</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">(</span><span class="n">删除工作区文件</span><span class="err">，</span><span class="n">并且将这次删除放入暂存区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">rm</span><span class="w"> </span><span class="o">-</span><span class="n">cached</span><span class="w"> </span><span class="o">[</span><span class="n">file</span><span class="o">]</span><span class="w"> </span><span class="p">(</span><span class="n">停止追踪指定文件</span><span class="err">，</span><span class="n">但该文件会保留在工作区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">mv</span><span class="w"> </span><span class="o">[</span><span class="n">file</span><span class="o">-</span><span class="n">origin</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">file</span><span class="o">-</span><span class="n">rename</span><span class="o">]</span><span class="w"> </span><span class="p">(</span><span class="n">改名文件</span><span class="err">，</span><span class="n">并且将这个改名放入暂存区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">mv</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"> </span><span class="n">oldfolder</span><span class="w"> </span><span class="n">newfoldergit</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="nf">newfolder</span><span class="w"> </span><span class="p">(</span><span class="n">改名文件夹</span><span class="err">，</span><span class="n">并将此更改上传</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">rm</span><span class="w"> </span><span class="o">-</span><span class="n">r</span><span class="w"> </span><span class="o">--</span><span class="n">cached</span><span class="w"> </span><span class="o">[</span><span class="n">dir</span><span class="o">]</span><span class="n">$</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">commit</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="err">&#39;</span><span class="n">删除了dir</span><span class="err">&#39;</span><span class="n">$</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">push</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="nf">master</span><span class="w">   </span><span class="p">(</span><span class="n">删除文件夹</span><span class="err">，</span><span class="n">并将此更改上传</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="git-commit">git commit
+</h5><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">commit</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="o">[</span><span class="n">message</span><span class="o">]</span><span class="w"> </span><span class="p">(</span><span class="n">提交暂存区到仓库区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">commit</span><span class="w"> </span><span class="o">[</span><span class="n">file1</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">file2</span><span class="o">]</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="o">[</span><span class="n">message</span><span class="o">]</span><span class="w"> </span><span class="p">(</span><span class="n">提交暂存区的指定文件到仓库区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">commit</span><span class="w"> </span><span class="o">-</span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">提交工作区自上次commit之后的变化</span><span class="err">，</span><span class="n">直接到仓库区</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">commit</span><span class="w"> </span><span class="o">-</span><span class="n">v</span><span class="w"> </span><span class="p">(</span><span class="n">提交时显示所有的diff信息</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">commit</span><span class="w"> </span><span class="o">--</span><span class="n">amend</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="o">[</span><span class="n">message</span><span class="o">]</span><span class="w"> </span><span class="p">(</span><span class="n">使用一次新的commit</span><span class="err">，</span><span class="n">替代上一次提交</span><span class="err">，</span><span class="n">如果代码没有任何变化</span><span class="err">，</span><span class="n">则用来改写上一次commit的提交信息</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">commit</span><span class="w"> </span><span class="o">-</span><span class="n">amend</span><span class="w"> </span><span class="o">[</span><span class="n">file1</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">file2</span><span class="o">]</span><span class="p">...</span><span class="w"> </span><span class="p">(</span><span class="n">重做上一次commit</span><span class="err">，</span><span class="n">并包括指定文件的新变化</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="git-branch">git branch
+</h5><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="err">（</span><span class="n">查看本地分支</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">r</span><span class="w"> </span><span class="err">（</span><span class="n">查看远程分支</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">a</span><span class="w"> </span><span class="err">（</span><span class="n">查看所有分支</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">branchName</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="err">（</span><span class="n">新建一个分支</span><span class="err">，</span><span class="n">但依然停留在当前分支</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">b</span><span class="w"> </span><span class="o">[</span><span class="n">branch</span><span class="o">-</span><span class="n">name</span><span class="o">]</span><span class="w"> </span><span class="err">（</span><span class="n">新建一个分支</span><span class="err">，</span><span class="n">并切换到该分支</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">--</span><span class="n">set</span><span class="o">-</span><span class="n">upstream</span><span class="o">-</span><span class="n">to</span><span class="o">=</span><span class="n">origin</span><span class="o">/&lt;</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">feture</span><span class="o">-</span><span class="n">test</span><span class="w"> </span><span class="err">（</span><span class="n">建立本地分支与远程分支的联系</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">M</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="err">（</span><span class="n">重命名分支</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="n">branchname</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">D</span><span class="w"> </span><span class="n">branchname</span><span class="w"> </span><span class="err">（</span><span class="n">删除本地分支</span><span class="err">）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="o">-</span><span class="n">r</span><span class="w"> </span><span class="n">branchname</span><span class="w"> </span><span class="err">（</span><span class="n">删除远程分支</span><span class="err">）</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="问题点">问题点
+</h2><h4 id="1master分支和main分支的问题">1.master分支和main分支的问题
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="n">远程有两个分支</span><span class="err">：</span><span class="w"> </span><span class="n">默认分支main和提交的分支master</span><span class="err">，</span><span class="n">本地git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">a只能查到master分支</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">这是因为以前默认分支为master</span><span class="err">，</span><span class="n">现在默认分支为main</span><span class="err">；</span><span class="n">git提交后是master分支</span><span class="err">。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">需要</span><span class="err">：</span><span class="n">master</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">main</span><span class="err">；</span><span class="n">删除master分支</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">解决</span><span class="p">:</span><span class="n">1</span><span class="p">.</span><span class="na">重命名当前分支</span><span class="p">:</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="n">master</span><span class="w"> </span><span class="n">main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">2</span><span class="p">.</span><span class="na">删除本地分支</span><span class="p">:</span><span class="w">   </span><span class="n">git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="n">master</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">3</span><span class="p">.</span><span class="na">删除远程分支</span><span class="p">:</span><span class="w">   </span><span class="n">git</span><span class="w"> </span><span class="n">push</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="o">-</span><span class="n">delete</span><span class="w"> </span><span class="n">master</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">4</span><span class="p">.</span><span class="na">拉取远程代码</span><span class="p">:</span><span class="w">   </span><span class="n">git</span><span class="w"> </span><span class="n">pull</span><span class="w"> </span><span class="n">main</span><span class="w"> </span><span class="o">--</span><span class="n">allow</span><span class="o">-</span><span class="n">unrelated</span><span class="o">-</span><span class="n">histories</span><span class="p">;</span><span class="n">直接git</span><span class="w"> </span><span class="n">pull</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">main会报错</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">5</span><span class="p">.</span><span class="na">然后推送</span><span class="p">:</span><span class="w">      </span><span class="n">git</span><span class="w"> </span><span class="n">push</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">main</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">最好创建远程项目时不要建readme</span><span class="p">.</span><span class="na">md文件</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/docker/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Docker</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/linux/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/lua/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">lua</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/regular-expression/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">regular expression</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/shell/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">shell</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

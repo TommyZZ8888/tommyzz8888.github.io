@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Categories on my note</title>
+        <link>https://tommyzz8888.github.io/categories/</link>
+        <description>Recent content in Categories on my note</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-Hans</language>
+        <lastBuildDate>Sun, 28 Dec 2025 09:38:23 +0800</lastBuildDate><atom:link href="https://tommyzz8888.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>DB</title>
+        <link>https://tommyzz8888.github.io/categories/db/</link>
+        <pubDate>Sun, 28 Dec 2025 09:38:23 +0800</pubDate>
+        
+        <guid>https://tommyzz8888.github.io/categories/db/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Error</title>
+        <link>https://tommyzz8888.github.io/categories/error/</link>
+        <pubDate>Sun, 28 Dec 2025 09:38:23 +0800</pubDate>
+        
+        <guid>https://tommyzz8888.github.io/categories/error/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Java Base</title>
+        <link>https://tommyzz8888.github.io/categories/java-base/</link>
+        <pubDate>Sun, 28 Dec 2025 09:38:23 +0800</pubDate>
+        
+        <guid>https://tommyzz8888.github.io/categories/java-base/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Java 基础</title>
+        <link>https://tommyzz8888.github.io/categories/java-%E5%9F%BA%E7%A1%80/</link>
+        <pubDate>Sun, 28 Dec 2025 09:38:23 +0800</pubDate>
+        
+        <guid>https://tommyzz8888.github.io/categories/java-%E5%9F%BA%E7%A1%80/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Java 奇技淫巧</title>
+        <link>https://tommyzz8888.github.io/categories/java-%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/</link>
+        <pubDate>Sun, 28 Dec 2025 09:38:23 +0800</pubDate>
+        
+        <guid>https://tommyzz8888.github.io/categories/java-%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>

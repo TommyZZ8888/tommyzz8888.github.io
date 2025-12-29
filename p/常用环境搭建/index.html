@@ -1,0 +1,2461 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="JDK apt方式安装 参考： https://cn.linux-console.net/?p=34553\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 # 查看可用版本 apt search openjdk-* # 查看官方仓库中的 JDK 包 apt list -a &#39;openjdk-*-jdk*&#39; # 安装jdk apt install openjdk-17-jdk # 查看是否安装成功 java -version # 安装的目录 root@debian:/usr/local/jdk# cd /usr/lib/jvm root@debian:/usr/lib/jvm# ls java-1.17.0-openjdk-amd64 java-17-openjdk-amd64 openjdk-17 # 配置环境 vi /etc/environment 添加： JAVA_HOME=&#34;/usr/lib/jvm/java-17-openjdk-amd64&#34; # 验证是否更改成功 source /etc/environment echo $JAVA_HOME # 执行以下命令，会看到 ls -l $JAVA_HOME root@debian:/usr/lib/jvm# ls -l $JAVA_HOME 总计 32 drwxr-xr-x 2 root root 4096 7月15日 17:21 bin drwxr-xr-x 4 root root 4096 7月15日 17:20 conf lrwxrwxrwx 1 root root 42 5月 1日 16:40 docs -&gt; ../../../share/doc/openjdk-17-jre-headless drwxr-xr-x 3 root root 4096 7月15日 17:21 include drwxr-xr-x 2 root root 4096 7月15日 17:21 jmods drwxr-xr-x 72 root root 4096 7月15日 17:20 legal drwxr-xr-x 5 root root 4096 7月15日 17:21 lib drwxr-xr-x 3 root root 4096 7月15日 17:20 man -rw-r--r-- 1 root root 1229 5月 1日 16:40 release 离线安装 参考：Debian安装JDK-17.0.5教程_debian安装java17-CSDN博客\n">
+<title>常用环境搭建</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/%E5%B8%B8%E7%94%A8%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="常用环境搭建">
+<meta property='og:description' content="JDK apt方式安装 参考： https://cn.linux-console.net/?p=34553\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 # 查看可用版本 apt search openjdk-* # 查看官方仓库中的 JDK 包 apt list -a &#39;openjdk-*-jdk*&#39; # 安装jdk apt install openjdk-17-jdk # 查看是否安装成功 java -version # 安装的目录 root@debian:/usr/local/jdk# cd /usr/lib/jvm root@debian:/usr/lib/jvm# ls java-1.17.0-openjdk-amd64 java-17-openjdk-amd64 openjdk-17 # 配置环境 vi /etc/environment 添加： JAVA_HOME=&#34;/usr/lib/jvm/java-17-openjdk-amd64&#34; # 验证是否更改成功 source /etc/environment echo $JAVA_HOME # 执行以下命令，会看到 ls -l $JAVA_HOME root@debian:/usr/lib/jvm# ls -l $JAVA_HOME 总计 32 drwxr-xr-x 2 root root 4096 7月15日 17:21 bin drwxr-xr-x 4 root root 4096 7月15日 17:20 conf lrwxrwxrwx 1 root root 42 5月 1日 16:40 docs -&gt; ../../../share/doc/openjdk-17-jre-headless drwxr-xr-x 3 root root 4096 7月15日 17:21 include drwxr-xr-x 2 root root 4096 7月15日 17:21 jmods drwxr-xr-x 72 root root 4096 7月15日 17:20 legal drwxr-xr-x 5 root root 4096 7月15日 17:21 lib drwxr-xr-x 3 root root 4096 7月15日 17:20 man -rw-r--r-- 1 root root 1229 5月 1日 16:40 release 离线安装 参考：Debian安装JDK-17.0.5教程_debian安装java17-CSDN博客\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/%E5%B8%B8%E7%94%A8%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="常用环境搭建">
+<meta name="twitter:description" content="JDK apt方式安装 参考： https://cn.linux-console.net/?p=34553\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 # 查看可用版本 apt search openjdk-* # 查看官方仓库中的 JDK 包 apt list -a &#39;openjdk-*-jdk*&#39; # 安装jdk apt install openjdk-17-jdk # 查看是否安装成功 java -version # 安装的目录 root@debian:/usr/local/jdk# cd /usr/lib/jvm root@debian:/usr/lib/jvm# ls java-1.17.0-openjdk-amd64 java-17-openjdk-amd64 openjdk-17 # 配置环境 vi /etc/environment 添加： JAVA_HOME=&#34;/usr/lib/jvm/java-17-openjdk-amd64&#34; # 验证是否更改成功 source /etc/environment echo $JAVA_HOME # 执行以下命令，会看到 ls -l $JAVA_HOME root@debian:/usr/lib/jvm# ls -l $JAVA_HOME 总计 32 drwxr-xr-x 2 root root 4096 7月15日 17:21 bin drwxr-xr-x 4 root root 4096 7月15日 17:20 conf lrwxrwxrwx 1 root root 42 5月 1日 16:40 docs -&gt; ../../../share/doc/openjdk-17-jre-headless drwxr-xr-x 3 root root 4096 7月15日 17:21 include drwxr-xr-x 2 root root 4096 7月15日 17:21 jmods drwxr-xr-x 72 root root 4096 7月15日 17:20 legal drwxr-xr-x 5 root root 4096 7月15日 17:21 lib drwxr-xr-x 3 root root 4096 7月15日 17:20 man -rw-r--r-- 1 root root 1229 5月 1日 16:40 release 离线安装 参考：Debian安装JDK-17.0.5教程_debian安装java17-CSDN博客\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#apt方式安装">apt方式安装</a></li>
+        <li><a href="#离线安装">离线安装</a></li>
+        <li><a href="#卸载">卸载</a></li>
+      </ol>
+    </li>
+  </ol>
+
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#apt方式">apt方式</a></li>
+        <li><a href="#离线安装-1">离线安装</a></li>
+        <li><a href="#卸载-1">卸载</a></li>
+      </ol>
+    </li>
+  </ol>
+
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#apt方式-1">apt方式</a></li>
+        <li><a href="#离线安装-2">离线安装</a></li>
+      </ol>
+    </li>
+  </ol>
+
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#apt方式-2">apt方式</a></li>
+        <li><a href="#离线安装也非离线">离线安装（也非离线）</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/%E9%83%A8%E7%BD%B2/" >
+            部署
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E5%B8%B8%E7%94%A8%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">常用环境搭建</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 11 分钟
+                
+                
+                , 5360 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="jdk">JDK
+</h1><h3 id="apt方式安装">apt方式安装
+</h3><p>参考： <a class="link" href="https://cn.linux-console.net/?p=34553"  target="_blank" rel="noopener"
+    >https://cn.linux-console.net/?p=34553</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 查看可用版本</span>
+</span></span><span class="line"><span class="cl">apt search openjdk-*
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看官方仓库中的 JDK 包</span>
+</span></span><span class="line"><span class="cl">apt list -a <span class="s1">&#39;openjdk-*-jdk*&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装jdk</span>
+</span></span><span class="line"><span class="cl">apt install openjdk-17-jdk
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看是否安装成功</span>
+</span></span><span class="line"><span class="cl">java -version
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装的目录</span>
+</span></span><span class="line"><span class="cl">root@debian:/usr/local/jdk# <span class="nb">cd</span> /usr/lib/jvm
+</span></span><span class="line"><span class="cl">root@debian:/usr/lib/jvm# ls
+</span></span><span class="line"><span class="cl">java-1.17.0-openjdk-amd64  java-17-openjdk-amd64  openjdk-17
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置环境</span>
+</span></span><span class="line"><span class="cl">vi /etc/environment
+</span></span><span class="line"><span class="cl">添加：
+</span></span><span class="line"><span class="cl"><span class="nv">JAVA_HOME</span><span class="o">=</span><span class="s2">&#34;/usr/lib/jvm/java-17-openjdk-amd64&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 验证是否更改成功</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> /etc/environment
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="nv">$JAVA_HOME</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 执行以下命令，会看到</span>
+</span></span><span class="line"><span class="cl">ls -l <span class="nv">$JAVA_HOME</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">root@debian:/usr/lib/jvm# ls -l <span class="nv">$JAVA_HOME</span>
+</span></span><span class="line"><span class="cl">总计 <span class="m">32</span>
+</span></span><span class="line"><span class="cl">drwxr-xr-x  <span class="m">2</span> root root <span class="m">4096</span>  7月15日 17:21 bin
+</span></span><span class="line"><span class="cl">drwxr-xr-x  <span class="m">4</span> root root <span class="m">4096</span>  7月15日 17:20 conf
+</span></span><span class="line"><span class="cl">lrwxrwxrwx  <span class="m">1</span> root root   <span class="m">42</span>  5月 1日 16:40 docs -&gt; ../../../share/doc/openjdk-17-jre-headless
+</span></span><span class="line"><span class="cl">drwxr-xr-x  <span class="m">3</span> root root <span class="m">4096</span>  7月15日 17:21 include
+</span></span><span class="line"><span class="cl">drwxr-xr-x  <span class="m">2</span> root root <span class="m">4096</span>  7月15日 17:21 jmods
+</span></span><span class="line"><span class="cl">drwxr-xr-x <span class="m">72</span> root root <span class="m">4096</span>  7月15日 17:20 legal
+</span></span><span class="line"><span class="cl">drwxr-xr-x  <span class="m">5</span> root root <span class="m">4096</span>  7月15日 17:21 lib
+</span></span><span class="line"><span class="cl">drwxr-xr-x  <span class="m">3</span> root root <span class="m">4096</span>  7月15日 17:20 man
+</span></span><span class="line"><span class="cl">-rw-r--r--  <span class="m">1</span> root root <span class="m">1229</span>  5月 1日 16:40 release
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="离线安装">离线安装
+</h3><p>参考：<a class="link" href="https://blog.csdn.net/weixin_57792864/article/details/128519792"  target="_blank" rel="noopener"
+    >Debian安装JDK-17.0.5教程_debian安装java17-CSDN博客</a></p>
+<p><a class="link" href="https://www.cnblogs.com/lwlnice/p/18298579"  target="_blank" rel="noopener"
+    >https://www.cnblogs.com/lwlnice/p/18298579</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 下载 https://download.oracle.com/otn/java/jdk/17.0.16+12/91eb813b5d15455fbbf4d46dcf0b9d6a/jdk-17.0.16_linux-x64_bin.tar.gz</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 也可以</span>
+</span></span><span class="line"><span class="cl">wget https://download.oracle.com/otn/java/jdk/17.0.16%2B12/91eb813b5d15455fbbf4d46dcf0b9d6a/jdk-17.0.16_linux-x64_bin.tar.gz
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建/usr/lib/jdk，并将下载jdk复制到该路径（可以选择其他路径，我一般选择/usr/local/mysql/）</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 解压</span>
+</span></span><span class="line"><span class="cl">tar -zxvf jdk-17.0.16_linux-x64_bin.tar.gz    
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 配置环境</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 方式一（更推荐）：</span>
+</span></span><span class="line"><span class="cl">nano /etc/environment
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加</span>
+</span></span><span class="line"><span class="cl"><span class="nv">JAVA_HOME</span><span class="o">=</span><span class="s2">&#34;/usr/local/jdk/jdk-17.0.16&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">PATH</span><span class="o">=</span><span class="s2">&#34;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:</span><span class="nv">$JAVA_HOME</span><span class="s2">/bin&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 刷新 或重启系统 reboot</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> /etc/environment  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 验证</span>
+</span></span><span class="line"><span class="cl">java -version
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 方式二</span>
+</span></span><span class="line"><span class="cl">vi /etc/profile
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#在最下方输入</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">JAVA_HOME</span><span class="o">=</span>/java/jdk-17.0.5
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">JRE_HOME</span><span class="o">=</span><span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span>/jre
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">CLASSPATH</span><span class="o">=</span>.:<span class="nv">$JAVA_HOME</span>/lib:<span class="nv">$JRE_HOME</span>/lib:<span class="nv">$CLASSPATH</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$JAVA_HOME</span>/bin:<span class="nv">$JRE_HOME</span>/bin:<span class="nv">$PATH</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 刷新</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> /etc/profile
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 验证</span>
+</span></span><span class="line"><span class="cl">java -version
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">https://download.oracle.com/otn/java/jdk/17.0.16%2B12/91eb813b5d15455fbbf4d46dcf0b9d6a/jdk-17.0.16_linux-x64_bin.tar.gz
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th><code>/etc/environment</code></th>
+          <th><code>/etc/profile</code></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>类型</strong></td>
+          <td>纯文本键值对文件</td>
+          <td>Shell 脚本</td>
+      </tr>
+      <tr>
+          <td><strong>执行方式</strong></td>
+          <td>系统启动时读取并解析</td>
+          <td>登录 shell 启动时执行</td>
+      </tr>
+      <tr>
+          <td><strong>支持逻辑</strong></td>
+          <td>不支持</td>
+          <td>支持 shell 脚本逻辑 (<code>if</code>, <code>$VAR</code>)</td>
+      </tr>
+      <tr>
+          <td><strong>作用范围</strong></td>
+          <td>系统范围，对所有进程和用户</td>
+          <td>仅对登录 shell 用户</td>
+      </tr>
+      <tr>
+          <td><strong>常用场景</strong></td>
+          <td>设置全局的、不依赖 shell 的变量</td>
+          <td>配置 shell 相关的变量、别名、函数</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="卸载">卸载
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 首先查看所有本地安装的 Java 软件包</span>
+</span></span><span class="line"><span class="cl">sudo dpkg -l <span class="p">|</span> grep <span class="s1">&#39;jdk\|jre&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">root@debian:/usr/lib/jvm# sudo dpkg -l <span class="p">|</span> grep <span class="s1">&#39;jdk\|jre&#39;</span>
+</span></span><span class="line"><span class="cl">ii  openjdk-17-jdk:amd64                    17.0.15+6-1~deb12u1                 amd64        OpenJDK Development Kit <span class="o">(</span>JDK<span class="o">)</span>
+</span></span><span class="line"><span class="cl">ii  openjdk-17-jdk-headless:amd64           17.0.15+6-1~deb12u1                 amd64        OpenJDK Development Kit <span class="o">(</span>JDK<span class="o">)</span> <span class="o">(</span>headless<span class="o">)</span>
+</span></span><span class="line"><span class="cl">ii  openjdk-17-jre:amd64                    17.0.15+6-1~deb12u1                 amd64        OpenJDK Java runtime, using Hotspot JIT
+</span></span><span class="line"><span class="cl">ii  openjdk-17-jre-headless:amd64           17.0.15+6-1~deb12u1                 amd64        OpenJDK Java runtime, using Hotspot JIT <span class="o">(</span>headless<span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 执行删除操作</span>
+</span></span><span class="line"><span class="cl">sudo apt purge openjdk-17-jdk:amd64 openjdk-17-jdk-headless:amd64 openjdk-17-jre:amd64 openjdk-17-jre-headless:amd64
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 清除系统中所有剩余的依赖项</span>
+</span></span><span class="line"><span class="cl">sudo apt autoremove --purge
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 最后在 “/etc/environment”文件中删除JAVA_HOME变量</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="mysql">MySQL
+</h1><h3 id="apt方式">apt方式
+</h3><p>参考：https://blog.csdn.net/qq_45738379/article/details/135392581</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 下载对应系统的mysql-apt-config包</span>
+</span></span><span class="line"><span class="cl">apt install wget -y
+</span></span><span class="line"><span class="cl">wget https://repo.mysql.com/apt/debian/pool/mysql-apt-config/m/mysql-apt-config/mysql-apt-config_0.8.29-1_all.deb
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装下载的deb包</span>
+</span></span><span class="line"><span class="cl">apt install dpkg -y
+</span></span><span class="line"><span class="cl">apt install gnupg -y
+</span></span><span class="line"><span class="cl">sudo dpkg -i mysql-apt-config_0.8.29-1_all.deb
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 更新apt</span>
+</span></span><span class="line"><span class="cl">sudo apt update
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装mysql-server</span>
+</span></span><span class="line"><span class="cl">sudo apt-get -y install mysql-community-server mysql-server
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#安装过程中保持空密码，保持默认强密码模式，直接回车</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 登录mysql8.0，空密码登录，第4步没有设置密码</span>
+</span></span><span class="line"><span class="cl">sudo mysql -uroot
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 进入数据库</span>
+</span></span><span class="line"><span class="cl">use mysql
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改root@localhost用户的密码，密码：大写英文 + 特殊字符 + 数字</span>
+</span></span><span class="line"><span class="cl">ALTER USER <span class="s1">&#39;root&#39;</span>@<span class="s1">&#39;localhost&#39;</span> IDENTIFIED WITH mysql_native_password BY <span class="s1">&#39;你的密码&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建 root 远程账号，用于远程登录</span>
+</span></span><span class="line"><span class="cl">CREATE USER <span class="s1">&#39;root&#39;</span>@<span class="s1">&#39;%&#39;</span> IDENTIFIED WITH mysql_native_password BY <span class="s1">&#39;你的密码&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">GRANT ALL PRIVILEGES ON *.* TO <span class="s1">&#39;root&#39;</span>@<span class="s1">&#39;%&#39;</span> WITH GRANT OPTION<span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 重载授权表</span>
+</span></span><span class="line"><span class="cl">FLUSH PRIVILEGES<span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 退出</span>
+</span></span><span class="line"><span class="cl"><span class="nb">exit</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置开机自启动</span>
+</span></span><span class="line"><span class="cl">systemctl <span class="nb">enable</span> mysql <span class="o">&amp;&amp;</span> systemctl daemon-reload <span class="o">&amp;&amp;</span> systemctl restart mysql <span class="o">&amp;&amp;</span> systemctl status mysql
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>若想修改my.cnf的配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">systemctl stop mysql
+</span></span><span class="line"><span class="cl">rm -rf /var/lib/mysql
+</span></span><span class="line"><span class="cl">vi /etc/mysql/my.cnf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="o">[</span>mysqld<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">max_connections</span> <span class="o">=</span> <span class="m">1000</span>
+</span></span><span class="line"><span class="cl"><span class="nv">wait_timeout</span> <span class="o">=</span> <span class="m">7200</span>
+</span></span><span class="line"><span class="cl"><span class="nv">interactive_timeout</span> <span class="o">=</span> <span class="m">7200</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 1、需要保证这个datadir目录下为空；</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 2、需要保证对datadir目录赋予mysql 权限，执行命令：chown -R mysql:mysql /data/mysql</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># datadir=/var/lib/mysql</span>
+</span></span><span class="line"><span class="cl">bind-address<span class="o">=</span>0.0.0.0
+</span></span><span class="line"><span class="cl"><span class="nv">default_authentication_plugin</span><span class="o">=</span>mysql_native_password
+</span></span><span class="line"><span class="cl"><span class="c1"># 排除掉 NO_ZERO_DATE and NO_ZERO_IN_DATE</span>
+</span></span><span class="line"><span class="cl"><span class="nv">sql_mode</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 表名忽略大小写</span>
+</span></span><span class="line"><span class="cl"><span class="nv">lower_case_table_names</span> <span class="o">=</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 只输出 error 级别的日志</span>
+</span></span><span class="line"><span class="cl"><span class="nv">log_error_verbosity</span> <span class="o">=</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">default-time-zone <span class="o">=</span> <span class="s1">&#39;+08:00&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>mysql.server<span class="o">]</span>
+</span></span><span class="line"><span class="cl">default-character-set <span class="o">=</span> utf8
+</span></span><span class="line"><span class="cl"><span class="o">[</span>mysqld_safe<span class="o">]</span>
+</span></span><span class="line"><span class="cl">default-character-set <span class="o">=</span> utf8
+</span></span><span class="line"><span class="cl"><span class="o">[</span>client<span class="o">]</span>
+</span></span><span class="line"><span class="cl">default-character-set <span class="o">=</span> utf8
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="离线安装-1">离线安装
+</h3><p><strong>环境依赖：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">apt-get update <span class="c1"># 先更新一下包列表</span>
+</span></span><span class="line"><span class="cl">apt-get install -y libaio1 libncurses6 libnuma1 sysv-rc-conf
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>（ Systemd 的服务文件方式）</p>
+<p><strong>获取并解压安装包：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 假设你当前在 /root 目录下，且已经上传了压缩包</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 先创建好目标安装目录</span>
+</span></span><span class="line"><span class="cl">mkdir -p /usr/local/mysql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 解压到 /usr/local/mysql 目录，并剥离顶层目录</span>
+</span></span><span class="line"><span class="cl">tar -xvf mysql-8.0.33-linux-glibc2.17-x86_64-minimal.tar.xz -C /usr/local/mysql --strip-components <span class="m">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>创建用户及用户组：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">groupadd mysql
+</span></span><span class="line"><span class="cl">useradd -r -g mysql -s /bin/false mysql
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>添加环境变量：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s1">&#39;export PATH=$PATH:/usr/local/mysql/bin&#39;</span> &gt;&gt; /etc/profile
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> /etc/profile
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>创建相应目录并赋予合适权限：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mkdir -p /data/mysql/data /data/mysql/log
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 注意 PID 和 SOCK 文件创建的位置，与 my.cnf 保持一致</span>
+</span></span><span class="line"><span class="cl">touch /data/mysql/log/mysql.err
+</span></span><span class="line"><span class="cl">touch /data/mysql/mysql.pid
+</span></span><span class="line"><span class="cl">touch /data/mysql/mysql.sock
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">chown mysql:mysql -R /usr/local/mysql
+</span></span><span class="line"><span class="cl">chown mysql:mysql -R /data/mysql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建软链接，方便应用程序查找</span>
+</span></span><span class="line"><span class="cl">ln -s /data/mysql/mysql.sock /tmp/mysql.sock
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>配置文件编写 (<code>/etc/my.cnf</code>)：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="line"><span class="cl"><span class="k">[mysqld]</span>
+</span></span><span class="line"><span class="cl"><span class="na">user</span><span class="o">=</span><span class="s">mysql</span>
+</span></span><span class="line"><span class="cl"><span class="na">bind-address</span><span class="o">=</span><span class="s">0.0.0.0</span>
+</span></span><span class="line"><span class="cl"><span class="na">port</span><span class="o">=</span><span class="s">3306</span>
+</span></span><span class="line"><span class="cl"><span class="na">basedir</span><span class="o">=</span><span class="s">/usr/local/mysql</span>
+</span></span><span class="line"><span class="cl"><span class="na">datadir</span><span class="o">=</span><span class="s">/data/mysql/data</span>
+</span></span><span class="line"><span class="cl"><span class="na">socket</span><span class="o">=</span><span class="s">/data/mysql/mysql.sock</span>
+</span></span><span class="line"><span class="cl"><span class="na">log_error</span><span class="o">=</span><span class="s">/data/mysql/log/mysql.err</span>
+</span></span><span class="line"><span class="cl"><span class="na">pid_file</span><span class="o">=</span><span class="s">/data/mysql/mysql.pid # 修正了 /datal 到 /data</span>
+</span></span><span class="line"><span class="cl"><span class="na">max_connections</span><span class="o">=</span><span class="s">100</span>
+</span></span><span class="line"><span class="cl"><span class="na">max_connect_errors</span><span class="o">=</span><span class="s">100</span>
+</span></span><span class="line"><span class="cl"><span class="na">character-set-server</span><span class="o">=</span><span class="s">utf8mb4</span>
+</span></span><span class="line"><span class="cl"><span class="na">default-storage-engine</span><span class="o">=</span><span class="s">INNODB</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 推荐使用默认的 caching_sha2_password，如果你要兼容旧客户端，再改为 mysql_native_password</span>
+</span></span><span class="line"><span class="cl"><span class="na">default_authentication_plugin</span><span class="o">=</span><span class="s">caching_sha2_password </span>
+</span></span><span class="line"><span class="cl"><span class="na">lower_case_table_names</span> <span class="o">=</span> <span class="s">1</span>
+</span></span><span class="line"><span class="cl"><span class="na">interactive_timeout</span> <span class="o">=</span> <span class="s">1800</span>
+</span></span><span class="line"><span class="cl"><span class="na">wait_timeout</span> <span class="o">=</span> <span class="s">1800</span>
+</span></span><span class="line"><span class="cl"><span class="na">lock_wait_timeout</span> <span class="o">=</span> <span class="s">3600</span>
+</span></span><span class="line"><span class="cl"><span class="na">tmp_table_size</span> <span class="o">=</span> <span class="s">64M</span>
+</span></span><span class="line"><span class="cl"><span class="na">max_heap_table_size</span> <span class="o">=</span> <span class="s">64M</span>
+</span></span><span class="line"><span class="cl"><span class="na">innodb_autoinc_lock_mode</span> <span class="o">=</span> <span class="s">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">[mysql]</span>
+</span></span><span class="line"><span class="cl"><span class="na">default-character-set</span><span class="o">=</span><span class="s">utf8mb4</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">[client]</span>
+</span></span><span class="line"><span class="cl"><span class="na">port</span><span class="o">=</span><span class="s">3306</span>
+</span></span><span class="line"><span class="cl"><span class="na">default-character-set</span><span class="o">=</span><span class="s">utf8mb4</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>初始化 MySQL：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/usr/local/mysql/bin/mysqld --initialize --user<span class="o">=</span>mysql
+</span></span><span class="line"><span class="cl"><span class="c1"># 显式指定 --user=mysql 确保以正确的用户进行初始化，避免权限问题</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>查看密码：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">grep <span class="s1">&#39;root@localhost:&#39;</span> /data/mysql/log/mysql.err <span class="p">|</span> cut -d<span class="s1">&#39;:&#39;</span> -f2-
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>创建 MySQL Systemd 服务（推荐替代 SysVinit）：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 创建服务文件</span>
+</span></span><span class="line"><span class="cl">nano /etc/systemd/system/mysql.service
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输入以下内容（注意这里的 <code>ExecStart</code> 等路径要与你的安装路径匹配）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">[</span>Unit<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Description</span><span class="o">=</span>MySQL Server
+</span></span><span class="line"><span class="cl"><span class="nv">Documentation</span><span class="o">=</span>man:mysqld<span class="o">(</span>8<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Documentation</span><span class="o">=</span>http://dev.mysql.com/doc/refman/en/using-systemd.html
+</span></span><span class="line"><span class="cl"><span class="nv">After</span><span class="o">=</span>network.target
+</span></span><span class="line"><span class="cl"><span class="nv">After</span><span class="o">=</span>syslog.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Service<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">User</span><span class="o">=</span>mysql
+</span></span><span class="line"><span class="cl"><span class="nv">Group</span><span class="o">=</span>mysql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置为 forking 类型，表示 ExecStart 启动的进程会 fork 出一个子进程作为主进程</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Type</span><span class="o">=</span>forking
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 指定 PID 文件的位置，systemd 会通过这个文件来跟踪主进程</span>
+</span></span><span class="line"><span class="cl"><span class="nv">PIDFile</span><span class="o">=</span>/data/mysql/mysql.pid 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">PermissionsStartOnly</span><span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ExecStart 命令不再使用 --daemonize</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 它会直接启动 mysqld，并让它读取 my.cnf 中的配置</span>
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStart</span><span class="o">=</span>/usr/local/mysql/bin/mysqld --defaults-file<span class="o">=</span>/etc/my.cnf --pid-file<span class="o">=</span>/data/mysql/mysql.pid
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">Restart</span><span class="o">=</span>on-failure
+</span></span><span class="line"><span class="cl"><span class="nv">RestartPreventExitStatus</span><span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Allow time to shut down gracefully</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TimeoutStopSec</span><span class="o">=</span><span class="m">60</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">LimitNOFILE</span><span class="o">=</span><span class="m">65535</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Install<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>保存并退出。</p>
+<p><strong>刷新 Systemd 配置并启用服务：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl daemon-reload
+</span></span><span class="line"><span class="cl">systemctl <span class="nb">enable</span> mysql <span class="c1"># 设置开机自启</span>
+</span></span><span class="line"><span class="cl">systemctl start mysql  <span class="c1"># 启动MySQL服务</span>
+</span></span><span class="line"><span class="cl">systemctl status mysql <span class="c1"># 检查服务状态</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果服务启动失败，查看日志：<code>journalctl -u mysql -xe</code>。</p>
+<p><strong>登录 MySQL 并修改密码：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mysql -u root -p
+</span></span><span class="line"><span class="cl"><span class="c1"># 输入之前获取的临时密码</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果你 my.cnf 中设置了 default_authentication_plugin=caching_sha2_password</span>
+</span></span><span class="line"><span class="cl">ALTER USER <span class="s1">&#39;root&#39;</span>@<span class="s1">&#39;localhost&#39;</span> IDENTIFIED BY <span class="s1">&#39;123456&#39;</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果你 my.cnf 中设置了 default_authentication_plugin=mysql_native_password</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;123456&#39;; </span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">USE mysql<span class="p">;</span>
+</span></span><span class="line"><span class="cl">UPDATE user <span class="nb">set</span> <span class="nv">host</span> <span class="o">=</span> <span class="s1">&#39;%&#39;</span> where <span class="nv">user</span> <span class="o">=</span> <span class="s1">&#39;root&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">FLUSH PRIVILEGES<span class="p">;</span>
+</span></span><span class="line"><span class="cl">EXIT<span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>ps: <strong>如果密码输入一直失败</strong></p>
+<p>重新确认临时密码</p>
+<p>由于密码是 <code>ERROR 1045</code> 的主要原因，让我们获取<strong>最新</strong>的临时密码。</p>
+<ol>
+<li>
+<p><strong>确保 MySQL 已停止。</strong> 这在重新初始化之前至关重要，以避免冲突。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl stop mysql
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>确认它已停止：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl status mysql
+</span></span><span class="line"><span class="cl"><span class="c1"># 应该显示 Active: inactive (dead)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>删除旧数据和日志（请务必小心！）。</strong> 这能确保真正地进行全新初始化。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">rm -rf /data/mysql/data/*
+</span></span><span class="line"><span class="cl">rm -f /data/mysql/log/mysql.err <span class="c1"># 删除旧的错误日志文件</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>注意：</strong> <code>rm -rf /data/mysql/data/*</code> 会删除所有 MySQL 数据。在生产环境中，请<strong>务必备份</strong>数据。对于你当前的学习安装，这通常是安全的。</p>
+</li>
+<li>
+<p><strong>重新初始化 MySQL。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/usr/local/mysql/bin/mysqld --initialize --user<span class="o">=</span>mysql --basedir<span class="o">=</span>/usr/local/mysql --datadir<span class="o">=</span>/data/mysql/data
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这条命令会再次初始化数据目录并生成一个新的临时密码。</p>
+</li>
+<li>
+<p><strong>再次查看新的临时密码。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">grep <span class="s1">&#39;root@localhost:&#39;</span> /data/mysql/log/mysql.err <span class="p">|</span> cut -d<span class="s1">&#39;:&#39;</span> -f2-
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这一次，<strong>请仔细</strong>复制输出中密码部分，确保没有额外的空格或不可见字符。你可以将其复制到一个文本编辑器中，确保只复制实际的密码。</p>
+</li>
+<li>
+<p><strong>启动 MySQL 服务。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl start mysql
+</span></span><span class="line"><span class="cl">systemctl status mysql <span class="c1"># 确认是 active (running)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>使用新密码登录。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mysql -u root -p
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在提示符 <code>Enter password:</code> 后，<strong>小心地粘贴</strong>你刚刚获取到的新临时密码，然后按回车。</p>
+</li>
+</ol>
+<hr>
+<ol start="2">
+<li>如果以上步骤仍然失败（极少见但可能）</li>
+</ol>
+<p>如果上述步骤未能解决问题，这表明可能存在更深层次的认证机制或环境问题。</p>
+<p>你可以尝试以<strong>跳过权限认证</strong>的方式登录 MySQL，这样你可以进入数据库，然后手动重置 <code>root</code> 密码。<strong>注意：这会使你的数据库完全不安全，只用于紧急故障排除。</strong></p>
+<ol>
+<li>
+<p><strong>停止 MySQL 服务：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl stop mysql
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>以跳过权限的方式启动 MySQL（手动启动，不通过 systemd）：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/usr/local/mysql/bin/mysqld_safe --skip-grant-tables --skip-networking <span class="p">&amp;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>--skip-grant-tables</code>：跳过权限验证，任何用户无需密码即可登录。</li>
+<li><code>--skip-networking</code>：禁用网络连接，只允许本地连接，增加安全性。</li>
+<li><code>&amp;</code>：将进程放到后台运行。</li>
+</ul>
+</li>
+<li>
+<p><strong>无密码登录 MySQL：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mysql -u root
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这次应该不需要密码就能直接进入 MySQL 命令行。</p>
+</li>
+<li>
+<p><strong>在 MySQL 内部修改 root 密码并刷新权限：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span><span class="w"> </span><span class="c1">-- 刷新权限，确保后续命令生效
+</span></span></span><span class="line"><span class="cl"><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;root&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;YourNewSecurePasswordHere&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">-- 替换为你的新密码
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- 或者，如果你的 my.cnf 中是 default_authentication_plugin=mysql_native_password
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED WITH mysql_native_password BY &#39;YourNewSecurePasswordHere&#39;;
+</span></span></span><span class="line"><span class="cl"><span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">EXIT</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>注意：</strong> 将 <code>YourNewSecurePasswordHere</code> 替换为你自己设置的新密码！</p>
+</li>
+<li>
+<p><strong>停止以不安全模式运行的 MySQL 进程：</strong> 先找到 <code>mysqld_safe</code> 的进程 ID：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ps aux <span class="p">|</span> grep mysqld_safe
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>找到对应的 PID（通常在第二列），然后：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">kill</span> &lt;PID&gt; <span class="c1"># 替换为实际的 PID</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>或者更暴力但有效的方式：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">killall mysqld_safe
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>正常启动 MySQL 服务：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">systemctl start mysql
+</span></span><span class="line"><span class="cl">systemctl status mysql <span class="c1"># 确认是 active (running)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>使用新密码登录：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mysql -u root -p
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<h3 id="卸载-1">卸载
+</h3><p><a class="link" href="https://blog.csdn.net/weixin_43938497/article/details/110124730"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/weixin_43938497/article/details/110124730</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 使用命令罗列出本机上的所有MySQL相关软件</span>
+</span></span><span class="line"><span class="cl">dpkg --get-selections <span class="p">|</span> grep mysql
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 然后逐一卸载</span>
+</span></span><span class="line"><span class="cl">sudo apt-get --purge remove mysql-server
+</span></span><span class="line"><span class="cl">sudo apt-get --purge remove mysql-client
+</span></span><span class="line"><span class="cl">sudo apt-get --purge remove mysql-common
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 在通过下列命令清除残余</span>
+</span></span><span class="line"><span class="cl">apt-get autoremove
+</span></span><span class="line"><span class="cl">apt-get autoclean
+</span></span><span class="line"><span class="cl">rm /etc/mysql/ -R
+</span></span><span class="line"><span class="cl">rm /var/lib/mysql/ -R
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">49:18.118428Z <span class="m">6</span> <span class="o">[</span>Note<span class="o">]</span> <span class="o">[</span>MY-010454<span class="o">]</span> <span class="o">[</span>Server<span class="o">]</span> A temporary password is generated <span class="k">for</span> root@localhost: ruNn3Yc&lt;82kx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="redis">Redis
+</h1><h3 id="apt方式-1">apt方式
+</h3><p>参考：https://blog.csdn.net/SunBoy_1409/article/details/134996932</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 更新系统</span>
+</span></span><span class="line"><span class="cl">sudo apt update -y
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装Redis</span>
+</span></span><span class="line"><span class="cl">sudo apt install redis-server
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看Redis状态</span>
+</span></span><span class="line"><span class="cl">sudo systemctl status redis
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 验证</span>
+</span></span><span class="line"><span class="cl">redis-cli
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; keys *
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置密码</span>
+</span></span><span class="line"><span class="cl">在 /etc/redis/redis.conf中 ，释放注释 requirepass foobared 
+</span></span><span class="line"><span class="cl">设置密码root，requirepass root
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 开启远程连接</span>
+</span></span><span class="line"><span class="cl">在 /etc/redis/redis.conf中，注释掉 <span class="nb">bind</span> 127.0.0.1 -1:1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 重启</span>
+</span></span><span class="line"><span class="cl">systemctl restart redis
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 测试</span>
+</span></span><span class="line"><span class="cl">root@debian:/usr/local# redis-cli
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; <span class="nb">set</span> name tom
+</span></span><span class="line"><span class="cl"><span class="o">(</span>error<span class="o">)</span> NOAUTH Authentication required.
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; auth <span class="m">123456</span>
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; <span class="nb">set</span> name tom
+</span></span><span class="line"><span class="cl">OK
+</span></span><span class="line"><span class="cl">127.0.0.1:6379&gt; get name
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;tom&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="离线安装-2">离线安装
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1">#  下载</span>
+</span></span><span class="line"><span class="cl">wget http://download.redis.io/releases/redis-7.0.2.tar.gz
+</span></span><span class="line"><span class="cl">或 官网下载通过xftp传到服务器
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  解压到/uer/local目录下</span>
+</span></span><span class="line"><span class="cl">tar -zxvf redis-7.0.2.tar.gz -C /usr/local
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 更新软件包列表</span>
+</span></span><span class="line"><span class="cl">sudo apt update
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装编译工具和依赖项</span>
+</span></span><span class="line"><span class="cl">sudo apt install -y build-essential tcl
+</span></span><span class="line"><span class="cl">apt install -y pkg-config libssl-dev
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  切换到/uer/local/redis-7.0.2目录下,编译</span>
+</span></span><span class="line"><span class="cl">make
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  安装并指定安装目录</span>
+</span></span><span class="line"><span class="cl">make install <span class="nv">PREFIX</span><span class="o">=</span>/usr/local/redis
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  从 redis 的源码目录中复制 redis.conf 到 redis 的安装目录</span>
+</span></span><span class="line"><span class="cl">cp /usr/local/redis-5.0.3/redis.conf /usr/local/redis/bin/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 开启远程连接 &amp; 设置密码</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 在 /etc/redis/redis.conf中，注释掉 bind 127.0.0.1 -1:1</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改 redis.conf 文件，把 daemonize no 改为 daemonize yes</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 设置密码 requirepass 123456</span>
+</span></span><span class="line"><span class="cl">vim redis.conf
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  后台启动</span>
+</span></span><span class="line"><span class="cl">./redis-server redis.conf
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  查看是否启动</span>
+</span></span><span class="line"><span class="cl">ps -ef<span class="p">|</span>grep redis
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  停止</span>
+</span></span><span class="line"><span class="cl">./redis-cli shutdown
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加服务</span>
+</span></span><span class="line"><span class="cl">vim /etc/systemd/system/redis.service
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 添加配置数据</span>
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Unit<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Description</span><span class="o">=</span>redis-server
+</span></span><span class="line"><span class="cl"><span class="nv">After</span><span class="o">=</span>network.target
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Service<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">Type</span><span class="o">=</span>forking
+</span></span><span class="line"><span class="cl"><span class="nv">ExecStart</span><span class="o">=</span>/usr/local/redis/bin/redis-server /usr/local/redis/bin/redis.conf
+</span></span><span class="line"><span class="cl"><span class="nv">PrivateTmp</span><span class="o">=</span><span class="nb">true</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Install<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">### 解析</span>
+</span></span><span class="line"><span class="cl">Description:描述服务
+</span></span><span class="line"><span class="cl">After:描述服务类别
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Service<span class="o">]</span>服务运行参数的设置
+</span></span><span class="line"><span class="cl"><span class="nv">Type</span><span class="o">=</span>forking是后台运行的形式
+</span></span><span class="line"><span class="cl">ExecStart为服务的具体运行命令
+</span></span><span class="line"><span class="cl">ExecReload为重启命令
+</span></span><span class="line"><span class="cl">ExecStop为停止命令
+</span></span><span class="line"><span class="cl"><span class="nv">PrivateTmp</span><span class="o">=</span>True表示给服务分配独立的临时空间
+</span></span><span class="line"><span class="cl">注意：<span class="o">[</span>Service<span class="o">]</span>的启动、重启、停止命令全部要求使用绝对路径
+</span></span><span class="line"><span class="cl"><span class="o">[</span>Install<span class="o">]</span>运行级别下服务安装的相关设置，可设置为多用户，即系统运行级别为3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 开机自启</span>
+</span></span><span class="line"><span class="cl">systemctl daemon-reload
+</span></span><span class="line"><span class="cl">systemctl start redis.service
+</span></span><span class="line"><span class="cl">systemctl <span class="nb">enable</span> redis.service
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">-- 添加完开机启动服务后,以下命令生效
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">systemctl start redis.service   	<span class="c1">#启动redis服务</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">systemctl stop redis.service   		<span class="c1">#停止redis服务</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">systemctl restart redis.service   	<span class="c1">#重新启动服务</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">systemctl status redis.service   	<span class="c1">#查看服务当前状态</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">systemctl <span class="nb">enable</span> redis.service   	<span class="c1">#设置开机自启动</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">systemctl disable redis.service   	<span class="c1">#停止开机自启动</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="nginx">Nginx
+</h1><h3 id="apt方式-2">apt方式
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 更新包</span>
+</span></span><span class="line"><span class="cl">sudo apt update
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装nginx</span>
+</span></span><span class="line"><span class="cl">sudo apt install nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看安装路径</span>
+</span></span><span class="line"><span class="cl">whereis nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># nginx.conf路径</span>
+</span></span><span class="line"><span class="cl">/etc/nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># html路径</span>
+</span></span><span class="line"><span class="cl">/usr/share/nginx/html
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 启动</span>
+</span></span><span class="line"><span class="cl">sudo systemctl start nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 停止</span>
+</span></span><span class="line"><span class="cl">sudo systemctl stop nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 状态</span>
+</span></span><span class="line"><span class="cl">sudo systemctl status nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 开机自启动</span>
+</span></span><span class="line"><span class="cl">sudo systemctl <span class="nb">enable</span> nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="离线安装也非离线">离线安装（也非离线）
+</h3><ol>
+<li>
+<p><strong>确定 Nginx 版本和架构：</strong> 首先，你需要知道你想要安装的Nginx版本，以及目标Debian 12系统的架构（例如 <code>amd64</code>、<code>arm64</code> 等）。Debian 12 (Bookworm) 仓库中通常有 <code>nginx-full</code>, <code>nginx-common</code>, <code>nginx-core</code> 等包。</p>
+</li>
+<li>
+<p><strong>下载 Nginx 及其依赖：</strong> 在一个与目标机器相同架构、相同Debian 12版本的联网机器上，执行以下命令来下载Nginx及其所有依赖包：</p>
+<p>Bash</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1"># 更新包列表 (确保获取最新的依赖信息)</span>
+</span></span><span class="line"><span class="cl"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 下载 Nginx 及其所有依赖包到当前目录</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 注意：这会将所有下载的 .deb 包存放在 /var/cache/apt/archives/ 目录下</span>
+</span></span><span class="line"><span class="cl"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">--</span><span class="n">download</span><span class="o">-</span><span class="n">only</span> <span class="n">nginx</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>--download-only</code> 选项只会下载包，而不会进行安装。</p>
+</li>
+<li>
+<p><strong>查找并复制所有 .deb 包：</strong> 所有下载的 .deb 包都位于 <code>/var/cache/apt/archives/</code> 目录下。你需要将这些文件全部复制到一个可移动存储设备（如U盘）上，或者通过其他方式传输到离线机器上。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1"># 进入缓存目录</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /var/cache/apt/archives/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 将所有 .deb 包复制到你的可移动设备（例如 /mnt/usb_drive）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 请根据实际路径修改 /mnt/usb_drive</span>
+</span></span><span class="line"><span class="cl">cp *.deb /mnt/usb_drive/
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>重要提示：</strong> Nginx 的依赖包可能包括 <code>libssl-dev</code>, <code>zlib1g-dev</code>, <code>libpcre3-dev</code>, <code>build-essential</code> 等，具体取决于你安装的 Nginx 版本和系统环境。最可靠的方法是使用 <code>apt install --download-only nginx</code>，它会自动帮你收集所有必需的 <code>.deb</code> 文件。</p>
+</li>
+</ol>
+<p>步骤2：在离线机器上安装 Nginx</p>
+<ol>
+<li>
+<p><strong>将 .deb 包传输到离线机器：</strong> 将你复制的 <code>.deb</code> 包传输到离线Debian 12机器上的一个目录，例如 <code>/home/user/nginx_offline_install</code>。</p>
+</li>
+<li>
+<p><strong>安装所有 .deb 包：</strong> 使用 <code>dpkg</code> 命令安装所有下载的 .deb 包。由于存在依赖关系，最好一次性安装所有包，或者使用 <code>dpkg -i --recursive</code> 或 <code>apt install ./</code>。</p>
+<p>Bash</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1"># 进入存放 .deb 包的目录</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /usr/local/nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装所有 .deb 包</span>
+</span></span><span class="line"><span class="cl">sudo dpkg -i *.deb
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 如果有依赖问题，使用以下命令尝试修复（通常在线安装时才用，但离线可以尝试，可能需要手动解决依赖）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># sudo apt --fix-broken install</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>dpkg -i *.deb</code> 会尝试安装当前目录下所有的 .deb 包。如果遇到依赖问题，<code>dpkg</code> 可能会报错。通常，当你下载了所有正确的依赖包时，这个命令会成功。</p>
+</li>
+<li>
+<p><strong>验证 Nginx 安装：</strong> 安装完成后，Nginx 服务应该会自动启动。你可以检查其状态：</p>
+<p>Bash</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">sudo systemctl status nginx
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-nginx" data-lang="nginx"><span class="line"><span class="cl"><span class="k">user</span> <span class="s">www-data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">worker_processes</span> <span class="s">auto</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">pid</span> <span class="s">/run/nginx.pid</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">error_log</span> <span class="s">/var/log/nginx/error.log</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">include</span> <span class="n">/etc/nginx/modules-enabled/*.conf</span>;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">events</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">worker_connections</span> <span class="mi">768</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">http</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">include</span>       <span class="s">mime.types</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">default_type</span>  <span class="s">application/octet-stream</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kn">sendfile</span>        <span class="no">on</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">keepalive_timeout</span>  <span class="mi">65</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kn">server</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">listen</span>       <span class="mi">8080</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">server_name</span>  <span class="n">192.168.111.155</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kn">root</span> <span class="s">/home/tom/app/dist</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">index</span> <span class="s">index.html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kn">location</span> <span class="p">=</span> <span class="s">/favicon.ico</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">try_files</span> <span class="s">/favicon.ico</span> <span class="p">=</span><span class="mi">404</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri/</span> <span class="s">/index.html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kn">location</span> <span class="s">/api/</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">proxy_pass</span> <span class="s">http://localhost:8090</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="nv">$host</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">proxy_set_header</span> <span class="s">X-Real-IP</span> <span class="nv">$remote_addr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="tomcat">Tomcat
+</h1><h1 id="宝塔">宝塔
+</h1><h1 id="项目部署">项目部署：
+</h1><p>nginx配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">user www-data<span class="p">;</span>
+</span></span><span class="line"><span class="cl">worker_processes auto<span class="p">;</span>
+</span></span><span class="line"><span class="cl">pid /run/nginx.pid<span class="p">;</span>
+</span></span><span class="line"><span class="cl">error_log /var/log/nginx/error.log<span class="p">;</span>
+</span></span><span class="line"><span class="cl">include /etc/nginx/modules-enabled/*.conf<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">events <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    worker_connections 768<span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">http <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    include       mime.types<span class="p">;</span>
+</span></span><span class="line"><span class="cl">    default_type  application/octet-stream<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    sendfile        on<span class="p">;</span>
+</span></span><span class="line"><span class="cl">    keepalive_timeout  65<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    server <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        listen       8080<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        server_name  192.168.111.155<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        root /home/tom/app/dist<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        index index.html<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nv">location</span> <span class="o">=</span> /favicon.ico <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            try_files /favicon.ico <span class="o">=</span>404<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        location / <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            try_files <span class="nv">$uri</span> <span class="nv">$uri</span>/ /index.html<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        location /api/ <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            proxy_pass http://localhost:8090<span class="p">;</span>
+</span></span><span class="line"><span class="cl">            proxy_set_header Host <span class="nv">$host</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            proxy_set_header X-Real-IP <span class="nv">$remote_addr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            proxy_set_header X-Forwarded-For <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>权限报错：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">server: 192.168.111.155, request: <span class="s2">&#34;GET /favicon.ico HTTP/1.1&#34;</span>, host: <span class="s2">&#34;192.168.111.155:8080&#34;</span>, referrer: <span class="s2">&#34;http://192.168.111.155:8080/&#34;</span> 2025/07/17 11:11:37 <span class="o">[</span>crit<span class="o">]</span> 25260#25260: *6 stat<span class="o">()</span> <span class="s2">&#34;/home/tom/app/dist/index.html&#34;</span> failed <span class="o">(</span>13: Permission denied<span class="o">)</span>, client: 192.168.111.152,
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>项目存放路径例：</p>
+<p>/home/tom/app；</p>
+<p>nginx配置中用户user www-data;</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 检查项目文件目录权限 确保这些目录和文件的权限允许 www-data 用户访问</span>
+</span></span><span class="line"><span class="cl">ls -ld /home/tom /home/tom/app /home/tom/app/dist /home/tom/app/dist/index.html
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改权限 为 www-data 用户授予读取权限</span>
+</span></span><span class="line"><span class="cl">sudo chown -R tom:www-data /home/tom/app/dist
+</span></span><span class="line"><span class="cl">sudo chmod -R g+r /home/tom/app/dist
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 确保目录可访问</span>
+</span></span><span class="line"><span class="cl">sudo chmod o+x /home/tom
+</span></span><span class="line"><span class="cl">sudo chmod o+x /home/tom/app
+</span></span><span class="line"><span class="cl">sudo chmod o+x /home/tom/app/dist
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/docker/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Docker</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/centos7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">centos7</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/centos7-%E5%AE%89%E8%A3%85-mysql-8%E8%AF%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">centos7 安装 `MySQL 8`（详）</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/centos7-%E5%AE%89%E8%A3%85jdkmysqlredisnginxnacos/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">centos7 安装jdk、mysql、redis、nginx、nacos</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/debian%E4%BD%BF%E7%94%A8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">debian使用</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

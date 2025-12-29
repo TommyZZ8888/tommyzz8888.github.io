@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 概述：一共三大部分配置。 其中#注释掉的可以在需要的时候开启并修改，没有注释掉的（除了下面location示例）不要删掉，基本都是必须的配置项。 ###############################第一部分 全局配置############################\n1 2 3 4 5 #user nobody; 指定启动进程的用户，默认不用指定即可。 #error_log logs/error.log; 配置日志输出，虽然叫error_log但是可以定义输出的级别，默认不写是ERROR级别 #error_log logs/error.log notice; #error_log logs/error.log info; #pid logs/nginx.pid; 记录pid的文件，默认就是放到这个位置，可以修改。 只启动一个进程，nginx是多进程单线程模型，但是使用了epoll sendfile 非阻塞io worker_processes 1;\n">
+<title>openresty配置详解</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/openresty%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="openresty配置详解">
+<meta property='og:description' content=" 概述：一共三大部分配置。 其中#注释掉的可以在需要的时候开启并修改，没有注释掉的（除了下面location示例）不要删掉，基本都是必须的配置项。 ###############################第一部分 全局配置############################\n1 2 3 4 5 #user nobody; 指定启动进程的用户，默认不用指定即可。 #error_log logs/error.log; 配置日志输出，虽然叫error_log但是可以定义输出的级别，默认不写是ERROR级别 #error_log logs/error.log notice; #error_log logs/error.log info; #pid logs/nginx.pid; 记录pid的文件，默认就是放到这个位置，可以修改。 只启动一个进程，nginx是多进程单线程模型，但是使用了epoll sendfile 非阻塞io worker_processes 1;\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/openresty%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="openresty配置详解">
+<meta name="twitter:description" content=" 概述：一共三大部分配置。 其中#注释掉的可以在需要的时候开启并修改，没有注释掉的（除了下面location示例）不要删掉，基本都是必须的配置项。 ###############################第一部分 全局配置############################\n1 2 3 4 5 #user nobody; 指定启动进程的用户，默认不用指定即可。 #error_log logs/error.log; 配置日志输出，虽然叫error_log但是可以定义输出的级别，默认不写是ERROR级别 #error_log logs/error.log notice; #error_log logs/error.log info; #pid logs/nginx.pid; 记录pid的文件，默认就是放到这个位置，可以修改。 只启动一个进程，nginx是多进程单线程模型，但是使用了epoll sendfile 非阻塞io worker_processes 1;\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#ngx">ngx</a></li>
+        <li><a href="#log">log</a></li>
+        <li><a href="#var与ctx">var与ctx</a></li>
+        <li><a href="#hash与编码">hash与编码</a></li>
+        <li><a href="#re正则个人感觉lua自带的正则已经够用了">re正则（个人感觉lua自带的正则已经够用了）</a></li>
+        <li><a href="#os相关的">os相关的</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" >
+            中间件
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/openresty%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/">openresty配置详解</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 6 分钟
+                
+                
+                , 2697 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <ul>
+<li>
+<h1 id="概述一共三大部分配置">概述：一共三大部分配置。
+</h1></li>
+</ul>
+<h1 id="其中注释掉的可以在需要的时候开启并修改没有注释掉的除了下面location示例不要删掉基本都是必须的配置项">其中#注释掉的可以在需要的时候开启并修改，没有注释掉的（除了下面location示例）不要删掉，基本都是必须的配置项。
+</h1><p>###############################第一部分 全局配置############################</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#user  nobody;                        指定启动进程的用户，默认不用指定即可。
+</span></span><span class="line"><span class="cl">#error_log  logs/error.log;           配置日志输出，虽然叫error_log但是可以定义输出的级别，默认不写是ERROR级别
+</span></span><span class="line"><span class="cl">#error_log  logs/error.log  notice;   
+</span></span><span class="line"><span class="cl">#error_log  logs/error.log  info;
+</span></span><span class="line"><span class="cl">#pid        logs/nginx.pid;           记录pid的文件，默认就是放到这个位置，可以修改。
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="只启动一个进程nginx是多进程单线程模型但是使用了epoll-sendfile-非阻塞io">只启动一个进程，nginx是多进程单线程模型，但是使用了epoll sendfile 非阻塞io
+</h1><p>worker_processes  1;</p>
+<p>###############################第二部分 event配置############################
+#主要是网络连接相关的配置
+events {</p>
+<h1 id="每个worker能连接1024个链接">每个worker能连接1024个链接
+</h1><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">  worker_connections  1024;
+</span></span><span class="line"><span class="cl">  #use epoll; 事件驱动模型select|poll|kqueue|epoll|resig
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###############################第三部分 http配置############################</p>
+<p>​</p>
+<pre><code>http {
+  include       mime.types;  #文件扩展名与文件类型映射表
+  default_type  text/html;   #默认的返回类型，可以在server.location里面改
+  sendfile        on;        #开启sendfile系统调用
+  keepalive_timeout  65;     #连接超时时间65s
+</code></pre>
+<p>​</p>
+<pre><code>  server {
+    listen       80;
+    # 下面展示多个demo，demo之间互相没有依赖关系，可以单独配置来进行测试。
+    # 其中demo1到demo6 是nginx相关的。
+
+############### demo1 展示location路径的不同写法优先级 ###############
+# =最高优先级 表示路径完全等于，可以匹配/demo1/a/b的请求
+location =/demo1/a/b {
+  echo &quot;=/demo1/a/b&quot;;
+} 
+# ^~第二高  表示startsWith，可以匹配/demo1/a/b/c和/demo1/abc请求
+location ^~/demo1/a {
+  echo &quot;^~/demo1/a&quot;;
+}
+# ~等四个符号第三高  表示正则，如果要用{}是特殊符号，需要整个加引号，建议直接加双引号，防止出错，可以匹配/demo1/bcd
+# 其他三个：~*不区分大小写正则，!~正则不匹配的，!~*不分大小写的正则不匹配
+location &quot;~/demo1/\w{3}$&quot; {
+  echo &quot;regex&quot;;
+}
+# 最低 没有前置符号 /demo1 /demo111 /demo1/b/c 不符合上面三种，就会匹配到这
+location /demo1{
+  echo &quot;/demo1&quot;;
+}
+
+############### demo2 展示serve静态文件夹 ###############
+location / {
+   root   html;                 # root就是根目录是当前html目录
+   index  index.html index.htm; # index表示默认不写的时候转到的文件
+}
+
+############## demo3 指定错误文件 ###############
+error_page   500 502 503 504  /50x.html;
+location = /50x.html {
+   root   html;
+}
+
+############# demo4 rewrite重写url rewrite也可以是server级别 ####################
+location /demo4 {
+  # 一般放到最后一行
+  rewrite ^/(.*) /$1/api permanent; # permanent301, redirect302, break不在匹配后面rewrite规则，last继续向下匹配。
+}
+location /demo4/api {
+  echo &quot;/demo4/api&quot;;
+}
+
+############# demo5 demo6 proxy_pass反向代理 ####################
+# /demo5 =&gt; baidu.com/demo5
+# /demo5/a/b =&gt; baidu.com/demo5/a/b
+location /demo5 {
+  proxy_pass  https://www.baidu.com;
+}
+# /demo6 =&gt; baidu.com
+# /demo6/a/b =&gt; baidu.com/a/b
+location /demo6 {
+  # proxy_set_header Host $http_host; 如果有请求头改动的需求可以搜索proxy_set_header去了解
+  proxy_pass  https://www.baidu.com/;
+}
+</code></pre>
+<p>}</p>
+<h1 id="下面demo7到demo11是openresty-lua的一些配置demo">下面demo7到demo11是openresty lua的一些配置demo
+</h1><pre><code>  server {
+    listen       81;
+</code></pre>
+<p>​</p>
+<pre><code>############# demo7 init_by_lua_block 用来加载经常用到的库 或者 用来对多进程shared变量赋值 ####################
+init_by_lua_block {
+  cjson = require(&quot;cjson&quot;)       --后续的lua流程中可以直接使用cjson
+  local myname = ngx.shared.info --可以认为是静态变量，通过info:get获取变量值
+  info:set(&quot;name&quot;, &quot;frank&quot;)
+  info:set(&quot;age&quot;, 77)
+}
+
+############# demo8 demo9 rewrite_by_lua_block 配合ngx.redirect用来替换rewrite指令 ####################
+# 注意rewrite_by_lua和因为作用阶段是nginx原生rewrite之后，所以容易和原生一起用的时候出错，最好的方式就是只用lua的不要用nginx的了。
+location /demo8 {
+  set $a 1;
+  set $b &quot;&quot;;
+  rewrite_by_lua_block {
+    ngx.var.b = tonumber(ngx.var.a) + 1
+    if tonumber(ngx.var.b) == 2 then
+      return ngx.redirect(&quot;/demo9&quot;) --默认是302，如果要301或307可以再加一个第二参数即可
+    end
+  }
+  echo &quot;demo8&quot;; # 注意echo是content阶段的，rewrite阶段重定向了请求，就走不到这里了
+}
+location /demo9 {
+  echo &quot;demo9&quot;;
+}
+############# demo10 access_by_lua_block 用来做一些加载内容前的准备工作例如访问redis看看用户身份是不是合法 ip是不是合法等 ####################
+location /demo10 {
+  access_by_lua_block {
+    local res = ngx.location.capture(&quot;/auth&quot;) -- ngx.location.capture是作为客户端发起http请求拿到结果
+    if res.status == ngx.HTTP_OK then
+      return  -- 正常return就能走到content阶段
+    end
+    if res.status == ngx.HTTP_FORBIDDEN then
+      ngx.exit(res.status) -- exit + 状态码 就直接返回状态码了
+    end
+    ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+  }
+  echo &quot;demo10&quot;; # 如果合法的话就返回demo10字样
+}
+location /auth {
+  return 200; # 换成403 or 500试试
+}
+
+############# demo10 content_by_lua_block 用来作为content阶段的脚本，一般测试用的多 ####################
+#不要和 echo proxy_pass等content阶段指令一起用
+location /demo10 {
+  content_by_lua_block{
+    ngx.say(&quot;/demo10&quot;);
+    ngx.say(&quot;/demo11&quot;); -- 和外部用俩echo效果类似。ngx.say ngx.print区别是前者会多个回车在最后
+  }
+  # echo &quot;echo10&quot;;   如果外面用了echo，则只有echo的效果
+  # proxy_pass http://www.baidu.com; 如果外面用了proxy_pass也是只有proxy_pass效果了，因为都是content阶段，content只能一个生效。
+}
+
+############# demo11 rewrite_by_lua与proxy_pass配合 根据参数进行转发 ####################
+location /demo11 {
+	  default_type text/html;
+		set $proxy &quot;&quot;;
+  rewrite_by_lua '            # 千万别用content，因为content和proxy_pass阶段犯冲
+			local h = ngx.var.host    # 这里从host中提出第一个.之前的部分看是不是a来决定转发到哪
+			local dot = h:find(&quot;%.&quot;)
+			local prefix = h:sub(1,dot-1)
+			if prefix == &quot;a&quot; then
+				ngx.var.proxy=&quot;127.0.0.1:3000&quot;
+			else
+				ngx.var.proxy=&quot;127.0.0.1:5500&quot;
+			end
+  ';
+		proxy_pass http://$proxy$uri;
+}
+  }
+}
+</code></pre>
+<h3 id="ngx">ngx
+</h3><p>上面的配置中已经看到ngx的一些属性和方法了，例如say print可以作为content返回，redirect可以实现跳转，ngx.location.capture可以请求一个url，一般是内部url。exit可以返回状态码，shared可以作为一个所有进程共享的缓存kv池。</p>
+<p>再来看看其他的一些常见用法。</p>
+<h3 id="log">log
+</h3><p>ngx.log(ngx.INFO, &ldquo;日志内容&rdquo;) 级别有ngx.STDERR ngx.EMERG ngx.ALERT ngx.CRIT ngx.ERR ngx.WARN ngx.NOTICE ngx.INFO ngx.DEBUG</p>
+<h3 id="var与ctx">var与ctx
+</h3><p>ngx.var可以获取或者修改nginx上下文的$xx变量，包括内置的变量，和在location范围内set的变量。nginx上下文的变量参考</p>
+<p>一个request上下文的ngx.ctx是一个table可以自由的赋值和获取。例如rewrite_by_lua中ngx.ctx.a=10, content_by_lua中能拿到ngx.ctx.a。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">location.capture
+</span></span><span class="line"><span class="cl">local res = ngx.location.capture(&#39;/foo?a=1&amp;b=3&amp;c=%3a&#39;) -- get请求, res有status body header和truncated属性
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ngx.req.set_header(&#34;Content-Type&#34;, &#34;application/json&#34;)
+</span></span><span class="line"><span class="cl">ngx.location.capture(&#39;/foo/bar&#39;,{ method = ngx.HTTP_POST, body = cjson.encode({a = &#39;hello, world&#39; })) --post
+</span></span><span class="line"><span class="cl">req
+</span></span><span class="line"><span class="cl">ngx.req.get_method() 返回大写的字符串GET
+</span></span><span class="line"><span class="cl">ngx.req.get_headers() 返回 kv table
+</span></span><span class="line"><span class="cl">ngx.req.set_header(k, v)
+</span></span><span class="line"><span class="cl">ngx.req.get_body_data() 返回是string
+</span></span><span class="line"><span class="cl">ngx.req.get_uri_args() get查询参数，返回table
+</span></span><span class="line"><span class="cl">ngx.req.get_post_args() form类型的post，返回table,err
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="hash与编码">hash与编码
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">newstr = ngx.encode_base64(str, no_padding?)
+</span></span><span class="line"><span class="cl">newstr = ngx.decode_base64(str)
+</span></span><span class="line"><span class="cl">digest = ngx.md5(str)
+</span></span><span class="line"><span class="cl">str = ngx.encode_args(table)
+</span></span><span class="line"><span class="cl">table = ngx.decode_args(str, max_args?)
+</span></span><span class="line"><span class="cl">newstr = ngx.escape_uri(str)
+</span></span><span class="line"><span class="cl">newstr = ngx.unescape_uri(str)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="re正则个人感觉lua自带的正则已经够用了">re正则（个人感觉lua自带的正则已经够用了）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">local m, err = ngx.re.match(&#34;hello, 1234&#34;, &#34;[0-9]{3}&#34;) -- m[0] == &#34;123&#34; 这个正则比lua自带的正则强一点
+</span></span><span class="line"><span class="cl">local from, to, err = ngx.re.find(s, &#34;([0-9]+)&#34;, &#34;jo&#34;)
+</span></span><span class="line"><span class="cl">local iterator, err = ngx.re.gmatch(&#34;hello, world!&#34;, &#34;([a-z]+)&#34;, &#34;i&#34;)
+</span></span><span class="line"><span class="cl">local newstr, n, err = ngx.re.sub(&#34;hello, 1234&#34;, &#34;([0-9])[0-9]&#34;, &#34;[$0][$1]&#34;)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="os相关的">os相关的
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ngx.sleep(n) 单位是s
+</span></span><span class="line"><span class="cl">ngx.time() ngx.utctime()ngx.now() ngx.today()... 时间相关的
+</span></span><span class="line"><span class="cl">ngx.exec(&#34;shell&#34;)
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/elasticsearch/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ElasticSearch</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/kafka/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kafka</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/kafka%E9%9D%A2%E8%AF%95%E9%A2%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kafka面试题</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/nginx/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Nginx</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/nginx%E7%9A%84%E5%8F%98%E9%87%8F%E6%8F%90%E5%8F%96/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">nginx的变量提取</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

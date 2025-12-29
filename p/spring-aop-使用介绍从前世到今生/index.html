@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前面写过 Spring IOC 的源码分析，很多读者希望可以出一个 Spring AOP 的源码分析，不过 Spring AOP 的源码还是比较多的，写出来不免篇幅会大些。\n本文不介绍源码分析，而是介绍 Spring AOP 中的一些概念，以及它的各种配置方法，涵盖了 Spring AOP 发展到现在出现的全部 3 种配置方式。\n">
+<title>Spring AOP 使用介绍，从前世到今生</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/spring-aop-%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D%E4%BB%8E%E5%89%8D%E4%B8%96%E5%88%B0%E4%BB%8A%E7%94%9F/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="Spring AOP 使用介绍，从前世到今生">
+<meta property='og:description' content="前面写过 Spring IOC 的源码分析，很多读者希望可以出一个 Spring AOP 的源码分析，不过 Spring AOP 的源码还是比较多的，写出来不免篇幅会大些。\n本文不介绍源码分析，而是介绍 Spring AOP 中的一些概念，以及它的各种配置方法，涵盖了 Spring AOP 发展到现在出现的全部 3 种配置方式。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/spring-aop-%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D%E4%BB%8E%E5%89%8D%E4%B8%96%E5%88%B0%E4%BB%8A%E7%94%9F/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="Spring AOP 使用介绍，从前世到今生">
+<meta name="twitter:description" content="前面写过 Spring IOC 的源码分析，很多读者希望可以出一个 Spring AOP 的源码分析，不过 Spring AOP 的源码还是比较多的，写出来不免篇幅会大些。\n本文不介绍源码分析，而是介绍 Spring AOP 中的一些概念，以及它的各种配置方法，涵盖了 Spring AOP 发展到现在出现的全部 3 种配置方式。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#aop-aspectj-spring-aop">AOP, AspectJ, Spring AOP</a></li>
+    <li><a href="#aop-术语解释">AOP 术语解释</a></li>
+    <li><a href="#spring-aop">Spring AOP</a>
+      <ol>
+        <li><a href="#spring-12-中的配置">Spring 1.2 中的配置</a></li>
+        <li><a href="#spring-20-aspectj-配置">Spring 2.0 @AspectJ 配置</a></li>
+        <li><a href="#spring-20-schema-based-配置">Spring 2.0 schema-based 配置</a></li>
+      </ol>
+    </li>
+    <li><a href="#小结">小结</a></li>
+    <li><a href="#附录">附录</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/concurrency/" class="font_size_6">
+                Concurrency
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_5">
+                Juc
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_4">
+                Jvm
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/java-base/" >
+            Java Base
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/spring-aop-%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D%E4%BB%8E%E5%89%8D%E4%B8%96%E5%88%B0%E4%BB%8A%E7%94%9F/">Spring AOP 使用介绍，从前世到今生</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 16 分钟
+                
+                
+                , 8001 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>前面写过 Spring IOC 的源码分析，很多读者希望可以出一个 Spring AOP 的源码分析，不过 Spring AOP 的源码还是比较多的，写出来不免篇幅会大些。</p>
+<p>本文不介绍源码分析，而是介绍 Spring AOP 中的一些概念，以及它的各种配置方法，涵盖了 Spring AOP 发展到现在出现的全部 3 种配置方式。</p>
+<p>由于 Spring 强大的向后兼容性，实际代码中往往会出现很多配置混杂的情况，而且居然还能工作，本文希望帮助大家理清楚这些知识。</p>
+<p>本文使用的测试源码已上传到 Github: <a class="link" href="https://github.com/hongjiev/spring-aop-learning"  target="_blank" rel="noopener"
+    >hongjiev/spring-aop-learning</a>。</p>
+<p><strong>目录：</strong></p>
+<!-- toc -->
+<h2 id="aop-aspectj-spring-aop">AOP, AspectJ, Spring AOP
+</h2><p>我们先来把它们的概念和关系说说清楚。</p>
+<p>AOP 要实现的是在我们原来写的代码的基础上，进行一定的包装，如在方法执行前、方法返回后、方法抛出异常后等地方进行一定的拦截处理或者叫增强处理。</p>
+<p>AOP 的实现并不是因为 Java 提供了什么神奇的钩子，可以把方法的几个生命周期告诉我们，而是我们要实现一个代理，实际运行的实例其实是生成的代理类的实例。</p>
+<p>作为 Java 开发者，我们都很熟悉 <strong>AspectJ</strong> 这个词，甚至于我们提到 AOP 的时候，想到的往往就是 AspectJ，即使你可能不太懂它是怎么工作的。这里，我们把 AspectJ 和 Spring AOP 做个简单的对比：</p>
+<p><strong>Spring AOP：</strong></p>
+<ul>
+<li>
+<p>它基于动态代理来实现。默认地，如果使用接口的，用 JDK 提供的动态代理实现，如果没有接口，使用 CGLIB 实现。大家一定要明白背后的意思，包括什么时候会不用 JDK 提供的动态代理，而用 CGLIB 实现。</p>
+</li>
+<li>
+<p>Spring 3.2 以后，spring-core 直接就把 CGLIB 和 ASM 的源码包括进来了，这也是为什么我们不需要显式引入这两个依赖</p>
+</li>
+<li>
+<p>Spring 的 IOC 容器和 AOP 都很重要，Spring AOP 需要依赖于 IOC 容器来管理。</p>
+</li>
+<li>
+<p>如果你是 web 开发者，有些时候，你可能需要的是一个 Filter 或一个 Interceptor，而不一定是 AOP。</p>
+</li>
+<li>
+<p>Spring AOP 只能作用于 Spring 容器中的 Bean，它是使用纯粹的 Java 代码实现的，只能作用于 bean 的方法。</p>
+</li>
+<li>
+<p>Spring 提供了 AspectJ 的支持，后面我们会单独介绍怎么使用，一般来说我们用<strong>纯的</strong> Spring AOP 就够了。</p>
+</li>
+<li>
+<p>很多人会对比 Spring AOP 和 AspectJ 的性能，Spring AOP 是基于代理实现的，在容器启动的时候需要生成代理实例，在方法调用上也会增加栈的深度，使得 Spring AOP 的性能不如 AspectJ 那么好。</p>
+</li>
+</ul>
+<p><strong>AspectJ：</strong></p>
+<ul>
+<li>
+<p>AspectJ 出身也是名门，来自于 Eclipse 基金会，link：https://www.eclipse.org/aspectj</p>
+</li>
+<li>
+<p>属于静态织入，它是通过修改代码来实现的，它的织入时机可以是：</p>
+<ul>
+<li>Compile-time weaving：编译期织入，如类 A 使用 AspectJ 添加了一个属性，类 B 引用了它，这个场景就需要编译期的时候就进行织入，否则没法编译类 B。</li>
+<li>Post-compile weaving：也就是已经生成了 .class 文件，或已经打成 jar 包了，这种情况我们需要增强处理的话，就要用到编译后织入。</li>
+<li><strong>Load-time weaving</strong>：指的是在加载类的时候进行织入，要实现这个时期的织入，有几种常见的方法。1、自定义类加载器来干这个，这个应该是最容易想到的办法，在被织入类加载到 JVM 前去对它进行加载，这样就可以在加载的时候定义行为了。2、在 JVM 启动的时候指定 AspectJ 提供的 agent：<code>-javaagent:xxx/xxx/aspectjweaver.jar</code>。</li>
+</ul>
+</li>
+<li>
+<p>AspectJ 能干很多 Spring AOP 干不了的事情，它是 <strong>AOP 编程的完全解决方案</strong>。Spring AOP 致力于解决的是企业级开发中最普遍的 AOP 需求（方法织入），而不是力求成为一个像 AspectJ 一样的 AOP 编程完全解决方案。</p>
+</li>
+<li>
+<p>因为 AspectJ 在实际代码运行前完成了织入，所以大家会说它生成的类是没有额外运行时开销的。</p>
+</li>
+<li>
+<p><del>很快我会专门写一篇文章介绍 AspectJ 的使用，以及怎么在 Spring 应用中使用 AspectJ。</del></p>
+<blockquote>
+<p>已成文：https://www.javadoop.com/post/aspectj</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="aop-术语解释">AOP 术语解释
+</h2><p>在这里，不准备解释那么多 AOP 编程中的术语了，我们碰到一个说一个吧。</p>
+<p>Advice、Advisor、Pointcut、Aspect、Joinpoint 等等。</p>
+<h2 id="spring-aop">Spring AOP
+</h2><p>首先要说明的是，这里介绍的 Spring AOP 是纯的 Spring 代码，和 AspectJ 没什么关系，但是 Spring 延用了 AspectJ 中的概念，包括使用了 AspectJ 提供的 jar 包中的注解，但是不依赖于其实现功能。</p>
+<blockquote>
+<p>后面介绍的如 @Aspect、@Pointcut、@Before、@After 等注解都是来自于 AspectJ，但是功能的实现是纯 Spring AOP 自己实现的。</p>
+</blockquote>
+<p>下面我们来介绍 Spring AOP 的使用方法，先从最简单的配置方式开始说起，这样读者想看源码也会比较容易。</p>
+<p>目前 Spring AOP 一共有三种配置方式，Spring 做到了很好地向下兼容，所以大家可以放心使用。</p>
+<ul>
+<li>Spring 1.2 <strong>基于接口的配置</strong>：最早的 Spring AOP 是完全基于几个接口的，想看源码的同学可以从这里起步。</li>
+<li>Spring 2.0 <strong>schema-based 配置</strong>：Spring 2.0 以后使用 XML 的方式来配置，使用 命名空间 <code>&lt;aop /&gt;</code></li>
+<li>Spring 2.0 <strong>@AspectJ 配置</strong>：使用注解的方式来配置，这种方式感觉是最方便的，还有，这里虽然叫做 <code>@AspectJ</code>，但是这个和 AspectJ 其实没啥关系。</li>
+</ul>
+<h3 id="spring-12-中的配置">Spring 1.2 中的配置
+</h3><p>这节我们将介绍 Spring 1.2 中的配置，这是最古老的配置，但是由于 Spring 提供了很好的向后兼容，以及很多人根本不知道什么配置是什么版本的，以及是否有更新更好的配置方法替代，所以还是会有很多代码是采用这种古老的配置方式的，这里说的古老并没有贬义的意思。</p>
+<p>下面用一个简单的例子来演示怎么使用 Spring 1.2 的配置方式。</p>
+<p>首先，我们先定义两个接口 <code>UserService</code> 和 <code>OrderService</code>，以及它们的实现类 <code>UserServiceImpl</code> 和 <code>OrderServiceImpl</code>：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/7.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="3"
+	
+	
+></p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/8.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="3"
+	
+	
+></p>
+<p>接下来，我们定义两个 <strong>advice</strong>，分别用于拦截<strong>方法执行前</strong>和<strong>方法返回后</strong>：</p>
+<blockquote>
+<p>advice 是我们接触的第一个概念，记住它是干什么用的。</p>
+</blockquote>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/4.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="4"
+	
+	
+></p>
+<p>上面的两个 Advice 分别用于方法调用前输出参数和方法调用后输出结果。</p>
+<p>现在可以开始配置了，我们配置一个名为 <strong>spring_1_2.xml</strong> 的文件：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/5.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="5"
+	
+	
+></p>
+<p>接下来，我们跑起来看看：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/6.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="6"
+	
+	
+></p>
+<p>查看输出结果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">准备执行方法: createUser, 参数列表：[Tom, Cruise, 55]
+</span></span><span class="line"><span class="cl">方法返回：User{firstName=&#39;Tom&#39;, lastName=&#39;Cruise&#39;, age=55, address=&#39;null&#39;}
+</span></span><span class="line"><span class="cl">准备执行方法: queryUser, 参数列表：[]
+</span></span><span class="line"><span class="cl">方法返回：User{firstName=&#39;Tom&#39;, lastName=&#39;Cruise&#39;, age=55, address=&#39;null&#39;}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从结果可以看到，对 UserService 中的两个方法都做了前、后拦截。这个例子理解起来应该非常简单，就是一个代理实现。</p>
+<blockquote>
+<p>代理模式需要一个接口、一个具体实现类，然后就是定义一个代理类，用来包装实现类，添加自定义逻辑，在使用的时候，需要用代理类来生成实例。</p>
+</blockquote>
+<p>此中方法有个致命的问题，如果我们需要拦截 OrderService 中的方法，那么我们还需要定义一个 OrderService 的代理。如果还要拦截 PostService，得定义一个 PostService 的代理&hellip;&hellip;</p>
+<p>而且，我们看到，我们的拦截器的粒度只控制到了类级别，类中所有的方法都进行了拦截。接下来，我们看看怎么样<strong>只拦截特定的方法</strong>。</p>
+<p>在上面的配置中，配置拦截器的时候，interceptorNames 除了指定为 Advice，是还可以指定为 Interceptor 和 Advisor 的。</p>
+<p>这里我们来理解 <strong>Advisor</strong> 的概念，它也比较简单，<strong>它内部需要指定一个 Advice</strong>，Advisor 决定该拦截哪些方法，拦截后需要完成的工作还是内部的 Advice 来做。</p>
+<p>它有好几个实现类，这里我们使用实现类 <strong>NameMatchMethodPointcutAdvisor</strong> 来演示，从名字上就可以看出来，它需要我们给它提供方法名字，这样符合该配置的方法才会做拦截。</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/1.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="1"
+	
+	
+></p>
+<blockquote>
+<p>我们可以看到，userServiceProxy 这个 bean 配置了一个 advisor，advisor 内部有一个 advice。advisor 负责匹配方法，内部的 advice 负责实现方法包装。</p>
+<p>注意，这里的 mappedNames 配置是可以指定多个的，用逗号分隔，可以是不同类中的方法。相比直接指定 advice，advisor 实现了更细粒度的控制，因为在这里配置 advice 的话，所有方法都会被拦截。</p>
+</blockquote>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/2.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="2"
+	
+	
+></p>
+<p>输出结果如下，只有 createUser 方法被拦截：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">准备执行方法: createUser, 参数列表：[Tom, Cruise, 55]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>到这里，我们已经了解了 <strong>Advice</strong> 和 <strong>Advisor</strong> 了，前面也说了还可以配置 <strong>Interceptor</strong>。</p>
+<p>对于 Java 开发者来说，对 Interceptor 这个概念肯定都很熟悉了，这里就不做演示了，贴一下实现代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DebugInterceptor</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">MethodInterceptor</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="n">MethodInvocation</span><span class="w"> </span><span class="n">invocation</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Throwable</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;Before: invocation=[&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">invocation</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;]&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 执行 真实实现类 的方法</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Object</span><span class="w"> </span><span class="n">rval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">invocation</span><span class="p">.</span><span class="na">proceed</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;Invocation returned&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">rval</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面，我们介绍完了 <strong>Advice、Advisor、Interceptor</strong> 三个概念，相信大家应该很容易就看懂它们了。</p>
+<p>它们有个共同的问题，那就是我们得为每个 bean 都配置一个代理，之后获取 bean 的时候需要获取这个代理类的 bean 实例（如 <code>(UserService) context.getBean(&quot;userServiceProxy&quot;)</code>），这显然非常不方便，不利于我们之后要使用的自动根据类型注入。下面介绍 autoproxy 的解决方案。</p>
+<p><strong>autoproxy</strong>：从名字我们也可以看出来，它是实现自动代理，也就是说当 Spring 发现一个 bean 需要被切面织入的时候，Spring 会自动生成这个 bean 的一个代理来拦截方法的执行，确保定义的切面能被执行。</p>
+<p>这里强调<strong>自动</strong>，也就是说 Spring 会自动做这件事，而不用像前面介绍的，我们需要显式地指定代理类的 bean。</p>
+<p>我们去掉原来的 <strong>ProxyFactoryBean</strong> 的配置，改为使用 <strong>BeanNameAutoProxyCreator</strong> 来配置：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/9.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="9"
+	
+	
+></p>
+<p>配置很简单，beanNames 中可以使用正则来匹配 bean 的名字。这样配置出来以后，userServiceBeforeAdvice 和 userServiceAfterAdvice 这两个拦截器就不仅仅可以作用于 UserServiceImpl 了，也可以作用于 OrderServiceImpl、PostServiceImpl、ArticleServiceImpl&hellip;&hellip;等等，也就是说不再是配置某个 bean 的代理了。</p>
+<blockquote>
+<p>注意，这里的 InterceptorNames 和前面一样，也是可以配置成 Advisor 和 Interceptor 的。</p>
+</blockquote>
+<p>然后我们修改下使用的地方：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/10.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="10"
+	
+	
+></p>
+<p>发现没有，<strong>我们在使用的时候，完全不需要关心代理了</strong>，直接使用原来的类型就可以了，这是非常方便的。</p>
+<p>输出结果就是 OrderService 和 UserService 中的每个方法都得到了拦截：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">准备执行方法: createUser, 参数列表：[Tom, Cruise, 55]
+</span></span><span class="line"><span class="cl">方法返回：User{firstName=&#39;Tom&#39;, lastName=&#39;Cruise&#39;, age=55, address=&#39;null&#39;}
+</span></span><span class="line"><span class="cl">准备执行方法: queryUser, 参数列表：[]
+</span></span><span class="line"><span class="cl">方法返回：User{firstName=&#39;Tom&#39;, lastName=&#39;Cruise&#39;, age=55, address=&#39;null&#39;}
+</span></span><span class="line"><span class="cl">准备执行方法: createOrder, 参数列表：[Leo, 随便买点什么]
+</span></span><span class="line"><span class="cl">方法返回：Order{username=&#39;Leo&#39;, product=&#39;随便买点什么&#39;}
+</span></span><span class="line"><span class="cl">准备执行方法: queryOrder, 参数列表：[Leo]
+</span></span><span class="line"><span class="cl">方法返回：Order{username=&#39;Leo&#39;, product=&#39;随便买点什么&#39;}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>到这里，是不是发现 BeanNameAutoProxyCreator 非常好用，它需要指定被拦截类名的模式(如 *ServiceImpl)，它可以配置多次，这样就可以用来匹配不同模式的类了。</p>
+<p>另外，在 BeanNameAutoProxyCreator 同一个包中，还有一个非常有用的类 <strong>DefaultAdvisorAutoProxyCreator</strong>，比上面的 BeanNameAutoProxyCreator 还要方便。</p>
+<p>之前我们说过，advisor 内部包装了 advice，advisor 负责决定拦截哪些方法，内部 advice 定义拦截后的逻辑。所以，仔细想想其实就是只要让我们的 advisor 全局生效就能实现我们需要的自定义拦截功能、拦截后的逻辑处理。</p>
+<blockquote>
+<p>BeanNameAutoProxyCreator 是自己匹配方法，然后交由内部配置 advice 来拦截处理；</p>
+<p>而 DefaultAdvisorAutoProxyCreator 是让 ioc 容器中的所有 advisor 来匹配方法，advisor 内部都是有 advice 的，让它们内部的 advice 来执行拦截处理。</p>
+</blockquote>
+<p>1、我们需要再回头看下 Advisor 的配置，上面我们用了 NameMatchMethodPointcutAdvisor 这个类：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&#34;logCreateAdvisor&#34;</span> <span class="na">class=</span><span class="s">&#34;org.springframework.aop.support.NameMatchMethodPointcutAdvisor&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&#34;advice&#34;</span> <span class="na">ref=</span><span class="s">&#34;logArgsAdvice&#34;</span> <span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&#34;mappedNames&#34;</span> <span class="na">value=</span><span class="s">&#34;createUser,createOrder&#34;</span> <span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/bean&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其实 Advisor 还有一个更加灵活的实现类 <strong>RegexpMethodPointcutAdvisor</strong>，它能实现正则匹配，如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">bean</span><span class="w"> </span><span class="n">id</span><span class="o">=</span><span class="s">&#34;logArgsAdvisor&#34;</span><span class="w"> </span><span class="kd">class</span><span class="err">=&#34;</span><span class="nc">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">aop</span><span class="p">.</span><span class="na">support</span><span class="p">.</span><span class="na">RegexpMethodPointcutAdvisor</span><span class="s">&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s">    &lt;property name=&#34;</span><span class="n">advice</span><span class="s">&#34; ref=&#34;</span><span class="n">logArgsAdvice</span><span class="s">&#34; /&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s">    &lt;property name=&#34;</span><span class="n">pattern</span><span class="s">&#34; value=&#34;</span><span class="n">com</span><span class="p">.</span><span class="na">javadoop</span><span class="p">.</span><span class="o">*</span><span class="p">.</span><span class="na">service</span><span class="p">.</span><span class="o">*</span><span class="p">.</span><span class="na">create</span><span class="p">.</span><span class="o">*</span><span class="s">&#34; /&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s">&lt;/bean&gt;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>也就是说，我们能通过配置 Advisor，精确定位到需要被拦截的方法，然后使用内部的 Advice 执行逻辑处理。</p>
+<p>2、之后，我们需要配置 DefaultAdvisorAutoProxyCreator，它的配置非常简单，直接使用下面这段配置就可以了，它就会使得<strong>所有的 Advisor 自动生效</strong>，无须其他配置。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">bean</span><span class="w"> </span><span class="kd">class</span><span class="err">=&#34;</span><span class="nc">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">aop</span><span class="p">.</span><span class="na">framework</span><span class="p">.</span><span class="na">autoproxy</span><span class="p">.</span><span class="na">DefaultAdvisorAutoProxyCreator</span><span class="s">&#34; /&gt;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="https://www.javadoop.com/blogimages/spring-aop/11.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="11"
+	
+	
+></p>
+<p>然后我们运行一下：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/12.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="12"
+	
+	
+></p>
+<p>输出：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">准备执行方法: createUser, 参数列表：[Tom, Cruise, 55]
+</span></span><span class="line"><span class="cl">方法返回：User{firstName=&#39;Tom&#39;, lastName=&#39;Cruise&#39;, age=55, address=&#39;null&#39;}
+</span></span><span class="line"><span class="cl">准备执行方法: createOrder, 参数列表：[Leo, 随便买点什么]
+</span></span><span class="line"><span class="cl">方法返回：Order{username=&#39;Leo&#39;, product=&#39;随便买点什么&#39;}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从结果可以看出，create* 方法使用了 logArgsAdvisor 进行传参输出，query* 方法使用了 logResultAdvisor 进行了返回结果输出。</p>
+<p>到这里，Spring 1.2 的配置就要介绍完了。本文不会介绍得面面俱到，主要是关注最核心的配置，如果读者感兴趣，要学会自己去摸索，比如这里的 Advisor 就不只有我这里介绍的 NameMatchMethodPointcutAdvisor 和 RegexpMethodPointcutAdvisor，AutoProxyCreator 也不仅仅是 BeanNameAutoProxyCreator 和 DefaultAdvisorAutoProxyCreator。</p>
+<blockquote>
+<p>读到这里，我想对于很多人来说，就知道怎么去阅读 Spring AOP 源码了。</p>
+</blockquote>
+<h3 id="spring-20-aspectj-配置">Spring 2.0 @AspectJ 配置
+</h3><p>Spring 2.0 以后，引入了 @AspectJ 和 Schema-based 的两种配置方式，我们先来介绍 @AspectJ 的配置方式，之后我们再来看使用 xml 的配置方式。</p>
+<p>注意了，<strong>@AspectJ 和 AspectJ 没多大关系</strong>，并不是说基于 AspectJ 实现的，而仅仅是使用了 AspectJ 中的概念，包括使用的注解也是直接来自于 AspectJ 的包。</p>
+<p>首先，我们需要依赖 <code>aspectjweaver.jar</code> 这个包，这个包来自于 AspectJ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>org.aspectj<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>aspectjweaver<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;version&gt;</span>1.8.11<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果是使用 Spring Boot 的话，添加以下依赖即可：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">   <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">   <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-aop<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在 @AspectJ 的配置方式中，之所以要引入 aspectjweaver 并不是因为我们需要使用 AspectJ 的处理功能，而是因为 Spring 使用了 AspectJ 提供的一些注解，实际上<strong>还是纯的 Spring AOP 代码</strong>。</p>
+<p>说了这么多，明确一点，@AspectJ 采用注解的方式来配置使用 Spring AOP。</p>
+<p>首先，我们需要<strong>开启</strong> @AspectJ 的注解配置方式，有两种方式：</p>
+<p>1、在 xml 中配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;aop:aspectj-autoproxy/&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>使用 @EnableAspectJAutoProxy</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Configuration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@EnableAspectJAutoProxy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AppConfig</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>一旦开启了上面的配置，那么所有使用 @Aspect 注解的 <strong>bean</strong> 都会被 Spring 当做<strong>用来实现 AOP 的配置类</strong>，我们称之为一个 <strong>Aspect</strong>。</p>
+<blockquote>
+<p>注意了，@Aspect 注解要作用在 bean 上面，不管是使用 @Component 等注解方式，还是在 xml 中配置 bean，首先它需要是一个 bean。</p>
+</blockquote>
+<p>比如下面这个 bean，它的类名上使用了 @Aspect，它就会被当做 Spring AOP 的配置。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&#34;myAspect&#34;</span> <span class="na">class=</span><span class="s">&#34;org.xyz.NotVeryUsefulAspect&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="c">&lt;!-- configure properties of aspect here as normal --&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/bean&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">org.xyz</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.aspectj.lang.annotation.Aspect</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Aspect</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">NotVeryUsefulAspect</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来，我们需要关心的是 @Aspect 注解的 bean 中，我们需要配置哪些内容。</p>
+<p>**首先，我们需要配置 Pointcut，**Pointcut 在大部分地方被翻译成切点，用于定义哪些方法需要被增强或者说需要被拦截，有点类似于之前介绍的 <strong>Advisor</strong> 的方法匹配。</p>
+<p>Spring AOP 只支持 bean 中的方法（不像 AspectJ 那么强大），所以我们可以认为 <strong>Pointcut</strong> 就是用来匹配 Spring 容器中的所有 bean 的方法的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Pointcut</span><span class="p">(</span><span class="s">&#34;execution(* transfer(..))&#34;</span><span class="p">)</span><span class="c1">// the pointcut expression</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">anyOldTransfer</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="c1">// the pointcut signature</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们看到，@Pointcut 中使用了 <strong>execution</strong> 来正则匹配方法签名，这也是最常用的，除了 execution，我们再看看其他的几个比较常用的匹配方式：</p>
+<ul>
+<li>
+<p>within：指定所在类或所在包下面的方法（Spring AOP 独有）</p>
+<blockquote>
+<p>如 @Pointcut(&ldquo;within(com.javadoop.springaoplearning.service..*)&rdquo;)</p>
+</blockquote>
+</li>
+<li>
+<p>@annotation：方法上具有特定的注解，如 @Subscribe 用于订阅特定的事件。</p>
+<blockquote>
+<p>如 @Pointcut(&ldquo;execution(* <em>.</em>(..)) &amp;&amp; @annotation(com.javadoop.annotation.Subscribe)&rdquo;)</p>
+</blockquote>
+</li>
+<li>
+<p>bean(idOrNameOfBean)：匹配 bean 的名字（Spring AOP 独有）</p>
+<blockquote>
+<p>如 @Pointcut(&ldquo;bean(*Service)&rdquo;)</p>
+</blockquote>
+</li>
+</ul>
+<p>Tips：上面匹配中，通常 &ldquo;.&rdquo; 代表一个包名，&quot;..&quot; 代表包及其子包，方法参数任意匹配使用两个点 &ldquo;..&quot;。</p>
+<p>对于 web 开发者，Spring 有个很好的建议，就是定义一个 <strong>SystemArchitecture</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Aspect</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SystemArchitecture</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// web 层</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Pointcut</span><span class="p">(</span><span class="s">&#34;within(com.javadoop.web..*)&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">inWebLayer</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// service 层</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Pointcut</span><span class="p">(</span><span class="s">&#34;within(com.javadoop.service..*)&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">inServiceLayer</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// dao 层</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Pointcut</span><span class="p">(</span><span class="s">&#34;within(com.javadoop.dao..*)&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">inDataAccessLayer</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// service 实现，注意这里指的是方法实现，其实通常也可以使用 bean(*ServiceImpl)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Pointcut</span><span class="p">(</span><span class="s">&#34;execution(* com.javadoop..service.*.*(..))&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">businessService</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// dao 实现</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Pointcut</span><span class="p">(</span><span class="s">&#34;execution(* com.javadoop.dao.*.*(..))&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">dataAccessOperation</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面这个 SystemArchitecture 很好理解，该 Aspect 定义了一堆的 Pointcut，随后在任何需要 Pointcut 的地方都可以直接引用（如 xml 中的 pointcut-ref=&quot;&quot;）。</p>
+<p>配置 pointcut 就是配置我们需要拦截哪些方法，接下来，我们要配置需要对这些被拦截的方法做什么，也就是前面介绍的 Advice。</p>
+<p><strong>接下来，我们要配置 Advice。</strong></p>
+<p>下面这块代码示例了各种常用的情况：</p>
+<blockquote>
+<p>注意，实际写代码的时候，不要把所有的切面都揉在一个 class 中。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Aspect</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AdviceExample</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 这里会用到我们前面说的 SystemArchitecture</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 下面方法就是写拦截 &#34;dao层实现&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Before</span><span class="p">(</span><span class="s">&#34;com.javadoop.aop.SystemArchitecture.dataAccessOperation()&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doAccessCheck</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// ... 实现代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 当然，我们也可以直接&#34;内联&#34;Pointcut，直接在这里定义 Pointcut</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 把 Advice 和 Pointcut 合在一起了，但是这两个概念我们还是要区分清楚的</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Before</span><span class="p">(</span><span class="s">&#34;execution(* com.javadoop.dao.*.*(..))&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doAccessCheck</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// ... 实现代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@AfterReturning</span><span class="p">(</span><span class="s">&#34;com.javadoop.aop.SystemArchitecture.dataAccessOperation()&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doAccessCheck</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// ...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@AfterReturning</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">pointcut</span><span class="o">=</span><span class="s">&#34;com.javadoop.aop.SystemArchitecture.dataAccessOperation()&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">returning</span><span class="o">=</span><span class="s">&#34;retVal&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doAccessCheck</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">retVal</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 这样，进来这个方法的处理时候，retVal 就是相应方法的返回值，是不是非常方便</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//  ... 实现代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 异常返回</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@AfterThrowing</span><span class="p">(</span><span class="s">&#34;com.javadoop.aop.SystemArchitecture.dataAccessOperation()&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doRecoveryActions</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// ... 实现代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@AfterThrowing</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">pointcut</span><span class="o">=</span><span class="s">&#34;com.javadoop.aop.SystemArchitecture.dataAccessOperation()&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">throwing</span><span class="o">=</span><span class="s">&#34;ex&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doRecoveryActions</span><span class="p">(</span><span class="n">DataAccessException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// ... 实现代码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 注意理解它和 @AfterReturning 之间的区别，这里会拦截正常返回和异常的情况</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@After</span><span class="p">(</span><span class="s">&#34;com.javadoop.aop.SystemArchitecture.dataAccessOperation()&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doReleaseLock</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 通常就像 finally 块一样使用，用来释放资源。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 无论正常返回还是异常退出，都会被拦截到</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 感觉这个很有用吧，既能做 @Before 的事情，也可以做 @AfterReturning 的事情</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Around</span><span class="p">(</span><span class="s">&#34;com.javadoop.aop.SystemArchitecture.businessService()&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">doBasicProfiling</span><span class="p">(</span><span class="n">ProceedingJoinPoint</span><span class="w"> </span><span class="n">pjp</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Throwable</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// start stopwatch</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Object</span><span class="w"> </span><span class="n">retVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pjp</span><span class="p">.</span><span class="na">proceed</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// stop stopwatch</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">retVal</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>细心的读者可能发现了有些 Advice 缺少方法传参，如在 @Before 场景中参数往往是非常有用的，比如我们要用日志记录下来被拦截方法的入参情况。</p>
+<p>Spring 提供了非常简单的获取入参的方法，使用 org.aspectj.lang.JoinPoint 作为 Advice 的第一个参数即可，如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Before</span><span class="p">(</span><span class="s">&#34;com.javadoop.springaoplearning.aop_spring_2_aspectj.SystemArchitecture.businessService()&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">logArgs</span><span class="p">(</span><span class="n">JoinPoint</span><span class="w"> </span><span class="n">joinPoint</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;方法执行前，打印入参：&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Arrays</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">joinPoint</span><span class="p">.</span><span class="na">getArgs</span><span class="p">()));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>注意：第一，必须放置在第一个参数上；第二，如果是 @Around，我们通常会使用其子类 ProceedingJoinPoint，因为它有 procceed()/procceed(args[]) 方法。</p>
+</blockquote>
+<p>到这里，我们介绍完了 @AspectJ 配置方式中的 <strong>Pointcut</strong> 和 <strong>Advice</strong> 的配置。对于开发者来说，其实最重要的就是这两个了，定义 Pointcut 和使用合适的 Advice 在各个 Pointcut 上。</p>
+<p>下面，我们用这一节介绍的 @AspectJ 来实现上一节实现的<strong>记录方法传参</strong>和<strong>记录方法返回值</strong>。</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/13.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="13"
+	
+	
+></p>
+<p>xml 的配置非常简单：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/14.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="14"
+	
+	
+></p>
+<blockquote>
+<p>这里是示例，所以 bean 的配置还是使用了 xml 的配置方式。</p>
+</blockquote>
+<p>测试一下：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/15.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="15"
+	
+	
+></p>
+<p>输出结果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">方法执行前，打印入参：[Tom, Cruise, 55]
+</span></span><span class="line"><span class="cl">User{firstName=&#39;Tom&#39;, lastName=&#39;Cruise&#39;, age=55, address=&#39;null&#39;}
+</span></span><span class="line"><span class="cl">方法执行前，打印入参：[]
+</span></span><span class="line"><span class="cl">User{firstName=&#39;Tom&#39;, lastName=&#39;Cruise&#39;, age=55, address=&#39;null&#39;}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>JoinPoint 除了 getArgs() 外还有一些有用的方法，大家可以进去稍微看一眼。</p>
+<p>最后提一点，@Aspect 中的配置不会作用于使用 @Aspect 注解的 bean。</p>
+<h3 id="spring-20-schema-based-配置">Spring 2.0 schema-based 配置
+</h3><p>本节将介绍的是 Spring 2.0 以后提供的基于 <code>&lt;aop /&gt;</code> 命名空间的 XML 配置。这里说的 schema-based 就是指基于 <code>aop</code>  这个 schema。</p>
+<blockquote>
+<p>介绍 IOC 的时候也介绍过 Spring 是怎么解析各个命名空间的（各种 *NamespaceHandler），解析 <code>&lt;aop /&gt;</code> 的源码在 org.springframework.aop.config.AopNamespaceHandler 中。</p>
+</blockquote>
+<p>有了前面的 @AspectJ 的配置方式的知识，理解 xml 方式的配置非常简单，所以我们就可以废话少一点了。</p>
+<p>这里先介绍<strong>配置 Aspect</strong>，便于后续理解：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;aop:config&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;aop:aspect</span> <span class="na">id=</span><span class="s">&#34;myAspect&#34;</span> <span class="na">ref=</span><span class="s">&#34;aBean&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        ...
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/aop:aspect&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/aop:config&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&#34;aBean&#34;</span> <span class="na">class=</span><span class="s">&#34;...&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    ...
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/bean&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>所有的配置都在 <code>&lt;aop:config&gt;</code> 下面。</p>
+<p><code>&lt;aop:aspect &gt;</code> 中需要指定一个 bean，和前面介绍的 LogArgsAspect  和 LogResultAspect 一样，我们知道该 bean 中我们需要写处理代码。</p>
+<p>然后，我们写好 Aspect 代码后，将其“织入”到合适的 Pointcut 中，这就是面向切面。</p>
+</blockquote>
+<p>然后，我们需要<strong>配置 Pointcut</strong>，非常简单，如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;aop:config&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;aop:pointcut</span> <span class="na">id=</span><span class="s">&#34;businessService&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="na">expression=</span><span class="s">&#34;execution(* com.javadoop.springaoplearning.service.*.*(..))&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c">&lt;!--也可以像下面这样--&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;aop:pointcut</span> <span class="na">id=</span><span class="s">&#34;businessService2&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="na">expression=</span><span class="s">&#34;com.javadoop.SystemArchitecture.businessService()&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/aop:config&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>将 <code>&lt;aop:pointcut&gt;</code> 作为 <code>&lt;aop:config&gt;</code> 的直接子元素，将作为全局 Pointcut。</p>
+</blockquote>
+<p>我们也可以在 <code>&lt;aop:aspect /&gt;</code>内部配置 Pointcut，这样该 Pointcut 仅用于该 Aspect：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;aop:config&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;aop:aspect</span> <span class="na">ref=</span><span class="s">&#34;logArgsAspect&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;aop:pointcut</span> <span class="na">id=</span><span class="s">&#34;internalPointcut&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="na">expression=</span><span class="s">&#34;com.javadoop.SystemArchitecture.businessService()&#34;</span> <span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/aop:aspect&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/aop:config&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来，我们应该配置 <strong>Advice</strong> 了，为了避免废话过多，我们直接上实例吧，非常好理解，将上一节用 @AspectJ 方式配置的搬过来：</p>
+<p><img src="https://www.javadoop.com/blogimages/spring-aop/16.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="16"
+	
+	
+></p>
+<p>上面的例子中，我们配置了两个 LogArgsAspect 和一个 LogResultAspect。</p>
+<p>其实基于 XML 的配置也是非常灵活的，这里没办法给大家演示各种搭配，大家抓住基本的 Pointcut、Advice 和 Aspect 这几个概念，就很容易配置了。</p>
+<h2 id="小结">小结
+</h2><p>到这里，本文介绍了 Spring AOP 的三种配置方式，我们要知道的是，到目前为止，我们使用的都是 Spring AOP，和 AspectJ 没什么关系。</p>
+<p>下一篇文章，将会介绍 AspectJ 的使用方式，以及怎样在 Spring 应用中使用 AspectJ。之后差不多就可以出 Spring AOP 源码分析了。</p>
+<p>《<a class="link" href="/post/aspectj" >AspectJ 使用介绍</a>》介绍了 AspectJ 的 3 种用法，感兴趣的读者可以去看一看，那篇文章稍微短一些。</p>
+<h2 id="附录">附录
+</h2><p>本文使用的测试源码已上传到 Github: <a class="link" href="https://github.com/hongjiev/spring-aop-learning"  target="_blank" rel="noopener"
+    >hongjiev/spring-aop-learning</a>。</p>
+<p>建议读者 clone 下来以后，通过命令行进行测试，而不是依赖于 IDE，因为 IDE 太&quot;智能&quot;了：</p>
+<ol>
+<li>
+<p>mvn clean package</p>
+</li>
+<li>
+<p>java -jar target/spring-aop-learning-1.0-jar-with-dependencies.jar</p>
+<blockquote>
+<p>pom.xml 中配置了 assembly 插件，打包的时候会将所有 jar 包依赖打到一起。</p>
+</blockquote>
+</li>
+<li>
+<p>修改 Application.java 中的代码，或者其他代码，然后重复 1 和 2</p>
+</li>
+</ol>
+<p>（全文完）</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/aspectj-%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AspectJ 使用介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/spring-aop-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Spring AOP 源码解析</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/spring-ioc-%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Spring IOC 容器源码分析</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>
