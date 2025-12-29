@@ -25,8 +25,7 @@ categories:
 
 
 
-![image-20230413095207559](C:\Users\DELL\Desktop\iooi\md\java奇技淫巧\img\image-20230413095207559.png)
-
+![image-20230413095207559.png](img%2Fimage-20230413095207559.png)
 
 
 #### 2、相同类型的Bean可以注入同一个Map/List/Set

@@ -10,7 +10,7 @@ categories:
 
 mysql执行流程
 
-![image-20230613135151431](..\img\db\执行流程.png)
+![image-20230613135151431](/img/db/执行流程.png)
 
 ###  1、InnoDB
 
@@ -426,7 +426,7 @@ show priviledges
 ##### 2.11user表
 
 **user表：是MySQL中最重要的一个权限表， 记录用户账号和权限信息。**
-[![img](..\img\db\mysql_01.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154814619-880344668.png)
+[![img](/img/db/mysql_01.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154814619-880344668.png)
 这些字段可以分成4类，分别是范围列（或用户列）、权限列、安全列和资源控制列。
 **1、范围列（或用户列）**
 
@@ -466,7 +466,7 @@ show priviledges
 ##### 2.12db表
 
 **db表：记录数据库层级的权限**
-[![img](..\img\db\记录数据库层级的权限.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152406519-649151221.png)
+[![img](/img/db/记录数据库层级的权限.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152406519-649151221.png)
 **1、用户列**
 db表用户列有3个字段，分别是Host、User、Db。这3个字段分别表示主机名、用户名和数据库
 名。表示从某个主机连接某个用户对某个数据库的操作权限，这3个字段的组合构成了db表的主键。
@@ -476,7 +476,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 ##### 2.13tables_priv表
 
 **tables_priv表：记录表层级的权限**
-[![img](..\img\db\记录表层级的权限.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152825187-262801799.png)
+[![img](/img/db/记录表层级的权限.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152825187-262801799.png)
 
 - Host、Db、User 和 Table_name 四个字段分别表示主机名、数据库名、用户名和表名。表示从某个主机连接某个用户对某个数据库中的某个表的操作权限，这4个字段的组合构成了tables_priv表的主键。
 - Grantor表示修改该记录的用户。
@@ -487,7 +487,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 ##### 2.14columns_priv表
 
 **columns_priv表：记录列层级的权限**
-[![img](..\img\db\记录列层级的权限.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220153703503-765466053.png)
+[![img](/img/db/记录列层级的权限.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220153703503-765466053.png)
 
 - Host、Db、User、Table_name和column_name 5个字段分别表示主机名、数据库名、用户名、表名和列名。表示从某个主机连接某个用户对某个数据库中的某个表中的某个列的操作权限，这5个字段的组合构成了columns_priv表的主键。
 - Timestamp表示修改该记录的时间。
@@ -496,7 +496,7 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 ##### 2.15procs_priv表
 
 **procs_priv表：存储的过程和函数的权限**
-[![img](..\img\db\存储的过程和函数的权限.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154121398-1977529702.png)
+[![img](/img/db/存储的过程和函数的权限.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154121398-1977529702.png)
 
 - Host、Db、User、Routine_name和Routine_type 5个字段分别表示主机名、数据库名、用户名、存储过程名和存储类型。表示从某个主机连接某个用户对某个数据库中的某个存储过程的操作权限，这5个字段的组合构成了procs_priv表的主键。
 - Grantor表示修改该记录的用户。
@@ -512,37 +512,37 @@ Create_routine_priv和Alter_routine_priv这两个字段决定用户是否具有�
 ##### 2.17请求核实阶段
 
 一旦建立了连接，服务器就进入请求核实阶段。对此连接上进来的每个请求，服务器检查该请求要执行什么操作、是否有足够的权限来执行它，这正是需要授权表中的权限列发挥作用的地方。这些权限可以来自user、db、table_priv和column_priv表。
-[![img](..\img\db\请求核实阶段流程图.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220161703950-393897996.png)
+[![img](/img/db/请求核实阶段流程图.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220161703950-393897996.png)
 
 ### 3、Mysql的数据目录结构
 
 ##### 3.1查看mysql的主要目录结构
 
 通过命名查看mysql的目录结构：`find / -name mysql`
-[![img](..\img\db\mysql目录结构\mysql主要目录结构.png)
+[![img](/img/db/mysql目录结构\mysql主要目录结构.png)
 
 ##### 3.2数据库文件的存放路径
 
 MySQL数据库文件的存放路径：/var/lib/mysql/
-[![img](..\img\db\mysql目录结构\数据库文件的存放路径.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163111437-1807887880.png)
+[![img](/img/db/mysql目录结构\数据库文件的存放路径.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163111437-1807887880.png)
 
 ##### 3.3相关命令的存放路径
 
 相关命令目录：/usr/bin和/usr/sbin。
 **/usr/bin目录**
-[![img](..\img\db\mysql目录结构\相关命令的存放路径.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163537093-646907271.png)
+[![img](/img/db/mysql目录结构\相关命令的存放路径.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163537093-646907271.png)
 **/usr/sbin目录**
-[![img](..\img\db\mysql目录结构\目录.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163652279-1335793189.png)
+[![img](/img/db/mysql目录结构\目录.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220163652279-1335793189.png)
 **启动命令能读取的配置文件选项组**
-[![img](..\img\db\mysql目录结构\2345397-20220220175719237-1534110880.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220175719237-1534110880.png)
+[![img](/img/db/mysql目录结构\2345397-20220220175719237-1534110880.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220175719237-1534110880.png)
 
 ##### 3.4配置文件目录
 
 配置文件目录：/usr/share/mysql（命令及配置文件）和 /etc（如my.cnf）
 **/usr/share/mysql（命令及配置文件）**
-[![img](..\img\db\mysql目录结构\配置文件目录.png)
+[![img](/img/db/mysql目录结构\配置文件目录.png)
 **/etc目录**
-[![img](..\img\db\mysql目录结构\2345397-20220220164107873-1172310117.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220164107873-1172310117.png)
+[![img](/img/db/mysql目录结构\2345397-20220220164107873-1172310117.png)](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220164107873-1172310117.png)
 
 #### 数据库和文件系统的关系
 
@@ -551,7 +551,7 @@ MySQL数据库文件的存放路径：/var/lib/mysql/
 ##### 3.5查看默认的数据库
 
 查看命令：SHOW DATABASES;
-[![img](..\img\db\mysql目录结构\查看默认的数据库.png)
+[![img](/img/db/mysql目录结构\查看默认的数据库.png)
 
 - **mysql**：MySQL系统自带的核心数据库，它存储了MySQL的**用户账户和权限信息**，一些**存储过程、事件的定义信息**，一些运行过程中产生的**日志信息**，一些帮助信息以及时区信息等。
 - **information_schema**：MySQL系统自带的数据库，**这个数据库保存着MySQL服务器维护的所有其他数据库的信息 ，比如有哪些表、哪些视图、哪些触发器、哪些列、哪些索引**。这些信息并不是真实的用户数据，而是**一些描述性信息**，有时候也称之为 元数据 。在系统数据库information_schema 中提供了一些以innodb_sys 开头的表，用于表示内部系统表。

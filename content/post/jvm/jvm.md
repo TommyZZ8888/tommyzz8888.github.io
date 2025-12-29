@@ -24,13 +24,13 @@ xx:+PrintTenuringDistribution
 
 
 
-![image-20230711091013467](..\img\jvm\堆栈.png)
+![image-20230711091013467](/img/jvm/堆栈.png)
 
 
 
 
 
-![image-20230711084055316](..\img\jvm\栈帧.png)
+![image-20230711084055316](/img/jvm/栈帧.png)
 
 ## JVM概述
 

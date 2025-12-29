@@ -48,7 +48,7 @@ ThreadPoolExecutor(int corePoolSize,
 
 通过这些参数的配置使得整个线程池的工作流程如下：
 
-[![img](..\img\multiplethread\threadpool\pool01.png)](https://img2018.cnblogs.com/blog/1162587/201909/1162587-20190902171916863-1777758429.png)
+[![img](/img/multiplethread/threadpool/pool01.png)](https://img2018.cnblogs.com/blog/1162587/201909/1162587-20190902171916863-1777758429.png)
 
 前几年一般普通的技术面试了解了以上的知识内容也差不多就够了，但是目前的大环境的影响或者面试更高级的开发上面的知识点是经不起深度考问的。例如以下几个问题你是否了解：线程池的内部有哪些状态？是如何判断核心线程数是否已满的？最大线程数是否包含核心线程数？当线程池中的线程数刚好达到 maximumPoolSize 这个值的时候，这个任务能否正常被执行？......，想要了解这些问题的答案我们只能在线程池的源码中寻找了。
 
@@ -71,7 +71,7 @@ public static void main(String[] args) {
 
 当 corePoolSize = 3，maximumPoolSize = 6，workQueue 大小为4的时候，我们的打印信息为：
 
-[![img](..\img\multiplethread\threadpool\pool02.png)](https://img2018.cnblogs.com/blog/1162587/201909/1162587-20190907173300360-1101768066.png)
+[![img](/img/multiplethread/threadpool/pool02.png)](https://img2018.cnblogs.com/blog/1162587/201909/1162587-20190907173300360-1101768066.png)
 
 可以发现总的创建了6个线程来执行完成了10个任务，其实很好理解，c=3个核心线程执行了3个任务，然后4个任务在队列中等待核心线程执行，最后额外创建了e=3个线程执行了剩下的3个任务，总创建的线程数就是 c + e = 6 <= 6（最大线程数）。
 
@@ -83,7 +83,7 @@ ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(3, 5, 5L, TimeUni
 
 我们再次执行上述的代码，则会报错，抛出如下 RejectedExecutionException 异常信息，可以看到是因为拒绝策略拦截的异常信息。
 
-[![img](..\img\multiplethread\threadpool\pool03.png)](https://img2018.cnblogs.com/blog/1162587/201909/1162587-20190907173315516-925878331.png)
+[![img](/img/multiplethread/threadpool/pool03.png)](https://img2018.cnblogs.com/blog/1162587/201909/1162587-20190907173315516-925878331.png)
 
 还是按照上面的逻辑分析，这时核心线程数是 c = 3，而阻塞队列的大小是 2，因此核心线程会处理掉其中5个任务，而剩下的5个任务会额外创建 e=5个线程去执行，那么总线程数就是 c + e = 8，但是这时的最大线程数 maximumPoolSize = 5，因此超过了最大线程数的限制，这时就执行了默认的拒绝策略抛出异常。其实它在准备创建第6个线程的时候就已经报错了，从这里也可以得知**只要创建的总线程数 >= maximumPoolSize 的时候，线程池就不会继续执行任务了而会去执行拒绝策略的逻辑**。
 
@@ -97,11 +97,11 @@ ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(3, 5, 5L, TimeUni
 
 店面租个几十平的，就做香辣烤鱼，餐桌大概15桌的样子。然后就是员工了，除了厨师主要是服务员了，但是我不能招15个服务员啊，每桌分配一个太浪费了，需要提高资源利用率控制成本，所以员工不能招太多，我只需要招5个固定服务员负责在大厅招呼顾客和传菜就可以了，每个人负责3个餐桌。
 
-[![img](..\img\multiplethread\threadpool\pool04.png)](https://img2018.cnblogs.com/blog/1162587/201911/1162587-20191122143152129-543326221.png)
+[![img](/img/multiplethread/threadpool/pool04.png)](https://img2018.cnblogs.com/blog/1162587/201911/1162587-20191122143152129-543326221.png)
 
 但是我没想到我们餐馆做的烤鱼很合大众口味，很受欢迎又加上营销效果好，成了一家网红餐馆。生意更是蒸蒸日上，每天座无虚席。但是空间有限啊，所以我们只能让后来无座的顾客稍微等候了，于是我们安排了一个取号排队等候区，顾客等待叫号有序就餐。
 
-[![img](..\img\multiplethread\threadpool\pool05.png)](https://img2018.cnblogs.com/blog/1162587/201911/1162587-20191122143332767-1314439611.png)
+[![img](/img/multiplethread/threadpool/pool05.png)](https://img2018.cnblogs.com/blog/1162587/201911/1162587-20191122143332767-1314439611.png)
 
 这时候餐馆的人员不变，仍然是5个服务员负责处理大厅的主要服务工作，同时排队等候区面积也不能过大，有个范围限制，不能影响我们的正常人员活动，同时也不能超过餐馆的范围排到餐馆外，如果顾客排队站到门外马路上了，这是就很危险的。随着口碑的发酵，一传十，十传百，我们的顾客络绎不绝，同时我们为了提高消费率又做起了外卖的服务，可以打包外带。
 
@@ -162,7 +162,7 @@ public void execute(Runnable command) {
 
 而根据以上代码的具体步骤我们可以画出详细的执行流程，如下图所示
 
-[![img](..\img\multiplethread\threadpool\pool06.png)](https://img2018.cnblogs.com/blog/1162587/201909/1162587-20190909195655324-553758508.png)
+[![img](/img/multiplethread/threadpool/pool06.png)](https://img2018.cnblogs.com/blog/1162587/201909/1162587-20190909195655324-553758508.png)
 
 以上的源码其实只有10几行，看起来很简单，主要是它的封装性比较好，其中主要有两个点需要重点解释，分别是：**线程池的状态**和 `addWorker()`添加工作的方法，这两个点弄明白了这段线程池的源码差不多也就理解了。
 
@@ -182,7 +182,7 @@ public void execute(Runnable command) {
 
 生命周期状态流转如下图所示：
 
-[![img](..\img\multiplethread\threadpool\pool07.png)](https://img2020.cnblogs.com/blog/1162587/202009/1162587-20200904162641889-2044248271.png)
+[![img](/img/multiplethread/threadpool/pool07.png)](https://img2020.cnblogs.com/blog/1162587/202009/1162587-20200904162641889-2044248271.png)
 
 很多时候我们表示状态都是通过简单的 int 值来表示，例如数据库数据的删除标志 delete_flag 其中0表示有效，1表示删除。而在线程池的源码里我们可以看到它是通过如下方式来进行表示的，
 
@@ -201,7 +201,7 @@ private static final int TERMINATED =  3 << COUNT_BITS;
 
 线程池内部使用一个变量维护两个值：运行状态（runState）和线程数量 （workerCount）何做到的呢？将十进制 int 值转换为二进制的值，共32位，其中高3位代表运行状态（runState ），而低29位代表工作线程数（workerCount）。
 
-[![img](..\img\multiplethread\threadpool\pool08.png)](https://img2020.cnblogs.com/blog/1162587/202009/1162587-20200904162656157-429188458.png)
+[![img](/img/multiplethread/threadpool/pool08.png)](https://img2020.cnblogs.com/blog/1162587/202009/1162587-20200904162656157-429188458.png)
 
 关于内部封装的获取生命周期状态、获取线程池线程数量的计算方法如以下代码所示：
 

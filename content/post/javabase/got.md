@@ -38,7 +38,7 @@ Spring容器中的Bean可以通过名称注入，或者通过类型注入。
 
 假设在项目中定义一个 `BeanService` 接口，基于该接口有三个实现类 `OneServiceImpl`、`TwoServiceImpl` 和 `ThreeServiceImpl`，三个实现类都由 Spring 容器管理。
 
-![image-20230608161030464](..\img\javabase\got\beantest-结构.png)
+![image-20230608161030464](/img/javabase/got/beantest-结构.png)
 
 
 

@@ -5,6 +5,7 @@ date: '2025-12-28T09:38:23+08:00'
 categories:
 - 中间件
 ---
+
 rabbitmq 三种发送信息方式 **director**，**topic**，**fanout**
 
 **注解式**

@@ -22,7 +22,7 @@ Shell 被当成是一种脚本语言来设计，其运作方式与解释型语�
 Shell 编程跟 JavaScript、php 编程一样，只要有一个能编写代码的文本编辑器和一个能解释执行的脚本解释器就可以了。
 
 `cat /etc/shells`：查看解释器
-![](..\img\tool\shell\shell环境.png)
+![](/img/tool/shell/shell环境.png)
 
 Linux 的 Shell 种类众多，常见的有：
 

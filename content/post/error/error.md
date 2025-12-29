@@ -203,25 +203,25 @@ java.lang.ClassCastException: class com.vren.common.common.core.domain.ResponseR
 
 首先发生异常的位置
 
-![image-20230627144251652](..\img\err\processbody.png)
+![image-20230627144251652](/img/err/processbody.png)
 
 
 
 我们可以发现这个`converter`是一个`StringHttpMessageConverter`类型，然后我们进入到`addDefaultHeaders`方法
 
-![image-20230627144402067](..\img\err\write.png)
+![image-20230627144402067](/img/err/write.png)
 
 
 
 然后，当代码执行到这个方法的 **260 行**时，就会发生刚才我们说的那个`ClassCastException`异常。
 
-![image-20230627144843579](..\img\err\classcast.png)
+![image-20230627144843579](/img/err/classcast.png)
 
 
 
 最后，我们终于找到了发生异常的原因，因为 260 的代码会执行getContentLength(t, headers.getContentType())这个方法，而这个方法会去执行StringHttpMessageConverter的getContentLength方法，如下图所示：
 
-![image-20230627144946025](..\img\err\stringconvert.png)
+![image-20230627144946025](/img/err/stringconvert.png)
 
 但是这个时候 `t`的类型已经被我们用`beforeBodyWrite`方法转为`ResponseResult`类型了，所以就发生了类型转换异常的错误
 
@@ -235,7 +235,7 @@ spring默认给我们注入了一些转换器
 1.遍历所有的转换器，判断当前转换器能不能使用
 2.如果可以使用，才调用我们写的`beforeBodyWrite`进行处理
 
-![image-20230627145750264](..\img\err\messageConverters.png)
+![image-20230627145750264](/img/err/messageConverters.png)
 
 最后，我们就发现了原来是因为处理过后的body已经从String类型转为Result类型，然后在调用实现类即StringHttpMessageConverter#getContentLength(String str, @Nullable MediaType contentType)方法时，第一个参数str发生了类型转换错误的异常。
 

@@ -48,13 +48,13 @@ a|b	//匹配a，b字符
 
 **进阶group入门语法**
 
-![image-20240104132952327](..\img\tool\regular_expression\image-20240104132952327.png)
+![image-20240104132952327](/img/tool/regular_expression/image-20240104132952327.png)
 
 
 
 
 
-![image-20240104133906900](..\img\tool\regular_expression\image-20240104133906900.png)
+![image-20240104133906900](/img/tool/regular_expression/image-20240104133906900.png)
 
 
 

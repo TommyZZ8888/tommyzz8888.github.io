@@ -97,15 +97,15 @@ private native void start0();
 
 并发
 
-[![img](..\img\juc\juc\并发.png)](https://images2015.cnblogs.com/blog/35158/201611/35158-20161125153718143-2147483584.png)
+[![img](/img/juc/juc/并发.png)](https://images2015.cnblogs.com/blog/35158/201611/35158-20161125153718143-2147483584.png)
 
 并行
 
-[![img](..\img\juc\juc\并行.png)](https://images2015.cnblogs.com/blog/35158/201611/35158-20161125153717753-1040268003.png)
+[![img](/img/juc/juc/并行.png)](https://images2015.cnblogs.com/blog/35158/201611/35158-20161125153717753-1040268003.png)
 
 串行： 有n个任务， 由一个线程按顺序执行。由于任务、方法都在一个线程执行，所以不存在线程不安全情况，也就不存在临界区的问题。
 
-[![img](..\img\juc\juc\串行.png)](https://images2015.cnblogs.com/blog/35158/201611/35158-20161125153717362-1273681161.png)
+[![img](/img/juc/juc/串行.png)](https://images2015.cnblogs.com/blog/35158/201611/35158-20161125153717362-1273681161.png)
 
 ------
 
@@ -223,7 +223,7 @@ class Ticket {
 
 [![img](D:\test\items\Tommy\notes\img\juc\juc\lock.png)](https://img-service.csdnimg.cn/img_convert/77ca36442c3ced0659a5af7f06909bd2.png)
 
-[![img](..\img\juc\juc\lock02.png)](https://img-service.csdnimg.cn/img_convert/d0070945de646cdc612f11c99dd5fb7d.png)
+[![img](/img/juc/juc/lock02.png)](https://img-service.csdnimg.cn/img_convert/d0070945de646cdc612f11c99dd5fb7d.png)
 
 公平锁： 十分公平，必须先来后到~；
 
@@ -384,9 +384,9 @@ class Data {
 
 ## 问题存在，A B C D 4 个线程！ 虚假唤醒
 
-[![img](..\img\juc\juc\虚假唤醒01.png)](https://img-service.csdnimg.cn/img_convert/1af314564aae84ed73a7ee90525f9d91.png)
+[![img](/img/juc/juc/虚假唤醒01.png)](https://img-service.csdnimg.cn/img_convert/1af314564aae84ed73a7ee90525f9d91.png)
 
-[![img](..\img\juc\juc\虚假唤醒02.png)](https://img-service.csdnimg.cn/img_convert/a917a32c3497007b58353dc2f5168fd6.png)
+[![img](/img/juc/juc/虚假唤醒02.png)](https://img-service.csdnimg.cn/img_convert/a917a32c3497007b58353dc2f5168fd6.png)
 
 解决方式 ，if 改为while即可，防止虚假唤醒
 
@@ -470,7 +470,7 @@ class Data {
 
 ## JUC版的生产者和消费者问题
 
-[![img](..\img\juc\juc\生产者消费者.png)](https://img-service.csdnimg.cn/img_convert/dad7044c4b8b46648084823841cb6781.png)
+[![img](/img/juc/juc/生产者消费者.png)](https://img-service.csdnimg.cn/img_convert/dad7044c4b8b46648084823841cb6781.png)
 
 > 补充：
 
@@ -1206,11 +1206,11 @@ CopyOnWriteArrayList：写入时复制！ COW 计算机程序设计领域的一�
 
 Vector底层是使用synchronized关键字来实现的：效率特别低下。
 
-[![img](..\img\juc\juc\vector.png)](https://img-service.csdnimg.cn/img_convert/ec0193ec03b4e67874350644b0f7b6ec.png)
+[![img](/img/juc/juc/vector.png)](https://img-service.csdnimg.cn/img_convert/ec0193ec03b4e67874350644b0f7b6ec.png)
 
 CopyOnWriteArrayList使用的是Lock锁，效率会更加高效！
 
-[![img](..\img\juc\juc\copyOnWriteArrayList.png)](https://img-service.csdnimg.cn/img_convert/65d81d2d9f14913e79f91dcf23f8eea7.png)
+[![img](/img/juc/juc/copyOnWriteArrayList.png)](https://img-service.csdnimg.cn/img_convert/65d81d2d9f14913e79f91dcf23f8eea7.png)
 
 ## Set不安全
 
@@ -1247,7 +1247,7 @@ public class SetTest {
 
 hashSet底层就是一个HashMap；
 
-[![img](..\img\juc\juc\hashset.png)](https://img-service.csdnimg.cn/img_convert/35c7c667ffc7a2e2bb001a147d30b5f9.png)
+[![img](/img/juc/juc/hashset.png)](https://img-service.csdnimg.cn/img_convert/35c7c667ffc7a2e2bb001a147d30b5f9.png)
 
 ## Map不安全
 
@@ -1403,7 +1403,7 @@ Close Door
 
 ## CyclicBarrier
 
-[![img](..\img\juc\juc\cyclicBarrier.png)](https://img-service.csdnimg.cn/img_convert/dee6ef3d75096d41547b6729fcce3037.png)
+[![img](/img/juc/juc/cyclicBarrier.png)](https://img-service.csdnimg.cn/img_convert/dee6ef3d75096d41547b6729fcce3037.png)
 
 加法计数器
 
@@ -1462,7 +1462,7 @@ Thread-6收集第7个龙珠！
 
 Semaphore：信号量
 
-[![img](..\img\juc\juc\semaphore.jpg)](https://images.cnblogs.com/cnblogs_com/kylinxxx/1675669/o_2012060230581607221821(1).jpg)
+[![img](/img/juc/juc/semaphore.jpg)](https://images.cnblogs.com/cnblogs_com/kylinxxx/1675669/o_2012060230581607221821(1).jpg)
 
 例子：抢车位！
 6车---3个停车位置
@@ -1528,7 +1528,7 @@ semaphore.release()释放，会将当前的信号量释放+1，然后唤醒等�
 
 # 读写锁ReadWriteLock
 
-[![img](..\img\juc\juc\readAndWriteLock.jpg)](https://images.cnblogs.com/cnblogs_com/kylinxxx/1675669/o_2012060237131607222207(1).jpg)
+[![img](/img/juc/juc/readAndWriteLock.jpg)](https://images.cnblogs.com/cnblogs_com/kylinxxx/1675669/o_2012060237131607222207(1).jpg)
 
 > 补充
 
@@ -1740,9 +1740,9 @@ class MyCache2 {
 
 # 阻塞队列
 
-[![img](..\img\juc\juc\fifo.png)](https://img-service.csdnimg.cn/img_convert/3b6b0b33e6e9b0f2261a89b6e42e78ea.png)
+[![img](/img/juc/juc/fifo.png)](https://img-service.csdnimg.cn/img_convert/3b6b0b33e6e9b0f2261a89b6e42e78ea.png)
 
-[![img](..\img\juc\juc\blockingQueue.png)](https://img-service.csdnimg.cn/img_convert/d651ccc40069352ee6c8b86ae2cee8eb.png)
+[![img](/img/juc/juc/blockingQueue.png)](https://img-service.csdnimg.cn/img_convert/d651ccc40069352ee6c8b86ae2cee8eb.png)
 
 ## BlockQueue
 
@@ -1750,7 +1750,7 @@ class MyCache2 {
 
 什么情况下我们会使用阻塞队列？多线程并发处理、线程池
 
-[![img](..\img\juc\juc\blockingQueue02.png)](https://img-service.csdnimg.cn/img_convert/cae49c50458adc0997d57b2044666ccb.png)
+[![img](/img/juc/juc/blockingQueue02.png)](https://img-service.csdnimg.cn/img_convert/cae49c50458adc0997d57b2044666ccb.png)
 
 BlockingQueue 有四组api
 
@@ -1944,7 +1944,7 @@ T2==>3
 - ExecutorService threadPool2 = Executors.newFixedThreadPool(5); //创建一个固定的线程池的大小
 - ExecutorService threadPool3 = Executors.newCachedThreadPool(); //可伸缩的
 
-[![img](..\img\juc\juc\pool.jpg)](https://images.cnblogs.com/cnblogs_com/kylinxxx/1675669/o_2012060328261607225266.jpg)
+[![img](/img/juc/juc/pool.jpg)](https://images.cnblogs.com/cnblogs_com/kylinxxx/1675669/o_2012060328261607225266.jpg)
 
 
 
@@ -2009,7 +2009,7 @@ public ThreadPoolExecutor(int corePoolSize,  //核心线程池大小
 
 狂神的银行排队例子
 
-[![img](..\img\juc\juc\bank_wait.jpg)](https://images.cnblogs.com/cnblogs_com/kylinxxx/1675669/o_2012060700541607238022(1).jpg)
+[![img](/img/juc/juc/bank_wait.jpg)](https://images.cnblogs.com/cnblogs_com/kylinxxx/1675669/o_2012060700541607238022(1).jpg)
 
 ## 4种拒绝策略
 
@@ -2166,7 +2166,7 @@ public class SynchronizedDemo {
 
 通过 JDK 自带的 `javap` 命令查看 `SynchronizedDemo` 类的相关字节码信息：首先切换到类的对应目录执行 `javac SynchronizedDemo.java` 命令生成编译后的 .class 文件，然后执行`javap -c -s -v -l SynchronizedDemo.class`。
 
-![image-20210210160804090](..\img\juc\juc\synchronized01.png)
+![image-20210210160804090](/img/juc/juc/synchronized01.png)
 
 ------
 
@@ -2198,7 +2198,7 @@ public class SynchronizedDemo2 {
 
 反编译一下：
 
-![image-20210210161841561](..\img\juc\juc\synchronized02.png)
+![image-20210210161841561](/img/juc/juc/synchronized02.png)
 
 `synchronized` 修饰的方法并没有 `monitorenter` 指令和 `monitorexit` 指令，取得代之的确实是 `ACC_SYNCHRONIZED` 标识，该标识指明了该方法是一个同步方法。JVM 通过该 `ACC_SYNCHRONIZED` 访问标志来辨别一个方法是否声明为同步方法，从而执行相应的同步调用。
 
@@ -2216,7 +2216,7 @@ public class SynchronizedDemo2 {
 
 在JVM中，对象在内存中的布局分为三块区域：**对象头、实例数据和对齐填充**。
 
-![img](..\img\juc\juc\synchronized03.png)
+![img](/img/juc/juc/synchronized03.png)
 
 `synchronized`用的锁是存在Java对象头里的。
 
@@ -2232,7 +2232,7 @@ Hotspot 有两种对象头：
 
 64 位虚拟机 Mark Word 是 64bit，在运行期间，Mark Word里存储的数据会随着锁标志位的变化而变化。
 
-![img](..\img\juc\juc\synchronized04.png)
+![img](/img/juc/juc/synchronized04.png)
 
 ##### 2、监视器（Monitor）
 
@@ -2253,7 +2253,7 @@ Hotspot 有两种对象头：
 
 锁主要存在四种状态，依次是：**无锁状态、偏向锁状态、轻量级锁状态、重量级锁状态**，锁可以从偏向锁升级到轻量级锁，再升级的重量级锁。**但是锁的升级是单向的，也就是说只能从低到高升级，不会出现锁的降级**。
 
-![img](..\img\juc\juc\synchronized05.png)
+![img](/img/juc/juc/synchronized05.png)
 
 ##### 1、偏向锁
 
@@ -2269,7 +2269,7 @@ Hotspot 有两种对象头：
 
 下图中的线 程1演示了偏向锁初始化的流程，线程2演示了偏向锁撤销的流程：
 
-![img](..\img\juc\juc\synchronized06.png)
+![img](/img/juc/juc/synchronized06.png)
 
 ##### 2、轻量级锁
 
@@ -2285,7 +2285,7 @@ Hotspot 有两种对象头：
 
 下图是 两个线程同时争夺锁，导致锁膨胀的流程图：
 
-![img](..\img\juc\juc\synchronized07.png)
+![img](/img/juc/juc/synchronized07.png)
 
 因为自旋会消耗CPU，为了避免无用的自旋（比如获得锁的线程被阻塞住了），一旦锁升级成重量级锁，就不会再恢复到轻量级锁状态。当锁处于这个状态下，其他线程试图获取锁时， 都会被阻塞住，当持有锁的线程释放锁之后会唤醒这些线程，被唤醒的线程就会进行新一轮的夺锁之争。
 

@@ -61,19 +61,19 @@ kafka-server-start.bat config\server.properties
 
    消息生产者生产消息发送到Queue中，然后消费者从Queue中取出并消费消息。消息被消费以后，Queue中不再存储，所以消费者不可能消费到已经被消费的消息。Queue支持存在多个消费者，但对于一个消息而言，只有一个消费者可以消费。
 
-   ![image-20231014163119969](..\img\middleware\kafka\点对点.png)
+   ![image-20231014163119969](/img/middleware/kafka/点对点.png)
 
 2. **发布、订阅模式（一对多，消费者消费消息之后不会清除消息）**
 
    消息生产者（发布）将消息发布到topic中，同事有多个消息消费者（订阅）消费该消息。和点对点方式不同，发布到topic中的消息会被所有订阅者消费。
 
-![image-20231014164311262](..\img\middleware\kafka\发布订阅.png)
+![image-20231014164311262](/img/middleware/kafka/发布订阅.png)
 
 
 
 ### 1.3 kafka基础架构
 
-![image-20231014164400065](..\img\middleware\kafka\kafka架构.png)
+![image-20231014164400065](/img/middleware/kafka/kafka架构.png)
 
 **1. Producer**
 
@@ -254,7 +254,7 @@ kafka-server-stop.sh stop
     ```
 
 
-    ![image-20231014171320208](..\img\middleware\kafka\演示截图1.png)
+    ![image-20231014171320208](/img/middleware/kafka/演示截图1.png)
 
 
 说明：kafka集群关闭时会需要一些时间
@@ -269,35 +269,35 @@ kafka-server-stop.sh stop
 kafka-topics.sh --zookeeper slave1:2181 --create --replication-factor 3 --partitions 2 --topic demo
 ```
 
-![image-20231014171506569](..\img\middleware\kafka\创建topic.png)
+![image-20231014171506569](/img/middleware/kafka/创建topic.png)
 
 2. 查看当前服务器中所有的 topic。
    ```shell
    kafka-topics.sh --zookeeper slave1:2181 --list
    ```
 
-   ![image-20231014171547419](..\img\middleware\kafka\查看topic.png)
+   ![image-20231014171547419](/img/middleware/kafka/查看topic.png)
 
 3. 查看某个 topic 的详情。
    ```shell
    kafka-topics.sh --zookeeper slave1:2181 --describe --topic demo
    ```
 
-   ![image-20231014171722107](..\img\middleware\kafka\查看某个topic详情.png)
+   ![image-20231014171722107](/img/middleware/kafka/查看某个topic详情.png)
 
 4. 删除 topic。
    ```shell
    kafka-topics.sh --zookeeper slave1:2181 --delete --topic first
    ```
 
-   ![image-20231014171804977](..\img\middleware\kafka\删除topic.png)
+   ![image-20231014171804977](/img/middleware/kafka/删除topic.png)
 
 5. 发送消息。
    ```shell
    kafka-console-producer.sh --broker-list slave1:9092 --topic demo
    ```
 
-   ![image-20231014171831137](..\img\middleware\kafka\发送消息.png)
+   ![image-20231014171831137](/img/middleware/kafka/发送消息.png)
 
 6. 消费消息。
    （1）方法一
@@ -306,7 +306,7 @@ kafka-topics.sh --zookeeper slave1:2181 --create --replication-factor 3 --partit
  kafka-console-consumer.sh --zookeeper slave1:2181 --topic demo
 ```
 
-![image-20231014171929258](..\img\middleware\kafka\消费消息1.png)
+![image-20231014171929258](/img/middleware/kafka/消费消息1.png)
 
 注意： 该方法已经过时。
 
@@ -316,7 +316,7 @@ kafka-topics.sh --zookeeper slave1:2181 --create --replication-factor 3 --partit
 kafka-console-consumer.sh --bootstrap-server slave1:9092 --topic demo
 ```
 
-![image-20231014171900273](..\img\middleware\kafka\消费消息2.png)
+![image-20231014171900273](/img/middleware/kafka/消费消息2.png)
 
 说明： 在以上两种方法的命令上添加 –from-beginning 参数会把主题中以往所有的数据都读取出来。
 
@@ -326,7 +326,7 @@ kafka-console-consumer.sh --bootstrap-server slave1:9092 --topic demo
 
 ### 3.1 kafka工作流程
 
-![image-20231014172059009](..\img\middleware\kafka\kafka工作流程.png)
+![image-20231014172059009](/img/middleware/kafka/kafka工作流程.png)
 
 
 
@@ -334,13 +334,13 @@ kafka-console-consumer.sh --bootstrap-server slave1:9092 --topic demo
 
 ### 3.2 kafka 文件存储机制
 
-![image-20231014205312019](..\img\middleware\kafka\文件存储机制.png)
+![image-20231014205312019](/img/middleware/kafka/文件存储机制.png)
 
 
 
 ​	由于生产者生产的消息不断追加到log文件末端，为防止log文件过大导致数据定位效率低下，kafka采取了分片和索引机制，将每个partition分为多个segment。每个segment对应两个文件，“.index”文件和“.log”文件。这些文件位于一个文件夹下，该文件夹命名规则为：topic名称+分区序号。例如demo这个topic有两个分区，则其对应的文件夹为demo-0，demo-1.
 
-![image-20231014205821517](..\img\middleware\kafka\image-20231014205821517.png)
+![image-20231014205821517](/img/middleware/kafka/image-20231014205821517.png)
 
 
 
@@ -362,7 +362,7 @@ kafka-console-consumer.sh --bootstrap-server slave1:9092 --topic demo
 
    我们需要将producer发送的数据封装成一个producerRecord对象
 
-   ![image-20231014210603611](..\img\middleware\kafka\发送方法.png)
+   ![image-20231014210603611](/img/middleware/kafka/发送方法.png)
 
 ​		(1) 指明partition的情况下，直接将指明的值作为partition值；
 
@@ -374,7 +374,7 @@ kafka-console-consumer.sh --bootstrap-server slave1:9092 --topic demo
 
 ​		为保证producer发送的数据，能可靠的发送到指定的topic，topic中的每个partition收到producer发送的数据后，都需要producer发送ack，如果producer收到ack，就会进行下一轮的发送，否则重新发送数据。
 
-![image-20231014211732317](..\img\middleware\kafka\数据可靠性保证.png)
+![image-20231014211732317](/img/middleware/kafka/数据可靠性保证.png)
 
 1. **副本同步策略**
 
@@ -409,7 +409,7 @@ kafka-console-consumer.sh --bootstrap-server slave1:9092 --topic demo
 
 4.**故障处理细节**
 
-![image-20231014214227505](..\img\middleware\kafka\故障处理细节.png)
+![image-20231014214227505](/img/middleware/kafka/故障处理细节.png)
 
 **LEO**: 指的是每个副本最大的offset。
 

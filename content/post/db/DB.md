@@ -173,7 +173,7 @@ MySQL 配置：
   - 数据存储层，主要是将数据存储在文件系统之上，并完成与存储引擎的交互
   - File System：文件系统，保存配置文件、数据文件、日志文件、错误文件、二进制文件等
 
-![](..\img\db\db_01.png)
+![](/img/db/db_01.png)
 
 
 
@@ -193,7 +193,7 @@ MySQL 服务器可以同时和多个客户端进行交互，所以要保证每�
 
 整体的执行流程：
 
-<img src="..\img\db\db_02.png" style="zoom: 33%;" />
+<img src="/img/db/db_02.png" style="zoom: 33%;" />
 
 
 
@@ -207,7 +207,7 @@ grant 语句会同时修改数据表和内存，判断权限的时候使用的�
 
 flush privileges 语句本身会用数据表（磁盘）的数据重建一份内存权限数据，所以在权限数据可能存在不一致的情况下使用，这种不一致往往是由于直接用 DML 语句操作系统权限表导致的，所以尽量不要使用这类语句
 
-![](..\img\db\db_03.png)
+![](/img/db/db_03.png)
 
 
 
@@ -237,7 +237,7 @@ flush privileges 语句本身会用数据表（磁盘）的数据重建一份内
 
 SHOW PROCESSLIST：查看当前 MySQL 在进行的线程，可以实时地查看 SQL 的执行情况，其中的 Command 列显示为 Sleep 的这一行，就表示现在系统里面有一个空闲连接
 
-![](..\img\db\db_04.png)
+![](/img/db/db_04.png)
 
 | 参数    | 含义                                                         |
 | ------- | ------------------------------------------------------------ |
@@ -326,7 +326,7 @@ SHOW PROCESSLIST：查看当前 MySQL 在进行的线程，可以实时地查看
    SHOW STATUS LIKE 'Qcache%';
    ```
 
-   <img src="..\img\db\db_05.png" style="zoom:67%;" />
+   <img src="/img/db/db_05.png" style="zoom:67%;" />
 
    | 参数                    | 含义                                                         |
    | ----------------------- | ------------------------------------------------------------ |
@@ -706,11 +706,11 @@ mysqldump -uroot -p2143 -T /tmp test city
 
 * 备份
 
-  ![图形化界面备份](..\img\db\db_06.png)
+  ![图形化界面备份](/img/db/db_06.png)
 
 * 恢复
 
-  ![图形化界面恢复](..\img\db\db_07.png)
+  ![图形化界面恢复](/img/db/db_07.png)
 
 
 
@@ -817,7 +817,7 @@ mysqlshow -uroot -p1234 test book --count
 
     - 用来定义数据库的访问权限和安全级别，及创建用户。关键字：grant， revoke等
 
-    ![](..\img\db\db_08.png)
+    ![](/img/db/db_08.png)
 
 
 
@@ -1364,7 +1364,7 @@ LIMIT		<limit_params>
   SELECT * FROM product WHERE NAME LIKE '%电脑%';
   ```
 
-  <img src="..\img\db\db_09.png" style="zoom: 80%;" />
+  <img src="/img/db/db_09.png" style="zoom: 80%;" />
 
 
 
@@ -1640,7 +1640,7 @@ SELECT * FROM emp WHERE name REGEXP '[uvw]';-- 匹配包含 uvw 的name值
   SELECT * FROM product LIMIT 6,2;  -- 第四页 开始索引=(4-1) * 2
   ```
 
-  ![](..\img\db\db_10.png)
+  ![](/img/db/db_10.png)
 
 
 
@@ -1971,7 +1971,7 @@ CREATE TABLE card(
 INSERT INTO card VALUES (NULL,'12345',1),(NULL,'56789',2);
 ```
 
-![](..\img\db\db_11.png)
+![](/img/db/db_11.png)
 
 
 
@@ -2005,7 +2005,7 @@ CREATE TABLE orderlist(
 INSERT INTO orderlist VALUES (NULL,'hm001',1),(NULL,'hm002',1),(NULL,'hm003',2),(NULL,'hm004',2);
 ```
 
-![多表设计一对多](..\img\db\db_12.png)
+![多表设计一对多](/img/db/db_12.png)
 
 
 
@@ -2048,7 +2048,7 @@ CREATE TABLE stu_course(
 INSERT INTO stu_course VALUES (NULL,1,1),(NULL,1,2),(NULL,2,1),(NULL,2,2);
 ```
 
-![](..\img\db\db_13.png)
+![](/img/db/db_13.png)
 
 
 
@@ -2105,7 +2105,7 @@ STRAIGHT_JOIN与 JOIN 类似，只不过左表始终在右表之前读取，只�
   SELECT 列名 FROM 表名1 RIGHT [OUTER] JOIN 表名2 ON 条件;
   ```
 
-![](..\img\db\db_14.png)
+![](/img/db/db_14.png)
 
 
 
@@ -2134,7 +2134,7 @@ STRAIGHT_JOIN与 JOIN 类似，只不过左表始终在右表之前读取，只�
   INSERT INTO employee VALUES (1001,'孙悟空',1005,9000.00),..,(1009,'宋江',NULL,16000.00);
   ```
   
-  ![](..\img\db\db_15.png)
+  ![](/img/db/db_15.png)
   
 * 数据查询
 
@@ -2423,7 +2423,7 @@ CREATE TABLE us_pro(
 );
 ```
 
-![多表练习架构设计](..\img\db\db_16.png)
+![多表练习架构设计](/img/db/db_16.png)
 
 
 
@@ -3631,7 +3631,7 @@ MERGE 存储引擎：
   )ENGINE = MERGE UNION = (order_1,order_2) INSERT_METHOD=LAST DEFAULT CHARSET=utf8;
   ```
 
-  ![](..\img\db\db_17.png)
+  ![](/img/db/db_17.png)
 
 | 特性         | MyISAM                         | InnoDB        | MEMORY               |
 | ------------ | ------------------------------ | ------------- | -------------------- |
@@ -3722,7 +3722,7 @@ MySQL 官方对索引的定义为：索引（index）是帮助 MySQL 高效获�
 **索引是在存储引擎层实现的**，所以并没有统一的索引标准，即不同存储引擎的索引的工作方式并不一样
 
 索引使用：一张数据表，用于保存数据；一个索引配置文件，用于保存索引；每个索引都指向了某一个数据
-![](..\img\db\db_18.png)
+![](/img/db/db_18.png)
 
 左边是数据表，一共有两列七条记录，最左边的是数据记录的物理地址（注意逻辑上相邻的记录在磁盘上也并不是一定物理相邻的）。为了加快 Col2 的查找，可以维护一个右边所示的二叉查找树，每个节点分别包含索引键值和一个指向对应数据的物理地址的指针，这样就可以运用二叉查找快速获取到相应数据
 
@@ -3771,7 +3771,7 @@ MySQL 官方对索引的定义为：索引（index）是帮助 MySQL 高效获�
 
 联合索引图示：根据身高年龄建立的组合索引（height、age）
 
-![](..\img\db\db_19.png)
+![](/img/db/db_19.png)
 
 
 
@@ -3937,7 +3937,7 @@ InnoDB 使用 B+Tree 作为索引结构，并且 InnoDB 一定有索引
 
 * InnoDB 表是基于聚簇索引建立的，因此 InnoDB 的索引能提供一种非常快速的主键查找性能。不过辅助索引也会包含主键列，所以不建议使用过长的字段作为主键，**过长的主索引会令辅助索引变得过大**
 
-![](..\img\db\db_20.png)
+![](/img/db/db_20.png)
 
 
 
@@ -3954,7 +3954,7 @@ MyISAM 的主键索引使用的是非聚簇索引，索引文件和数据文件�
 * 主键索引 B+ 树的节点存储了主键，辅助键索引 B+ 树存储了辅助键，表数据存储在独立的地方，这两颗 B+ 树的叶子节点都使用一个地址指向真正的表数据，对于表数据来说，这两个键没有任何差别
 * 由于索引树是独立的，通过辅助索引检索**无需回表查询**访问主键的索引树
 
-![](..\img\db\db_21.png)
+![](/img/db/db_21.png)
 
 
 
@@ -3970,7 +3970,7 @@ MyISAM 的索引方式也叫做非聚集的，之所以这么称呼是为了与 
 
 辅助索引：MyISAM 中主索引和辅助索引（Secondary key）在结构上没有任何区别，只是主索引要求 key 是唯一的，而辅助索引的 key 可以重复
 
-![](..\img\db\db_22.png)
+![](/img/db/db_22.png)
 
 
 
@@ -4036,40 +4036,40 @@ BTree 又叫多路平衡搜索树，一颗 m 叉的 BTree 特性如下：
 
 * 插入前 4 个字母 C N G A 
 
-  ![](..\img\db\db_23.png)
+  ![](/img/db/db_23.png)
 
 * 插入 H，n>4，中间元素 G 字母向上分裂到新的节点
 
-  ![](..\img\db\db_24.png)
+  ![](/img/db/db_24.png)
 
 * 插入 E、K、Q 不需要分裂
 
-  ![](..\img\db\db_25.png)
+  ![](/img/db/db_25.png)
 
 * 插入 M，中间元素 M 字母向上分裂到父节点 G
 
-  ![](..\img\db\db_26.png)
+  ![](/img/db/db_26.png)
 
 * 插入 F，W，L，T 不需要分裂
 
-  ![](..\img\db\db_27.png)
+  ![](/img/db/db_27.png)
 
 *  插入 Z，中间元素 T 向上分裂到父节点中
 
-  ![](..\img\db\db_28.png)
+  ![](/img/db/db_28.png)
 
 * 插入 D，中间元素 D 向上分裂到父节点中，然后插入 P，R，X，Y 不需要分裂
 
-  ![](..\img\db\db_29.png)
+  ![](/img/db/db_29.png)
 
 *  最后插入 S，NPQR 节点 n>5，中间节点 Q 向上分裂，但分裂后父节点 DGMT 的 n>5，中间节点 M 向上分裂
 
-  ![](..\img\db\db_30.png)
+  ![](/img/db/db_30.png)
 
 BTree 树就已经构建完成了，BTree 树和二叉树相比， 查询数据的效率更高， 因为对于相同的数据量来说，**BTree 的层级结构比二叉树少**，所以搜索速度快
 
 BTree 结构的数据可以让系统高效的找到数据所在的磁盘块，定义一条记录为一个二元组 [key, data] ，key 为记录的键值，对应表中的主键值，data 为一行记录中除主键外的数据。对于不同的记录，key 值互不相同，BTree 中的每个节点根据实际情况可以包含大量的关键字信息和分支
-![](..\img\db\db_31.png)
+![](/img/db/db_31.png)
 
 缺点：当进行范围查找时会出现回旋查找
 
@@ -4094,7 +4094,7 @@ B+Tree 为 BTree 的变种，B+Tree 与 BTree 的区别为：
 - **叶子节点按照 key 大小顺序排列，左边结尾数据都会保存右边节点开始数据的指针，形成一个链表**
 - 所有节点中的 key 在叶子节点中也存在（比如 5)，**key 允许重复**，B 树不同节点不存在重复的 key
 
-<img src="..\img\db\db_32.png" style="zoom:67%;" />
+<img src="/img/db/db_32.png" style="zoom:67%;" />
 
 B* 树：是 B+ 树的变体，在 B+ 树的非根和非叶子结点再增加指向兄弟的指针
 
@@ -4112,7 +4112,7 @@ MySQL 索引数据结构对经典的 B+Tree 进行了优化，在原 B+Tree 的�
 
 B+ 树的**叶子节点是数据页**（page），一个页里面可以存多个数据行
 
-![](..\img\db\db_33.png)
+![](/img/db/db_33.png)
 
 通常在 B+Tree 上有两个头指针，**一个指向根节点，另一个指向关键字最小的叶子节点**，而且所有叶子节点（即数据节点）之间是一种链式环结构。可以对 B+Tree 进行两种查找运算：
 
@@ -4248,10 +4248,10 @@ B+ 树为了保持索引的有序性，在插入新值的时候需要做相应�
 
 * 不使用索引下推优化时存储引擎通过索引检索到数据，然后回表查询记录返回给 Server 层，**服务器判断数据是否符合条件**
 
-  ![](..\img\db\db_34.png)
+  ![](/img/db/db_34.png)
 * 使用索引下推优化时，如果**存在某些被索引的列的判断条件**时，由存储引擎在索引遍历的过程中判断数据是否符合传递的条件，将符合条件的数据进行回表，检索出来返回给服务器，由此减少 IO 次数
 
-  ![](..\img\db\db_35.png)
+  ![](/img/db/db_35.png)
 
 **适用条件**：
 
@@ -4267,10 +4267,10 @@ SELECT * FROM user WHERE name LIKE '张%' AND　age = 10;	-- 头部模糊匹配�
 
 * 优化前：在非主键索引树上找到满足第一个条件的行，然后通过叶子节点记录的主键值再回到主键索引树上查找到对应的行数据，再对比 AND 后的条件是否符合，符合返回数据，需要 4 次回表
 
-  ![](..\img\db\db_36.png)
+  ![](/img/db/db_36.png)
 
 * 优化后：检查索引中存储的列信息是否符合索引条件，然后交由存储引擎用剩余的判断条件判断此行数据是否符合要求，**不满足条件的不去读取表中的数据**，满足下推条件的就根据主键值进行回表查询，2 次回表
-  ![](..\img\db\db_37.png)
+  ![](/img/db/db_37.png)
 
 当使用 EXPLAIN 进行分析时，如果使用了索引条件下推，Extra 会显示 Using index condition
 
@@ -4604,7 +4604,7 @@ SHOW [SESSION|GLOBAL] STATUS LIKE '';
 
   Com_xxx 表示每种语句执行的次数
 
-  ![](..\img\db\db_38.png)
+  ![](/img/db/db_38.png)
 
 * 查询 SQL 语句影响的行数：
 
@@ -4612,7 +4612,7 @@ SHOW [SESSION|GLOBAL] STATUS LIKE '';
   SHOW STATUS LIKE 'Innodb_rows_%';
   ```
 
-  ![](..\img\db\db_39.png)
+  ![](/img/db/db_39.png)
 
 Com_xxxx：这些参数对于所有存储引擎的表操作都会进行累计
 
@@ -4677,7 +4677,7 @@ SQL 执行慢有两种情况：
 
 * SHOW PROCESSLIST：**实时查看**当前 MySQL 在进行的连接线程，包括线程的状态、是否锁表、SQL 的执行情况，同时对一些锁表操作进行优化
 
-  ![](..\img\db\db_40.png)
+  ![](/img/db/db_40.png)
 
 
 
@@ -4700,7 +4700,7 @@ SQL 执行慢有两种情况：
 EXPLAIN SELECT * FROM table_1 WHERE id = 1;
 ```
 
-![](..\img\db\db_41.png)
+![](/img/db/db_41.png)
 
 | 字段          | 含义                                                         |
 | ------------- | ------------------------------------------------------------ |
@@ -4728,7 +4728,7 @@ SHOW WARINGS：在使用 EXPALIN 命令后执行该语句，可以查询与执�
 
 环境准备：
 
-![](..\img\db\db_42.png)
+![](/img/db/db_42.png)
 
 
 
@@ -4748,7 +4748,7 @@ id 代表 SQL 执行的顺序的标识，每个 SELECT 关键字对应一个唯�
   EXPLAIN SELECT * FROM t_role r, t_user u, user_role ur WHERE r.id = ur.role_id AND u.id = ur.user_id ;
   ```
 
-  ![](..\img\db\db_43.png)
+  ![](/img/db/db_43.png)
 
 * id 不同时，id 值越大优先级越高，越先被执行
 
@@ -4756,7 +4756,7 @@ id 代表 SQL 执行的顺序的标识，每个 SELECT 关键字对应一个唯�
   EXPLAIN SELECT * FROM t_role WHERE id = (SELECT role_id FROM user_role WHERE user_id = (SELECT id FROM t_user WHERE username = 'stu1'))
   ```
 
-  ![](..\img\db\db_44.png)
+  ![](/img/db/db_44.png)
 
 * id 有相同也有不同时，id 相同的可以认为是一组，从上往下顺序执行；在所有的组中，id 的值越大的组，优先级越高，越先执行
 
@@ -4764,7 +4764,7 @@ id 代表 SQL 执行的顺序的标识，每个 SELECT 关键字对应一个唯�
   EXPLAIN SELECT * FROM t_role r , (SELECT * FROM user_role ur WHERE ur.`user_id` = '2') a WHERE r.id = a.role_id ; 
   ```
 
-  ![](..\img\db\db_45.png)
+  ![](/img/db/db_45.png)
 
 * id 为 NULL 时代表的是临时表
 
@@ -4881,11 +4881,11 @@ key_len：
 SHOW PROFILES 能够在做 SQL 优化时分析当前会话中语句执行的**资源消耗**情况
 
 * 通过 have_profiling 参数，能够看到当前 MySQL 是否支持 profile：
-  ![](..\img\db\db_46.png)
+  ![](/img/db/db_46.png)
 
 * 默认 profiling 是关闭的，可以通过 set 语句在 Session 级别开启 profiling：
 
-  ![](..\img\db\db_47.png)
+  ![](/img/db/db_47.png)
 
   ```mysql
   SET profiling=1; #开启profiling 开关；
@@ -4897,7 +4897,7 @@ SHOW PROFILES 能够在做 SQL 优化时分析当前会话中语句执行的**�
   SHOW PROFILES;
   ```
 
-  ![](..\img\db\db_48.png)
+  ![](/img/db/db_48.png)
 
 * 查看到该 SQL 执行过程中每个线程的状态和消耗的时间：
 
@@ -4905,11 +4905,11 @@ SHOW PROFILES 能够在做 SQL 优化时分析当前会话中语句执行的**�
   SHOW PROFILE FOR QUERY query_id;
   ```
 
-  ![](..\img\db\db_49.png)
+  ![](/img/db/db_49.png)
 
 * 在获取到最消耗时间的线程状态后，MySQL 支持选择 all、cpu、block io 、context switch、page faults 等类型查看 MySQL 在使用什么资源上耗费了过高的时间。例如，选择查看 CPU 的耗费时间：
 
-  ![](..\img\db\db_50.png)
+  ![](/img/db/db_50.png)
 
   * Status：SQL 语句执行的状态
   * Durationsql：执行过程中每一个步骤的耗时
@@ -4976,7 +4976,7 @@ INSERT INTO `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `
 CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联合索引
 ```
 
-![](..\img\db\db_51.png)
+![](/img/db/db_51.png)
 
 
 
@@ -4994,7 +4994,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE name='小米科技' AND status='1' AND address='西安市';
   ```
 
-  ![](..\img\db\db_52.png)
+  ![](/img/db/db_52.png)
 
 * **最左前缀法则**：联合索引遵守最左前缀法则
 
@@ -5005,7 +5005,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE name='小米科技' AND status='1';
   ```
 
-  ![](..\img\db\db_53.png)
+  ![](/img/db/db_53.png)
 
   违法最左前缀法则 ， 索引失效：
 
@@ -5014,7 +5014,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE status='1' AND address='西安市';
   ```
 
-  ![](..\img\db\db_54.png)
+  ![](/img/db/db_54.png)
 
   如果符合最左法则，但是出现跳跃某一列，只有最左列索引生效：
 
@@ -5022,7 +5022,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE name='小米科技' AND address='西安市';
   ```
 
-  ![](..\img\db\db_55.png)
+  ![](/img/db/db_55.png)
 
   虽然索引列失效，但是系统会**使用了索引下推进行了优化**
 
@@ -5034,7 +5034,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
 
   根据前面的两个字段 name ， status 查询是走索引的， 但是最后一个条件 address 没有用到索引，使用了索引下推
 
-  ![](..\img\db\db_56.png)
+  ![](/img/db/db_56.png)
 
 * 在索引列上**函数或者运算（+ - 数值）操作**， 索引将失效：会破坏索引值的有序性
 
@@ -5042,7 +5042,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE SUBSTRING(name,3,2) = '科技';
   ```
 
-  ![](..\img\db\db_57.png)
+  ![](/img/db/db_57.png)
 
 * **字符串不加单引号**，造成索引失效：隐式类型转换，当字符串和数字比较时会**把字符串转化为数字**
 
@@ -5052,7 +5052,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE name='小米科技' AND status = 1;
   ```
 
-  ![](..\img\db\db_58.png)
+  ![](/img/db/db_58.png)
 
   如果 status 是 int 类型，SQL 为 `SELECT * FROM tb_seller WHERE status = '1' ` 并不会造成索引失效，因为会将 `'1'` 转换为 `1`，并**不会对索引列产生操作**
 
@@ -5069,7 +5069,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE name='小米科技' OR status='1';
   ```
 
-  ![](..\img\db\db_59.png)
+  ![](/img/db/db_59.png)
 
   **AND 分割的条件不影响**：
 
@@ -5077,7 +5077,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE name='阿里巴巴' AND createtime = '2088-01-01 12:00:00';
   ```
 
-  ![](..\img\db\db_60.png)
+  ![](/img/db/db_60.png)
 
 * **以 % 开头的 LIKE 模糊查询**，索引失效：
 
@@ -5087,7 +5087,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT * FROM tb_seller WHERE name like '%科技%';
   ```
 
-  ![](..\img\db\db_61.png)
+  ![](/img/db/db_61.png)
 
   解决方案：通过覆盖索引来解决 
 
@@ -5095,7 +5095,7 @@ CREATE INDEX idx_seller_name_sta_addr ON tb_seller(name, status, address); # 联
   EXPLAIN SELECT sellerid,name,status FROM tb_seller WHERE name like '%科技%';
   ```
 
-  ![](..\img\db\db_62.png)
+  ![](/img/db/db_62.png)
 
   原因：在覆盖索引的这棵 B+ 数上只需要进行 like 的匹配，或者是基于覆盖索引查询再进行 WHERE 的判断就可以获得结果
 

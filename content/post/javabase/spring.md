@@ -180,7 +180,7 @@ java -jar XXX.jar --server.port=8007
 
 
 
-![image-20230704145759440](..\img\javabase\spring\配置文件加载顺序.png)
+![image-20230704145759440](/img/javabase/spring/配置文件加载顺序.png)
 
 外部配置文件加载顺序，由jar包外向jar包内寻找配置文件，高优先级覆盖低优先级。
 红色是file:路径，也就是项目根路径。

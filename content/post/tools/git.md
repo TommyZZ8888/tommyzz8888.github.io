@@ -131,7 +131,7 @@ GitLab（地址： https://about.gitlab.com/ ）是一个用于仓库管理系�
 
 ### 工作过程
 
-![](..\img\tool\git\Git基本工作流程.png)
+![](/img/tool/gitGit基本工作流程.png)
 
 版本库：.git 隐藏文件夹就是版本库，版本库中存储了很多配置信息、日志信息和文件版本信息等
 
@@ -139,7 +139,7 @@ GitLab（地址： https://about.gitlab.com/ ）是一个用于仓库管理系�
 
 暂存区：.git 文件夹中有很多文件，其中有一个 index 文件就是暂存区，也可以叫做 stage，暂存区是一个临时保存修改文件的地方
 
-![](..\img\tool\git\文件流程图.png)
+![](/img/tool/git文件流程图.png)
 
 
 
@@ -231,7 +231,7 @@ pull = fetch + merge
 
 fetch 是从远程仓库更新到本地仓库，pull是从远程仓库直接更新到工作空间中
 
-![](..\img\tool\git\图解远程仓库工作流程.png)
+![](/img/tool/git图解远程仓库工作流程.png)
 
 
 
@@ -295,7 +295,7 @@ git push <shortname><branchname>：上传本地指定分支到远程仓库
 
 ## 版本管理
 
-![](..\img\tool\git\版本切换.png)
+![](/img/tool/git版本切换.png)
 
 命令：git reset --hard 版本唯一索引值
 
@@ -345,7 +345,7 @@ git merge branch-name：合并指定分支到当前分支
 
 有时候合并操作不会如此顺利。 如果你在两个不同的分支中，对同一个文件的同一个部分进行了不同的修改，Git 就没办法合并它们，同时会提示文件冲突。此时需要我们打开冲突的文件并修复冲突内容，最后执行 git add 命令来标识冲突已解决
 
-​	![](..\img\tool\git\合并分支冲突.png)
+​	![](/img/tool/git合并分支冲突.png)
 
 
 
@@ -438,14 +438,14 @@ File → Settings 打开设置窗口，找到 Version Control 下的 git 选项
 ### 版本管理
 
 * 版本对比
-  	![](..\img\tool\git\版本对比.png)
+  	![](/img/tool/git版本对比.png)
 
 * 版本切换方式一：控制台 Version Control → Log → 右键 Reset Current Branch → Reset，这种切换会抛弃原来的提交记录
-     		![](..\img\tool\git\版本切换方式一.png)
+     		![](/img/tool/git版本切换方式一.png)
 * 版本切换方式二：控制台 Version Control → Log → Revert Commit → Merge → 处理代码 → commit，这种切换会当成一个新的提交记录，之前的提交记录也都保留
-   ![](..\img\tool\git\版本切换方式二.png)
+   ![](/img/tool/git版本切换方式二.png)
 
-​           ![](..\img\tool\git\版本切换方式二(1).png)
+​           ![](/img/tool/git版本切换方式二(1).png)
 
 
 
@@ -472,7 +472,7 @@ File → Settings 打开设置窗口，找到 Version Control 下的 git 选项
 
 1. VCS → Git → Push → 点击 master Define remote
 2. 将远程仓库的 url 路径复制过来 → Push
-   ![](..\img\tool\git\本地仓库推送到远程仓库.png)
+   ![](/img/tool/git本地仓库推送到远程仓库.png)
 
 
 
@@ -484,7 +484,7 @@ File → Settings 打开设置窗口，找到 Version Control 下的 git 选项
 
 File → Close Project → Checkout from Version Control → Git → 指定远程仓库的路径 → 指定本地存放的路径 → clone
 
-![](..\img\tool\git\远程仓库克隆到本地仓库.png)
+![](/img/tool/git远程仓库克隆到本地仓库.png)
 
 
 

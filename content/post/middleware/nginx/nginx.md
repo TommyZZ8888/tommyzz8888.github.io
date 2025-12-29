@@ -1,10 +1,10 @@
 ---
 title: Nginx
 date: '2025-12-28T09:38:23+08:00'
-
 categories:
 - 中间件
---- 
+---
+
 ## Nginx
 
 主要用于**http服务器**    **反向代理**    **负载均衡**
@@ -358,7 +358,7 @@ http {
 
 ### [2.1 单机前后端文件](https://lanmei123.github.io/blog/server/nginx.html#_2-1-单机前后端文件)
 
-理想的情况如下 ![img.png](..\..\img\middleware\nginx\单机.png)
+理想的情况如下 ![img.png](/img/middleware/nginx/单机.png)
 
 nginx配置
 
@@ -418,7 +418,7 @@ http {
     11.0.0.1 作为应用服务器B
 ```
 
-实现效果 ![img.png](F:\java_study\github\Tommy\notes\img\middleware\nginx\高可用.png) 10.0.0.0 的负载均衡的nginx配置
+实现效果 ![img.png](/img/middleware/nginx/高可用.png) 10.0.0.0 的负载均衡的nginx配置
 
 
 

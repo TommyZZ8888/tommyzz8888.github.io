@@ -24,7 +24,7 @@ Docker 架构：
 * **容器（Container）**：镜像（Image）和容器（Container）的关系，就像是面向对象程序设计中的类和对象一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等
 * **仓库（Repository）**：仓库可看成一个代码控制中心，用来保存镜像
 
-![](..\img\tool\docker\Docker-docker架构.png)
+![](/img/tool/docker/Docker-docker架构.png)
 
 安装步骤：
 
@@ -199,7 +199,7 @@ sudo systemctl restart docker
 > Docker 容器和外部机器可以直接交换文件吗？
 > 容器之间想要进行数据交互？
 
-<img src="..\img\tool\docker\Docker-容器的数据卷.png" style="zoom:67%;" />
+<img src="/img/tool/docker/Docker-容器的数据卷.png" style="zoom:67%;" />
 
 **数据卷**：数据卷是宿主机中的一个目录或文件，当容器目录和数据卷目录绑定后，对方的修改会立即同步
 
@@ -235,7 +235,7 @@ sudo systemctl restart docker
 * 多个容器挂载同一个数据卷
 * 数据卷容器
 
-<img src="..\img\tool\docker\Docker-多容器数据交换.png" style="zoom:50%;" />
+<img src="/img/tool/docker/Docker-多容器数据交换.png" style="zoom:50%;" />
 
 * 创建启动c3数据卷容器，使用 –v 参数设置数据卷
 
@@ -270,7 +270,7 @@ sudo systemctl restart docker
 
 * 当容器中的网络服务需要被外部机器访问时，可以将容器中提供服务的端口映射到宿主机的端口上。外部机器访问宿主机的该端口，从而间接访问容器的服务。这种操作称为：**端口映射**
 
-  ![](..\img\tool\docker\Docker-MySQL部署.png)
+  ![](/img/tool/docker/Docker-MySQL部署.png)
 
 MySQL部署步骤：搜索mysql镜像，拉取mysql镜像，创建容器，操作容器中的mysql
 
@@ -530,7 +530,7 @@ Docker镜像原理：
 
 ### 镜像制作
 
-![](..\img\tool\docker\Docker-Docker镜像原理.png)
+![](/img/tool/docker/Docker-Docker镜像原理.png)
 
 ****
 
@@ -635,7 +635,7 @@ Docker Compose是一个编排多容器分布式部署的工具，提供命令集
 
 3. 运行 docker-compose up 启动应用
 
-![](..\img\tool\docker\Docker-Compose原理.png)
+![](/img/tool/docker/Docker-Compose原理.png)
 
 
 
@@ -779,7 +779,7 @@ Docker官方的Docker hub（https://hub.docker.com）是一个用于管理公共
   * 容器虚拟化的是操作系统，虚拟机虚拟化的是硬件。
   * 传统虚拟机可以运行不同的操作系统，容器只能运行同一类型操作系统
 
-  ![](..\img\tool\docker\Docker-容器和虚拟机对比.png)
+  ![](/img/tool/docker/Docker-容器和虚拟机对比.png)
 
   | 特性       | 容器               | 虚拟机     |
   | ---------- | ------------------ | ---------- |
