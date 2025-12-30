@@ -15,7 +15,7 @@ Java概述
 
 ### 1.什么是Java？
 
-![下辈子还学Java](https://gitee.com/sanfene/picgo3/raw/master/20220115100150.png)
+![下辈子还学Java](/img/javabase/base/20220115100150.png)
 
 PS：碎怂Java，有啥好介绍的。哦，面试啊。
 
@@ -25,7 +25,7 @@ Java是一门面向对象的编程语言，不仅吸收了C++语言的各种优�
 
 Java语言有很多优秀（可吹）的特点，以下几个是比较突出的：
 
-![Java语言特点](https://gitee.com/sanfene/picgo3/raw/master/20220115102217.png)
+![Java语言特点](/img/javabase/base/20220115102217.png)
 
 *   面向对象（封装，继承，多态）；
 *   平台无关性，平台无关性的具体表现在于，Java 是“一次编写，到处运行（Write Once，Run any Where）”的语言，因此采用 Java 语言编写的程序具有很好的可移植性，而保证这一点的正是 Java 的虚拟机机制。在引入虚拟机之后，Java 语言在不同的平台上运行不需要重新编译。
@@ -42,7 +42,7 @@ Java语言有很多优秀（可吹）的特点，以下几个是比较突出的�
 
 简单来说，JDK包含JRE，JRE包含JVM。
 
-![JDK、JRE、JVM关系](https://gitee.com/sanfene/picgo3/raw/master/20220115103315.png)
+![JDK、JRE、JVM关系](/img/javabase/base/20220115103315.png)
 
 ### 4.说说什么是跨平台性？原理是什么
 
@@ -60,7 +60,7 @@ Java语言有很多优秀（可吹）的特点，以下几个是比较突出的�
 *   **解释**：虚拟机执行Java字节码，将字节码翻译成机器能识别的机器码
 *   **执行**：对应的机器执行二进制机器码
 
-![Java程序执行过程](https://gitee.com/sanfene/picgo3/raw/master/20220115104405.png)
+![Java程序执行过程](/img/javabase/base/20220115104405.png)
 
 只需要把Java程序编译成Java虚拟机能识别的Java字节码，不同的平台安装对应的Java虚拟机，这样就可以可以实现Java语言的平台无关性。
 
@@ -74,7 +74,7 @@ Java语言有很多优秀（可吹）的特点，以下几个是比较突出的�
 
 Java 语言既具有编译型语言的特征，也具有解释型语言的特征，因为 Java 程序要经过先编译，后解释两个步骤，由 Java 编写的程序需要先经过编译步骤，生成字节码（`\*.class` 文件），这种字节码必须再经过JVM，解释成操作系统能识别的机器码，在由操作系统执行。因此，我们可以认为 Java 语言**编译**与**解释**并存。
 
-![编译与解释](https://gitee.com/sanfene/picgo3/raw/master/20220115104257.png)
+![编译与解释](/img/javabase/base/20220115104257.png)
 
 基础语法
 ====
@@ -85,7 +85,7 @@ Java 语言既具有编译型语言的特征，也具有解释型语言的特征
 
 Java语言数据类型分为两种：**基本数据类型**和**引用数据类型**。
 
-![Java数据类型](https://gitee.com/sanfene/picgo3/raw/master/20220115125651.png)
+![Java数据类型](/img/javabase/base/20220115125651.png)
 
 **基本数据类型：**
 
@@ -118,7 +118,7 @@ Java基本数据类型范围和默认值：
 
 Java 所有的数值型变量可以相互转换，当把一个表数范围小的数值或变量直接赋给另一个表数范围大的变量时，可以进行自动类型转换；反之，需要强制转换。
 
-![Java自动类型转换方向](https://gitee.com/sanfene/picgo3/raw/master/20220115191949.png)
+![Java自动类型转换方向](/img/javabase/base/20220115191949.png)
 
 这就好像，小杯里的水倒进大杯没问题，但大杯的水倒进小杯就不行了，可能会溢出。
 
@@ -139,7 +139,7 @@ Java 所有的数值型变量可以相互转换，当把一个表数范围小的
 
 Java可以自动对基本数据类型和它们的包装类进行装箱和拆箱。
 
-![装箱和拆箱](https://gitee.com/sanfene/picgo3/raw/master/20220115193443.png)
+![装箱和拆箱](/img/javabase/base/20220115193443.png)
 
 举例：
 
@@ -174,7 +174,7 @@ Java5 以前 switch(expr)中，expr 只能是 byte、short、char、int。
 *   continue 跳出本次循环，继续执行下次循环(**结束正在执行的循环 进入下一个循环条件**)
 *   return 程序返回，不再执行下面的代码(**结束当前的方法 直接返回**)
 
-![break 、continue 、return](https://gitee.com/sanfene/picgo3/raw/master/20220115195245.png)
+![break 、continue 、return](/img/javabase/base/20220115195245.png)
 
 ### 13.用最有效率的方法计算2乘以8？
 
@@ -250,11 +250,11 @@ PS：笔试面试可能会碰到的奇葩题，开发这么写，见一次吊一
 
 用一个比喻：面向过程是编年体；面向对象是纪传体。
 
-![面向对象和面向过程的区别](https://gitee.com/sanfene/picgo3/raw/master/20220115203351.png)
+![面向对象和面向过程的区别](/img/javabase/base/20220115203351.png)
 
 ### 16.面向对象有哪些特性
 
-![面向对象三大特征](https://gitee.com/sanfene/picgo3/raw/master/20220115203617.png)
+![面向对象三大特征](/img/javabase/base/20220115203617.png)
 
 *   **封装**
     
@@ -305,7 +305,7 @@ Java中，可以使用访问控制符来保护对类、变量、方法和构造�
 *   **public** : 对所有类可见。可以修饰类、接口、变量、方法
 *   **protected** : 对同一包内的类和所有子类可见。可以修饰变量、方法。**注意：不能修饰类（外部类）**。
 
-![访问修饰符和可见性](https://gitee.com/sanfene/picgo3/raw/master/20220115215058.png)
+![访问修饰符和可见性](/img/javabase/base/20220115215058.png)
 
 ### 19.this关键字有什么作用？
 
@@ -401,7 +401,7 @@ final表示不可变的意思，可用于修饰类、属性和方法：
     
     一张图说明：
     
-    ![final修饰变量](https://gitee.com/sanfene/picgo3/raw/master/20220116212446.png)
+    ![final修饰变量](/img/javabase/base/20220116212446.png)
     
 
 ### 25.final、finally、finalize的区别？
@@ -487,7 +487,7 @@ JVM 的内存分为堆和栈，其中栈中存储了基本数据类型和引用�
 
 而对象所占的空间是在堆中开辟的，所以传递的时候可以理解为把变量存储的对象地址给传递过去，因此引用类型也是值传递。
 
-![Java引用数据值传递示意图](https://gitee.com/sanfene/picgo3/raw/master/20220116220451.png)
+![Java引用数据值传递示意图](/img/javabase/base/20220116220451.png)
 
 ### 29.深拷贝和浅拷贝?
 
@@ -496,7 +496,7 @@ JVM 的内存分为堆和栈，其中栈中存储了基本数据类型和引用�
 
 例如现在有一个order对象，里面有一个products列表，它的浅拷贝和深拷贝的示意图：
 
-![浅拷贝和深拷贝示意图](https://gitee.com/sanfene/picgo3/raw/master/20220116222517.png)
+![浅拷贝和深拷贝示意图](/img/javabase/base/20220116222517.png)
 
 因此深拷贝是安全的，浅拷贝的话如果有引用类型，那么拷贝后对象，引用类型变量修改，会影响原对象。
 
@@ -513,7 +513,7 @@ Object类提供的clone()方法可以非常简单地实现对象的浅拷贝。
 
 Java中有以下四种创建对象的方式:
 
-![Java创建对象的四种方式](https://gitee.com/sanfene/picgo3/raw/master/20220116223506.png)
+![Java创建对象的四种方式](/img/javabase/base/20220116223506.png)
 
 *   new创建新对象
 *   通过反射机制
@@ -550,7 +550,7 @@ String是一个比较特殊的引用数据类型。
 
 两个语句都会去字符串常量池中检查是否已经存在 “abc”，如果有则直接使用，如果没有则会在常量池中创建 “abc” 对象。
 
-![堆与常量池中的String](https://gitee.com/sanfene/picgo3/raw/master/20220116230542.png)
+![堆与常量池中的String](/img/javabase/base/20220116230542.png)
 
 但是不同的是，String str1 = new String("abc") 还会通过 new String() 在堆里创建一个 "abc" 字符串对象实例。所以后者可以理解为被前者包含。
 
@@ -579,7 +579,7 @@ String ab = a + b;
 
 内存如下：
 
-![jdk1.8之前的字符串拼接](https://gitee.com/sanfene/picgo3/raw/master/20220117085549.png)
+![jdk1.8之前的字符串拼接](/img/javabase/base/20220117085549.png)
 
 在**Java8时**JDK对“+”号拼接进行了优化，上面所写的拼接方式会被优化为基于StringBuilder的append方法进行处理。Java会在编译期对“+”号进行处理。
 
@@ -672,7 +672,7 @@ Integer a= 127这种赋值，是用到了Integer自动装箱的机制。自动�
 
 实现的原理是int 在自动装箱的时候会调用Integer.valueOf，进而用到了 IntegerCache。
 
-![Integer.valueOf](https://gitee.com/sanfene/picgo3/raw/master/20220117230058.png)
+![Integer.valueOf](/img/javabase/base/20220117230058.png)
 
 很简单，就是判断下值是否在缓存范围之内，如果是的话去 IntegerCache 中取，不是的话就创建一个新的Integer对象。
 
@@ -735,7 +735,7 @@ public static int parseInt(String s, int radix)
 
 去掉枝枝蔓蔓（当然这些枝枝蔓蔓可以去看看，源码cover了很多情况），其实剩下的就是一个简单的字符串遍历计算，不过计算方式有点反常规，是用负的值累减。
 
-![parseInt示意图](https://gitee.com/sanfene/picgo3/raw/master/20220118073051.png)
+![parseInt示意图](/img/javabase/base/20220118073051.png)
 
 Object
 ------
@@ -744,7 +744,7 @@ Object
 
 Object 类是一个特殊的类，是所有类的父类，也就是说所有类都可以调用它的方法。它主要提供了以下 11 个方法，大概可以分为六类：
 
-![Object类的方法](https://gitee.com/sanfene/picgo3/raw/master/20220118075626.png)
+![Object类的方法](/img/javabase/base/20220118075626.png)
 
 **对象比较**：
 
@@ -782,7 +782,7 @@ Object 类是一个特殊的类，是所有类的父类，也就是说所有类�
 
 Java的异常体系是分为多层的。
 
-![Java异常体系](https://gitee.com/sanfene/picgo3/raw/master/20220118083050.png)
+![Java异常体系](/img/javabase/base/20220118083050.png)
 
 `Throwable` 是 Java 语言中所有错误或异常的基类。 Throwable 又分为`Error`和`Exception`，其中Error是系统内部错误，比如虚拟机异常，是程序无法处理的。`Exception`是程序问题导致的异常，又分为两种：
 
@@ -793,7 +793,7 @@ Java的异常体系是分为多层的。
 
 针对异常的处理主要有两种方式：
 
-![异常处理](https://gitee.com/sanfene/picgo3/raw/master/20220118084205.png)
+![异常处理](/img/javabase/base/20220118084205.png)
 
 *   **遇到异常不进行具体处理，而是继续抛给调用者 （throw，throws）**
 
@@ -906,7 +906,7 @@ Java Io流共涉及40多个类，看上去杂乱，其实都存在一定的关�
 *   **InputStream**/**Reader**: 所有的输入流的基类，前者是字节输入流，后者是字符输入流。
 *   **OutputStream**/**Writer**: 所有输出流的基类，前者是字节输出流，后者是字符输出流。
 
-![IO-操作方式分类-图片来源参考[2]](https://gitee.com/sanfene/picgo3/raw/master/20211011215419.jpeg)
+![IO-操作方式分类-图片来源参考[2]](/img/javabase/base/20211011215419.jpeg)
 
 > IO流用到了什么设计模式？
 
@@ -914,7 +914,7 @@ Java Io流共涉及40多个类，看上去杂乱，其实都存在一定的关�
 
 InputStream相关的部分类图如下，篇幅有限，装饰器模式就不展开说了。
 
-![Java IO流用到装饰器模式](https://gitee.com/sanfene/picgo3/raw/master/20220118224856.png)
+![Java IO流用到装饰器模式](/img/javabase/base/20220118224856.png)
 
 ### 43.既然有了字节流,为什么还要有字符流?
 
@@ -924,11 +924,11 @@ InputStream相关的部分类图如下，篇幅有限，装饰器模式就不展
 
 ### 44.BIO、NIO、AIO？
 
-![BIO、NIO、AIO](https://gitee.com/sanfene/picgo3/raw/master/20220119001928.png)
+![BIO、NIO、AIO](/img/javabase/base/20220119001928.png)
 
 **BIO**(blocking I/O) ： 就是传统的IO，同步阻塞，服务器实现模式为一个连接一个线程，即**客户端有连接请求时服务器端就需要启动一个线程进行处理**，如果这个连接不做任何事情会造成不必要的线程开销，可以通过连接池机制改善(实现多个客户连接服务器)。
 
-![BIO、NIO、AIO](https://gitee.com/sanfene/picgo3/raw/master/20220119004611.png)
+![BIO、NIO、AIO](/img/javabase/base/20220119004611.png)
 
 BIO方式适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高，并发局限于应用中，JDK1.4 以前的唯一选择，程序简单易理解。
 
@@ -936,13 +936,13 @@ BIO方式适用于连接数目比较小且固定的架构，这种方式对服�
 
 NIO是**同步非阻塞**的，服务器端用一个线程处理多个连接，客户端发送的连接请求会注册到多路复用器上，多路复用器轮询到连接有IO请求就进行处理：
 
-![NIO线程](https://gitee.com/sanfene/picgo3/raw/master/20220119004630.png)
+![NIO线程](/img/javabase/base/20220119004630.png)
 
 NIO的数据是面向**缓冲区Buffer**的，必须从Buffer中读取或写入。
 
 所以完整的NIO示意图：
 
-![NIO完整示意图](https://gitee.com/sanfene/picgo3/raw/master/20220119005251.png)
+![NIO完整示意图](/img/javabase/base/20220119005251.png)
 
 可以看出，NIO的运行机制：
 
@@ -964,7 +964,7 @@ PS：关于同步阻塞IO、同步不阻塞IO、异步不阻塞IO的相关概念
 
 所以**反序列化就是把二进制流恢复成对象**。
 
-![序列化和反序列化](https://gitee.com/sanfene/picgo3/raw/master/20220120094441.png)
+![序列化和反序列化](/img/javabase/base/20220120094441.png)
 
 类比我们生活中一些大件物品的运输，运输的时候把它拆了打包，用的时候再拆包组装。
 
@@ -1004,7 +1004,7 @@ private static final long serialVersionUID = 1L;
 
 Java序列化方式有很多，常见的有三种：
 
-![Java常见序列化方式](https://gitee.com/sanfene/picgo3/raw/master/20220120095418.png)
+![Java常见序列化方式](/img/javabase/base/20220120095418.png)
 
 *   Java对象流列化 ：Java原生序列化方法即通过Java原生流(InputStream和OutputStream之间的转化)的方式进行转化，一般是对象输出流 `ObjectOutputStream`和对象输入流`ObjectI叩utStream`。
 *   Json序列化：这个可能是我们最常用的序列化方式，Json序列化的选择很多，一般会使用jackson包，通过ObjectMapper类来进行一些操作，比如将对象转化为byte数组或者将json串转化为对象。
@@ -1035,7 +1035,7 @@ System.out.println(list);
 
 泛型一般有三种使用方式:**泛型类**、**泛型接口**、**泛型方法**。
 
-![泛型类、泛型接口、泛型方法](https://gitee.com/sanfene/picgo3/raw/master/20220121091637.png)
+![泛型类、泛型接口、泛型方法](/img/javabase/base/20220121091637.png)
 
 **1.泛型类**：
 
@@ -1150,7 +1150,7 @@ list.add(new Dog());
 
 **Java注解本质上是一个标记**，可以理解成生活中的一个人的一些小装扮，比如戴什么什么帽子，戴什么眼镜。
 
-![Java注解和帽子](https://gitee.com/sanfene/picgo3/raw/master/20220121085537.png)
+![Java注解和帽子](/img/javabase/base/20220121085537.png)
 
 注解可以标记在类上、方法上、属性上等，标记自身也可以设置一些值，比如帽子颜色是绿色。
 
@@ -1168,13 +1168,13 @@ list.add(new Dog());
 
 像常见的：
 
-![Override注解](https://gitee.com/sanfene/picgo3/raw/master/20220121090438.png)
+![Override注解](/img/javabase/base/20220121090438.png)
 
 就是给编译器用的，编译器编译的时候检查没问题就over了，class文件里面不会有 Override 这个标记。
 
 再比如 Spring 常见的 Autowired ，就是 RUNTIME 的，所以**在运行的时候可以通过反射得到注解的信息**，还能拿到标记的值 required 。
 
-![Autowired注解](https://gitee.com/sanfene/picgo3/raw/master/20220121090608.png)
+![Autowired注解](/img/javabase/base/20220121090608.png)
 
 反射
 ==
@@ -1191,7 +1191,7 @@ list.add(new Dog());
 
 反射最核心的四个类：
 
-![Java反射相关类](https://gitee.com/sanfene/picgo3/raw/master/20220121220853.png)
+![Java反射相关类](/img/javabase/base/20220121220853.png)
 
 > 反射的应用场景？
 
@@ -1218,7 +1218,7 @@ JDK已经出到17了，但是你迭代你的版本，我用我的8。JDK1.8的�
 
 JDK1.8有不少新特性，我们经常接触到的新特性如下：
 
-![JDK1.8主要新特性](https://gitee.com/sanfene/picgo3/raw/master/20220121223429.png)
+![JDK1.8主要新特性](/img/javabase/base/20220121223429.png)
 
 *   接口默认方法：Java 8允许我们给接口添加一个非抽象的方法实现，只需要使用 default关键字修饰即可
     
@@ -1396,7 +1396,7 @@ reduced.ifPresent(System.out::println);
 
 以上是常见的几种流式操作，还有其它的一些流式操作，可以帮助我们更便捷地处理集合数据。
 
-![Java Stream流](https://gitee.com/sanfene/picgo3/raw/master/20220121232729.png)
+![Java Stream流](/img/javabase/base/20220121232729.png)
 
 > 简单事情重复做，重复事情认真做，认真事情有创造性地做。
 > 
@@ -1440,6 +1440,6 @@ reduced.ifPresent(System.out::println);
 
 * * *
 
-![](https://img2022.cnblogs.com/blog/1659274/202201/1659274-20220124214709248-441069911.png)
+![](/img/javabase/base/1659274-20220124214709248-441069911.png)
 
 本文转自 <https://www.cnblogs.com/three-fighter/p/15841060.html>，如有侵权，请联系删除。

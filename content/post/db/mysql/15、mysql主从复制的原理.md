@@ -1,3 +1,12 @@
+---
+title: 15、mysql主从复制的原理.md
+date: '2025-12-28T09:38:23+08:00'
+
+categories:
+- DB
+---
+
+
 mysql主从复制
 =========
 
@@ -17,7 +26,7 @@ mysql主从复制
 
 #### 1、看记录二进制日志是否开启：在MySQL8中默认情况下，二进制文件是开启的。
 
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310193311215-40070923.png)
+![image](/img/db/mysql/2345397-20220310193311215-40070923.png)
 
 #### 2、日志的参数设置
 
@@ -28,11 +37,11 @@ mysql主从复制
 `log-bin=binloglog`  
 `binlog_expire_logs_seconds=600`  
 `max_binlog_size=100M`  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310195028369-855689704.png)  
+![image](/img/db/mysql/2345397-20220310195028369-855689704.png)  
 设置my.cnf之后，然后重启mysql服务  
 `systemctl restart mysqld`  
 重启之后，重新查看bin log日志  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310194744088-1316503733.png)  
+![image](/img/db/mysql/2345397-20220310194744088-1316503733.png)  
 **设置带文件夹的bin log日志存放目录时，一定要该目录为mysql用户**  
 `[mysqld]`  
 `log-bin="/var/lib/mysql/binlog/binloglog"`
@@ -42,14 +51,14 @@ mysql主从复制
 
 **方式2：临时性方式**  
 在mysql8中只有会话级别的设置，没有了global级别的设置。  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310195931887-1666092187.png)
+![image](/img/db/mysql/2345397-20220310195931887-1666092187.png)
 
 ### 1.3查看bin log日志
 
 1、当MySQL创建二进制日志文件时，先创建一个以“filename”为名称、以“.index”为后缀的文件，再创建一个以“filename”为名称、以“.000001”为后缀的文件。  
 2、MySQL服务重新启动一次，以“.000001”为后缀的文件就会增加一个，并且后缀名按1递增。即日志文件的个数与MySQL服务启动的次数相同；如果日志长度超过了 max\_binlog\_size 的上限（默认是1GB），就会创建一个新的日志文件。  
 **3、查看当前的二进制日志文件列表及大小**  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310203350038-1276049999.png)  
+![image](/img/db/mysql/2345397-20220310203350038-1276049999.png)  
 **4、显示bin log日志文件的命令**
 
 *   **文件中有时间日期的**  
@@ -57,10 +66,10 @@ mysql主从复制
     只显示被修改的数据(排除binlog格式)：`mysqlbinlog -v --base64-output=DECODE-ROWS "/var/lib/mysql/binlog/binloglog.000002"`
 *   **文件中有偏移量（position）**  
     显示偏移量： `show binlog events [IN 'log_name'] [FROM pos] [LIMIT [offset,] row_count];`  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310204841938-1524267115.png)
+    ![image](/img/db/mysql/2345397-20220310204841938-1524267115.png)
 
 **5、binlog日志的格式**  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310205136972-530984470.png)
+![image](/img/db/mysql/2345397-20220310205136972-530984470.png)
 
 *   statement  
     `每一条会修改数据的sql语句都会记录在binlog中。`  
@@ -78,9 +87,9 @@ mysql主从复制
 *   filename ：是日志文件名。
 *   option ：可选项，比较重要的两对option参数是--start-date、--stop-date 和 --start-position、--stop-position。  
     `1、--start-date 和 --stop-date ：可以指定恢复数据库的起始时间点和结束时间点。(使用mysqlbinlog命令显示文件中的信息)`  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310211538945-1285606988.png)  
+    ![image](/img/db/mysql/2345397-20220310211538945-1285606988.png)  
     `2、--start-position和--stop-position ：可以指定恢复数据的开始位置和结束位置。`  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310211620966-251695485.png)
+    ![image](/img/db/mysql/2345397-20220310211620966-251695485.png)
 
 #### 特定的场景
 
@@ -112,18 +121,18 @@ MySQL的二进制文件可以配置自动删除，同时MySQL也提供了安全�
 #### 1.6.1、写入机制
 
 **bin log的写入时机和redo log相似**，**事务执行过程中**先把bin log日志写到bin log cache中；**事务提交的时候**先把bin log cache中的数据写入page cache中，再把page cache中的数据刷盘到binlog文件中。因为一个事务的bin log不能被拆开，无论这个事务多大，也要确保一次性写入，所以系统会给每个线程分配一个块内存作为bin log cache。  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310230346789-895758372.png)
+![image](/img/db/mysql/2345397-20220310230346789-895758372.png)
 
 #### 1.6.2、bin log的刷盘策略
 
 **刷盘策略由参数sync\_binlog控制：默认为0**
 
 *   **当参数sync\_binlog为0时**，表示每次提交事务时都只执行write，由系统自行判断什么时候执行fsync（与redo log刷盘策略参数innodb\_flush\_log\_at\_trx\_commit为2相似）：`如果机器宕机，page cache中的binlog日志会丢失`  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310230936115-678221997.png)
+    ![image](/img/db/mysql/2345397-20220310230936115-678221997.png)
 *   **当参数sync\_binlog为1时**，表示每次提交事务时write和fsync都会执行。（与redo log刷盘策略参数innodb\_flush\_log\_at\_trx\_commit为1相似）  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310231312124-563443009.png)
+    ![image](/img/db/mysql/2345397-20220310231312124-563443009.png)
 *   **当参数sync\_binlog为2时**，表示每次提交事务时都会执行write，但是N个事务后才会执行fsync（N的值可以自己进行设置）：`如果机器宕机，page cache中最近N个事务的binlog日志会丢失`。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310231512053-1080249478.png)
+    ![image](/img/db/mysql/2345397-20220310231512053-1080249478.png)
 
 #### 1.6.3、bin log和redo log的区别
 
@@ -138,18 +147,18 @@ MySQL的二进制文件可以配置自动删除，同时MySQL也提供了安全�
 
 *   redo log：在事务执行过程中可以不断写入redo log file文件中（每1秒写入一次）
 *   bin log：只有在提交事务时才会写入bin log file文件中（每次提交事务才会写入）  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310232939005-382909307.png)
+    ![image](/img/db/mysql/2345397-20220310232939005-382909307.png)
 
 **2、写入时机不一致会出现的问题：**
 
 *   如果在执行过程中已经把redo log写入到redo log file文件后，在提交事务时bin log在写入bin log file时mysql程序出现异常。（把id=2的c字段的值从0改为1）  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310234507347-175618092.png)
+    ![image](/img/db/mysql/2345397-20220310234507347-175618092.png)
 *   由于mysql程序出现异常，因此bin log没有对应的修改记录，在重启之后主服务器会使用redo log进行数据的恢复，从服务器会使用bin log进行恢复数据，因此会出现主从服务器的数据不一致的问题。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310234914820-1518612383.png)
+    ![image](/img/db/mysql/2345397-20220310234914820-1518612383.png)
 *   为了解决上述数据不一致的问题，InnoDB存储引擎使用两阶段提交方案（将redo log写入到redo log file文件分为两个阶段：prepare和commit）。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310235342568-1815725886.png)  
+    ![image](/img/db/mysql/2345397-20220310235342568-1815725886.png)  
     `两阶段提交的原理：在写入bin log时mysql程序出现了异常，重启之后mysql主服务器根据redo log进行恢复数据时，发现redo log处于prepare阶段，然后就会判断是否有bin log日志（如果没有就会进行回滚事务，如果有就会进行提交事务）`  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220310235559809-1644408458.png)
+    ![image](/img/db/mysql/2345397-20220310235559809-1644408458.png)
 
 中继日志（relay log）
 ---------------
@@ -210,7 +219,7 @@ CD95YCABAAAAKAAAAGgDAAAAAFsAAAAAAAEAAgAB/wABAAAAfATkBw==
 #### 3.2.1原理剖析
 
 **实际上主从复制的原理就是基于bin log日志实现数据同步，通过以下三个线程来操作：（ MySQL复制是异步的且串行化的，而且重启后从接入点开始复制。）**  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220311113738053-2083481787.png)
+![image](/img/db/mysql/2345397-20220311113738053-2083481787.png)
 
 *   **二进制日志转储线程（bin log dump thread）**：是一个主库线程，当从库线程连接的时候，**主库的二进制日志转储线程可以将二进制日志发送给从库**，当主库读取事件（Event）的时候，会在binlog文件上加共享锁，读取完成之后，再将共享锁释放掉。
 *   **从库I/O线程**：会连接到主库，向主库发送请求更新的binlog日志。这时**从库的I/O线程就可以读取到主库的二进制日志转储线程发送的binlog更新部分，并且拷贝到本地的中继日志（relay log）**。
@@ -258,15 +267,15 @@ CD95YCABAAAAKAAAAGgDAAAAAFsAAAAAAAEAAgAB/wABAAAAfATkBw==
 
 *   **异步复制**  
     **异步模式就是客户端提交COMMIT之后不需要等从库返回任何结果，而是直接将结果返回给客户端**，这样做的好处是不会影响主库写的效率，但可能会存在主库宕机，而Binlog还没有同步到从库的情况，也就是此时的主库和从库数据不一致。这时候从从库中选择一个作为新主，那么新主则可能缺少原来主服务器中已提交的事务。所以，这种复制模式下的数据一致性是最弱的。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220311152915249-1045203600.png)
+    ![image](/img/db/mysql/2345397-20220311152915249-1045203600.png)
 *   **半同步复制**  
     1、**MySQL5.5版本之后开始支持半同步复制的方式。原理是在客户端提交COMMIT之后不直接将结果返回给客户端，而是等待至少有一个从库接收到了Binlog，并且写入到中继日志中，再返回给客户端**。这样做的好处就是提高了数据的一致性，当然相比于异步复制来说，至少多增加了一个网络连接的延迟，降低了主库写的效率。  
     2、在MySQL5.7版本中还增加了一个rpl\_semi\_sync\_master\_wait\_for\_slave\_count参数，可以对应答的从库数量进行设置，默认为1，也就是说只要有1个从库进行了响应，就可以返回给客户端。如果将这个参数调大，可以提升数据一致性的强度，但也会增加主库等待从库响应的时间。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220311153830320-1710214355.png)
+    ![image](/img/db/mysql/2345397-20220311153830320-1710214355.png)
 *   组复制  
     半同步复制是通过判断从库响应的个数来决定是否返回给客户端，虽然数据一致性相比于异步复制有提升，但仍然无法满足对数据一致性要求高的场景，比如金融领域。MGR 很好地弥补了这两种复制模式的不足。  
     `1、在执行读写（RW）事务的时候，需要通过一致性协议层（Consensus 层）的同意，也就是读写事务想要进行提交，必须要经过组里“大多数人”（对应 Node 节点）的同意，大多数指的是同意的节点数量需要大于 （N/2+1），这样才可以进行提交`  
     `2、在只读（RO）事务，则不需要经过组内同意，直接COMMIT即可。`  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220311154818168-1918190169.png)
+    ![image](/img/db/mysql/2345397-20220311154818168-1918190169.png)
 
 本文转自 <https://www.cnblogs.com/worldusemycode/p/15991048.html>，如有侵权，请联系删除。

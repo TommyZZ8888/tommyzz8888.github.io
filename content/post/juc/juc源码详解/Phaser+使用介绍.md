@@ -2,8 +2,8 @@
 name: phaser-tutorial
 title: Phaser 使用介绍
 date: 2024-01-20 19:37:40
-tags: 
-categories: concurrent
+categories:
+- juc
 ---
 本文将介绍 `java.util.concurrent.Phaser`，一个常常被大家忽略的并发工具。它和 `CyclicBarrier` 以及 `CountDownLatch` 很像，但是使用上更加的灵活，本文会进行一些对比介绍。
 
@@ -108,7 +108,7 @@ Phaser 比较灵活，它不需要在构造的时候指定固定数目的 **part
 
 画一张图压着：
 
-![](..\..\..\notes\img\juc\源码\phaser-1.png)
+![](/img/juc/源码/phaser-1.png)
 
 ### 重要接口介绍
 
@@ -249,7 +249,7 @@ Phaser m4 = new Phaser(n2, 5);
 
 根据上面的代码，我们可以画出下面这个很简单的图：
 
-![phaser](..\..\..\notes\img\juc\源码\phaser-2.png)
+![phaser](/img/juc/源码/phaser-2.png)
 
 这棵树上有 7 个 phaser 实例，每个 phaser 实例在构造的时候，都指定了 parties 为 5，但是，对于每个拥有子节点的节点来说，每个子节点都是它的一个 party，我们可以通过 phaser.getRegisteredParties() 得到每个节点的 parties 数量：
 

@@ -1,3 +1,12 @@
+---
+title: 2、mysql如何控制用户对数据库的访问.md
+date: '2025-12-28T09:38:23+08:00'
+
+categories:
+- DB
+---
+
+
 **基础理解：通过对用户赋予某些权限就可以控制用户对数据库的访问  
 更深层次的理解：当mysql对用户赋予某些权限时，mysql底层是如何控制用户对数据库的访问**
 
@@ -154,7 +163,7 @@ PASSWORD REUSE INTERVAL DEFAULT;
 （6）**CREATE ROUTINE权限**：用来创建保存的程序（函数和程序），ALTER ROUTINE权限：用来更改和删除保存的程序， EXECUTE权限：用来执行保存的程序。  
 （7）**GRANT权限**：允许授权给其他用户，可用于数据库、表和保存的程序。  
 （8）**FILE权限**：使用户可以使用LOAD DATA INFILE和SELECT ... INTO OUTFILE语句读或写服务器上的文件，任何被授予FILE权限的用户都能读或写MySQL服务器上的任何文件（说明用户可以读任何数据库目录下的文件，因为服务器可以访问这些文件）。  
-![image](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220123904589-418181875.png)
+![image](/img/db/mysql/2345397-20220220123904589-418181875.png)
 
 ### 2.2授予权限的原则
 
@@ -218,7 +227,7 @@ PASSWORD REUSE INTERVAL DEFAULT;
 ### 3.1user表
 
 **user表：是MySQL中最重要的一个权限表， 记录用户账号和权限信息。**  
-![image](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154814619-880344668.png)  
+![image](/img/db/mysql/2345397-20220220154814619-880344668.png)  
 这些字段可以分成4类，分别是范围列（或用户列）、权限列、安全列和资源控制列。  
 **1、范围列（或用户列）**
 
@@ -258,7 +267,7 @@ PASSWORD REUSE INTERVAL DEFAULT;
 ### 3.2db表
 
 **db表：记录数据库层级的权限**  
-![image](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152406519-649151221.png)  
+![image](/img/db/mysql/2345397-20220220152406519-649151221.png)  
 **1、用户列**  
 db表用户列有3个字段，分别是Host、User、Db。这3个字段分别表示主机名、用户名和数据库  
 名。表示从某个主机连接某个用户对某个数据库的操作权限，这3个字段的组合构成了db表的主键。  
@@ -268,7 +277,7 @@ Create\_routine\_priv和Alter\_routine\_priv这两个字段决定用户是否具
 ### 3.3tables\_priv表
 
 **tables\_priv表：记录表层级的权限**  
-![image](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220152825187-262801799.png)
+![image](/img/db/mysql/2345397-20220220152825187-262801799.png)
 
 *   Host、Db、User 和 Table\_name 四个字段分别表示主机名、数据库名、用户名和表名。表示从某个主机连接某个用户对某个数据库中的某个表的操作权限，这4个字段的组合构成了tables\_priv表的主键。
 *   Grantor表示修改该记录的用户。
@@ -279,7 +288,7 @@ Create\_routine\_priv和Alter\_routine\_priv这两个字段决定用户是否具
 ### 3.4columns\_priv表
 
 **columns\_priv表：记录列层级的权限**  
-![image](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220153703503-765466053.png)
+![image](/img/db/mysql/2345397-20220220153703503-765466053.png)
 
 *   Host、Db、User、Table\_name和column\_name 5个字段分别表示主机名、数据库名、用户名、表名和列名。表示从某个主机连接某个用户对某个数据库中的某个表中的某个列的操作权限，这5个字段的组合构成了columns\_priv表的主键。
 *   Timestamp表示修改该记录的时间。
@@ -288,7 +297,7 @@ Create\_routine\_priv和Alter\_routine\_priv这两个字段决定用户是否具
 ### 3.5procs\_priv表
 
 **procs\_priv表：存储的过程和函数的权限**  
-![image](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220154121398-1977529702.png)
+![image](/img/db/mysql/2345397-20220220154121398-1977529702.png)
 
 *   Host、Db、User、Routine\_name和Routine\_type 5个字段分别表示主机名、数据库名、用户名、存储过程名和存储类型。表示从某个主机连接某个用户对某个数据库中的某个存储过程的操作权限，这5个字段的组合构成了procs\_priv表的主键。
 *   Grantor表示修改该记录的用户。
@@ -305,6 +314,6 @@ Create\_routine\_priv和Alter\_routine\_priv这两个字段决定用户是否具
 ### 4.2请求核实阶段
 
 一旦建立了连接，服务器就进入请求核实阶段。对此连接上进来的每个请求，服务器检查该请求要执行什么操作、是否有足够的权限来执行它，这正是需要授权表中的权限列发挥作用的地方。这些权限可以来自user、db、table\_priv和column\_priv表。  
-![image](https://img2022.cnblogs.com/blog/2345397/202202/2345397-20220220161703950-393897996.png)
+![image](/img/db/mysql/2345397-20220220161703950-393897996.png)
 
 本文转自 <https://www.cnblogs.com/worldusemycode/p/15915303.html>，如有侵权，请联系删除。

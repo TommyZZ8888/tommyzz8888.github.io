@@ -2,8 +2,9 @@
 name: AbstractQueuedSynchronizer-2
 title: 一行一行源码分析清楚 AbstractQueuedSynchronizer (二)
 date: 2024-01-20 19:38:38
-tags: 
-categories: concurrency
+tags:
+categories:
+- juc
 ---
 文章比较长，信息量比较大，建议在 pc 上阅读。文章标题是为了呼应前文，其实可以单独成文的，主要是希望读者看文章能系统看。
 
@@ -213,7 +214,7 @@ public class ConditionObject implements Condition, java.io.Serializable {
 
 > 这里的阻塞队列如果叫做同步队列（sync queue）其实比较贴切，不过为了和前篇呼应，我就继续使用阻塞队列了。记住这里的两个概念，**阻塞队列**和**条件队列**。
 
-![condition-2](..\..\..\notes\img\juc\源码\aqs2-2.png)
+![condition-2](/img/juc/源码/aqs2-2.png)
 
 > 这里，我们简单回顾下 Node 的属性：
 ```java

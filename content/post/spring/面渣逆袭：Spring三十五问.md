@@ -16,13 +16,13 @@ categories:
 1.Spring是什么？特性？有哪些模块？
 ---------------------
 
-![Spring Logo](https://img-blog.csdnimg.cn/img_convert/3cea48398160c5d2ff6a8d7059441bfe.png)
+![Spring Logo](/img/spring/3cea48398160c5d2ff6a8d7059441bfe.png)
 
 一句话概括：**Spring 是一个轻量级、非入侵式的控制反转 (IoC) 和面向切面 (AOP) 的框架。**
 
 2003年，一个音乐家Rod Johnson决定发展一个轻量级的Java开发框架，`Spring`作为Java战场的龙骑兵渐渐崛起，并淘汰了`EJB`这个传统的重装骑兵。
 
-![Spring重要版本](https://img-blog.csdnimg.cn/img_convert/2edf55dfc044d8badc7252061f8d973f.png)
+![Spring重要版本](/img/spring/2edf55dfc044d8badc7252061f8d973f.png)
 
 到了现在，企业级开发的标配基本就是 **Spring5** + **Spring Boot 2** + **JDK 8**
 
@@ -30,7 +30,7 @@ categories:
 
 Spring有很多优点：
 
-![Spring特性](https://img-blog.csdnimg.cn/img_convert/69bc5e62bd4ce1b1a03b0a042d6d894f.png)
+![Spring特性](/img/spring/69bc5e62bd4ce1b1a03b0a042d6d894f.png)
 
 1.  **IOC** 和 **DI** 的支持
 
@@ -61,7 +61,7 @@ Spring 对 JavaEE 开发中非常难用的一些 API（JDBC、JavaMail、远程�
 
 Spring 框架是分模块存在，除了最核心的`Spring Core Container`是必要模块之外，其他模块都是`可选`，大约有 20 多个模块。
 
-![Spring模块划分](https://img-blog.csdnimg.cn/img_convert/367a1c0632b270e38e196b847e39eb9d.png)
+![Spring模块划分](/img/spring/367a1c0632b270e38e196b847e39eb9d.png)
 
 最主要的七大模块：
 
@@ -78,7 +78,7 @@ Spring 框架是分模块存在，除了最核心的`Spring Core Container`是�
 
 Spring有很多模块，甚至广义的SpringBoot、SpringCloud也算是Spring的一部分，我们来分模块，按功能来看一下一些常用的注解：
 
-![Spring常用注解](https://img-blog.csdnimg.cn/img_convert/ceb1a30e308232d951c5b79640cb8e4e.png)
+![Spring常用注解](/img/spring/ceb1a30e308232d951c5b79640cb8e4e.png)
 
 **Web**:
 
@@ -123,7 +123,7 @@ Spring有很多模块，甚至广义的SpringBoot、SpringCloud也算是Spring�
 
 Spring 框架中广泛使用了不同类型的设计模式，下面我们来看看到底有哪些设计模式?
 
-![Spring中用到的设计模式](https://img-blog.csdnimg.cn/img_convert/ff7c7df16c9b1473429a74a1f036f706.png)
+![Spring中用到的设计模式](/img/spring/ff7c7df16c9b1473429a74a1f036f706.png)
 
 1.  **工厂模式** : Spring 容器本质是一个大工厂，使用工厂模式通过 BeanFactory、ApplicationContext 创建 bean 对象。
 2.  **代理模式** : Spring AOP 功能功能就是通过代理模式来实现的，分为动态代理和静态代理。
@@ -143,11 +143,11 @@ Java 是面向对象的编程语言，一个个实例对象相互合作组成了
 
 所谓的**IOC**（控制反转）：就是由容器来负责控制对象的生命周期和对象间的关系。以前是我们想要什么，就自己创建什么，现在是我们需要什么，容器就给我们送来什么。
 
-![引入IOC之前和引入IOC之后](https://img-blog.csdnimg.cn/img_convert/fc7de78ce5b67650b85d668ddae86aa5.png)
+![引入IOC之前和引入IOC之后](/img/spring/fc7de78ce5b67650b85d668ddae86aa5.png)
 
 也就是说，控制对象生命周期的不再是引用它的对象，而是容器。对具体对象，以前是它控制其它对象，现在所有对象都被容器控制，所以这就叫**控制反转**。
 
-![控制反转示意图](https://img-blog.csdnimg.cn/img_convert/65586ba1c053eb484f1edbe7009cb498.png)
+![控制反转示意图](/img/spring/65586ba1c053eb484f1edbe7009cb498.png)
 
 **DI（依赖注入）**：指的是容器在实例化对象的时候把它依赖的类注入给它。有的说法IOC和DI是一回事，有的说法是IOC是思想，DI是IOC的实现。
 
@@ -162,7 +162,7 @@ PS:这道题老三在面试中被问到过，问法是“**你有自己实现过
 
 Spring的IOC本质就是一个大工厂，我们想想一个工厂是怎么运行的呢？
 
-![工厂运行](https://img-blog.csdnimg.cn/img_convert/2e85262ed5ea70e07fe86cba6cc08823.png)
+![工厂运行](/img/spring/2e85262ed5ea70e07fe86cba6cc08823.png)
 
 *   **生产产品**：一个工厂最核心的功能就是生产产品。在Spring里，不用Bean自己来实例化，而是交给Spring，应该怎么实现呢？——答案毫无疑问，**反射**。
     
@@ -177,7 +177,7 @@ Spring的IOC本质就是一个大工厂，我们想想一个工厂是怎么运�
 
 我们简单地实现一个mini版的Spring IOC：
 
-![mini版本Spring IOC](https://img-blog.csdnimg.cn/img_convert/78ea24479a30b2848941de5d9ab8c2ce.png)
+![mini版本Spring IOC](/img/spring/78ea24479a30b2848941de5d9ab8c2ce.png)
 
 **Bean定义：**
 
@@ -276,7 +276,7 @@ Bean通过一个配置文件定义，把它解析成一个类型。
     
 *   **BeanFactory.java**
     
-    ![BeanFactory](https://img-blog.csdnimg.cn/img_convert/a28cee765960548c503425b4226ee537.png)
+    ![BeanFactory](/img/spring/a28cee765960548c503425b4226ee537.png)
     
     *   对象工厂，我们最**核心**的一个类，在它初始化的时候，创建了bean注册器，完成了资源的加载。
         
@@ -384,7 +384,7 @@ PS:因为时间+篇幅的限制，这个demo比较简陋，没有面向接口、
 
 可以这么形容，BeanFactory是Spring的“心脏”，ApplicantContext是完整的“身躯”。
 
-![BeanFactory和ApplicantContext的比喻](https://img-blog.csdnimg.cn/img_convert/c11f3d62026307d7ee8440eae3420921.png)
+![BeanFactory和ApplicantContext的比喻](/img/spring/c11f3d62026307d7ee8440eae3420921.png)
 
 *   BeanFactory（Bean工厂）是Spring框架的基础设施，面向Spring本身。
 *   ApplicantContext（应用上下文）建立在BeanFactoty基础上，面向使用Spring框架的开发者。
@@ -395,7 +395,7 @@ BeanFactory是类的通用工厂，可以创建并管理各种类的对象。
 
 Spring为BeanFactory提供了很多种实现，最常用的是XmlBeanFactory，但在Spring 3.2中已被废弃，建议使用XmlBeanDefinitionReader、DefaultListableBeanFactory。
 
-![Spring5 BeanFactory继承体系](https://img-blog.csdnimg.cn/img_convert/6d09e6ae506296faf04dd53dc448b640.png)
+![Spring5 BeanFactory继承体系](/img/spring/6d09e6ae506296faf04dd53dc448b640.png)
 
 BeanFactory接口位于类结构树的顶端，它最主要的方法就是getBean(String var1)，这个方法从容器中返回特定名称的Bean。
 
@@ -417,7 +417,7 @@ public class HelloWorldApp{
 
 ApplicationContext由BeanFactory派生而来，提供了更多面向实际应用的功能。可以这么说，使用BeanFactory就是手动档，使用ApplicationContext就是自动档。
 
-![Spring5 ApplicationContext部分体系类图](https://img-blog.csdnimg.cn/img_convert/2064c9aa1cc763e9ddb04ef5247b9f10.png)
+![Spring5 ApplicationContext部分体系类图](/img/spring/2064c9aa1cc763e9ddb04ef5247b9f10.png)
 
 ApplicationContext 继承了HierachicalBeanFactory和ListableBeanFactory接口，在此基础上，还通过其他的接口扩展了BeanFactory的功能，包括：
 
@@ -457,11 +457,11 @@ Spring的IOC容器工作的过程，其实可以划分为两个阶段：**容器
 
 其中容器启动阶段主要做的工作是加载和解析配置文件，保存到对应的Bean定义中。
 
-![容器启动和Bean实例化阶段](https://img-blog.csdnimg.cn/img_convert/3184ecb1ef42f8af21781a30bf577d51.png)
+![容器启动和Bean实例化阶段](/img/spring/3184ecb1ef42f8af21781a30bf577d51.png)
 
 容器启动开始，首先会通过某种途径加载Congiguration MetaData，在大部分情况下，容器需要依赖某些工具类（BeanDefinitionReader）对加载的Congiguration MetaData进行解析和分析，并将分析后的信息组为相应的BeanDefinition。
 
-![xml配置信息映射注册过程](https://img-blog.csdnimg.cn/img_convert/0eac6cbbcabd2b5753eaea8dd2976141.png)
+![xml配置信息映射注册过程](/img/spring/0eac6cbbcabd2b5753eaea8dd2976141.png)
 
 最后把这些保存了Bean定义必要信息的BeanDefinition，注册到相应的BeanDefinitionRegistry，这样容器启动就完成了。
 
@@ -474,7 +474,7 @@ Spring的IOC容器工作的过程，其实可以划分为两个阶段：**容器
 
 Spring IOC 中Bean的生命周期大致分为四个阶段：**实例化**（Instantiation）、**属性赋值**（Populate）、**初始化**（Initialization）、**销毁**（Destruction）。
 
-![Bean生命周期四个阶段](https://img-blog.csdnimg.cn/img_convert/0798c5da61b71f0c2a4d459788fa7492.png)
+![Bean生命周期四个阶段](/img/spring/0798c5da61b71f0c2a4d459788fa7492.png)
 
 我们再来看一个稍微详细一些的过程：
 
@@ -482,12 +482,12 @@ Spring IOC 中Bean的生命周期大致分为四个阶段：**实例化**（Inst
 *   **属性赋值**：第 2 步，为 Bean 设置相关属性和依赖
 *   **初始化**：初始化的阶段的步骤比较多，5、6步是真正的初始化，第 3、4 步为在初始化前执行，第 7 步在初始化后执行，初始化完成之后，Bean就可以被使用了
 *   **销毁**：第 8~10步，第8步其实也可以算到销毁阶段，但不是真正意义上的销毁，而是先在使用前注册了销毁的相关调用接口，为了后面第9、10步真正销毁 Bean 时再执行相应的方法  
-    ![SpringBean生命周期](https://img-blog.csdnimg.cn/1e0fc271fe2147f6a410428570665f1d.png)
+    ![SpringBean生命周期](/img/spring/1e0fc271fe2147f6a410428570665f1d.png)
 
 简单总结一下，Bean生命周期里初始化的过程相对步骤会多一些，比如前置、后置的处理。
 
 最后通过一个实例来看一下具体的细节：  
-![Bean一生实例](https://img-blog.csdnimg.cn/457c7149208b496c9ba519e76298186a.png)
+![Bean一生实例](/img/spring/457c7149208b496c9ba519e76298186a.png)
 
 *   定义一个`PersonBean`类，实现`DisposableBean`, `InitializingBean`, `BeanFactoryAware`, `BeanNameAware`这4个接口，同时还有自定义的`init-method`和`destroy-method`。
 
@@ -631,14 +631,14 @@ Bean使用中：工作，只有对社会没有用的人才放假。。
 
 关于源码，Bean创建过程可以查看`AbstractBeanFactory#doGetBean`方法，在这个方法里可以看到Bean的实例化，赋值、初始化的过程，至于最终的销毁，可以看看`ConfigurableApplicationContext#close()`。
 
-![Bean生命周期源码追踪](https://img-blog.csdnimg.cn/img_convert/70316533f38c96c3c9a7d9c77d3021b9.png)
+![Bean生命周期源码追踪](/img/spring/70316533f38c96c3c9a7d9c77d3021b9.png)
 
 10.Bean定义和依赖定义有哪些方式？
 --------------------
 
 有三种方式：**直接编码方式**、**配置文件方式**、**注解方式**。
 
-![Bean依赖配置方式](https://img-blog.csdnimg.cn/0d71b5a4ecf444148c2cd5b8dc402012.png)
+![Bean依赖配置方式](/img/spring/0d71b5a4ecf444148c2cd5b8dc402012.png)
 
 *   直接编码方式：我们一般接触不到直接编码的方式，但其实其它的方式最终都要通过直接编码来实现。
 *   配置文件方式：通过xml、propreties类型的配置文件，配置相应的依赖关系，Spring读取配置文件，完成依赖关系的注入。
@@ -649,7 +649,7 @@ Bean使用中：工作，只有对社会没有用的人才放假。。
 
 Spring支持**构造方法注入**、**属性注入**、**工厂方法注入**,其中工厂方法注入，又可以分为**静态工厂方法注入**和**非静态工厂方法注入**。
 
-![Spring依赖注入方法](https://img-blog.csdnimg.cn/img_convert/fc59305be5dc0d76b7fb2eb1379d16eb.png)
+![Spring依赖注入方法](/img/spring/fc59305be5dc0d76b7fb2eb1379d16eb.png)
 
 *   **构造方法注入**
     
@@ -774,7 +774,7 @@ Spring提供的这种方式，可以按照某些规则进行Bean的自动装配�
 
 Spring提供了4种自动装配类型：
 
-![Spring四种自动装配类型](https://img-blog.csdnimg.cn/img_convert/9c22a72628eb796e961edf446b0fbd55.png)
+![Spring四种自动装配类型](/img/spring/9c22a72628eb796e961edf446b0fbd55.png)
 
 *   **byName**：根据名称进行自动匹配，假设Boss又一个名为car的属性，如果容器中刚好有一个名为car的bean，Spring就会自动将其装配给Boss的car属性
 *   **byType**：根据类型进行自动匹配，假设Boss有一个Car类型的属性，如果容器中刚好有一个Car类型的Bean，Spring就会自动将其装配给Boss这个属性
@@ -786,7 +786,7 @@ Spring提供了4种自动装配类型：
 
 Spring的Bean主要支持五种作用域：
 
-![Spring Bean支持作用域](https://img-blog.csdnimg.cn/img_convert/635d4915928e0ee98dcbab449579d790.png)
+![Spring Bean支持作用域](/img/spring/635d4915928e0ee98dcbab449579d790.png)
 
 *   **singleton** : 在Spring容器仅存在一个Bean实例，Bean以单实例的方式存在，是Bean默认的作用域。
 *   **prototype** : 每次从容器重调用Bean时，都会返回一个新的实例。
@@ -806,7 +806,7 @@ Spring的Bean主要支持五种作用域：
 
 假如这个Bean是有状态的，也就是会对Bean中的成员变量进行写操作，那么可能就存在线程安全的问题。
 
-![Spring单例Bean线程安全问题](https://img-blog.csdnimg.cn/img_convert/f057c1a27d6b6d58cc8b913031f25f09.png)
+![Spring单例Bean线程安全问题](/img/spring/f057c1a27d6b6d58cc8b913031f25f09.png)
 
 > **单例Bean线程安全问题怎么解决呢？**
 
@@ -830,11 +830,11 @@ Spring的Bean主要支持五种作用域：
 
 > **什么是循环依赖？**
 
-![Spring循环依赖](https://img-blog.csdnimg.cn/img_convert/3b3e1aec9bd47738060224487d892d64.png)
+![Spring循环依赖](/img/spring/3b3e1aec9bd47738060224487d892d64.png)
 
 Spring 循环依赖：简单说就是自己依赖自己，或者和别的Bean相互依赖。
 
-![鸡和蛋](https://img-blog.csdnimg.cn/img_convert/76f610d50cd7f7cb685d0a94e7fbf5e6.png)
+![鸡和蛋](/img/spring/76f610d50cd7f7cb685d0a94e7fbf5e6.png)
 
 只有单例的Bean才存在循环依赖的情况，**原型**(Prototype)情况下，Spring会直接抛出异常。原因很简单，AB循环依赖，A实例化的时候，发现依赖B，创建B实例，创建B的时候发现需要A，创建A1实例……无限套娃，直接把系统干垮。
 
@@ -844,7 +844,7 @@ Spring不支持基于构造器注入的循环依赖，但是假如AB循环依赖
 
 看看几种情形：
 
-![循环依赖的几种情形](https://img-blog.csdnimg.cn/img_convert/274f00cf547afa8cd2861272bb7aa583.png)
+![循环依赖的几种情形](/img/spring/274f00cf547afa8cd2861272bb7aa583.png)
 
 第四种可以而第五种不可以的原因是 Spring 在创建 Bean 时默认会根据自然排序进行创建，所以 A 会先于 B 进行创建。
 
@@ -857,7 +857,7 @@ Spring不支持基于构造器注入的循环依赖，但是假如AB循环依赖
 
 我们都知道，单例Bean初始化完成，要经历三步：
 
-![Bean初始化步骤](https://img-blog.csdnimg.cn/img_convert/c1f5179bacc5df66762b14e1c8e02c86.png)
+![Bean初始化步骤](/img/spring/c1f5179bacc5df66762b14e1c8e02c86.png)
 
 注入就发生在第二步，**属性赋值**，结合这个过程，Spring 通过**三级缓存**解决了循环依赖：
 
@@ -865,31 +865,31 @@ Spring不支持基于构造器注入的循环依赖，但是假如AB循环依赖
 2.  二级缓存 : Map<String,Object> **earlySingletonObjects**，早期曝光对象，用于保存实例化完成的 bean 实例
 3.  三级缓存 : Map<String,ObjectFactory<?>> **singletonFactories**，早期曝光对象工厂，用于保存 bean 创建工厂，以便于后面扩展有机会创建代理对象。
 
-![三级缓存](https://img-blog.csdnimg.cn/img_convert/88ed7f79845bcc1db666712258ace14e.png)
+![三级缓存](/img/spring/88ed7f79845bcc1db666712258ace14e.png)
 
 我们来看一下三级缓存解决循环依赖的过程：
 
 当 A、B 两个类发生循环依赖时：  
-![循环依赖](https://img-blog.csdnimg.cn/fd83fc16823449a0b82a1b3d4dcc8a84.png)
+![循环依赖](/img/spring/fd83fc16823449a0b82a1b3d4dcc8a84.png)
 
 A实例的初始化过程：
 
 1.  创建A实例，实例化的时候把A对象⼯⼚放⼊三级缓存，表示A开始实例化了，虽然我这个对象还不完整，但是先曝光出来让大家知道
     
-    ![1](https://img-blog.csdnimg.cn/img_convert/da3a3ea3b9f68c04784d63a4f03595ad.png)
+    ![1](/img/spring/da3a3ea3b9f68c04784d63a4f03595ad.png)
     
 2.  A注⼊属性时，发现依赖B，此时B还没有被创建出来，所以去实例化B
     
 3.  同样，B注⼊属性时发现依赖A，它就会从缓存里找A对象。依次从⼀级到三级缓存查询A，从三级缓存通过对象⼯⼚拿到A，发现A虽然不太完善，但是存在，把A放⼊⼆级缓存，同时删除三级缓存中的A，此时，B已经实例化并且初始化完成，把B放入⼀级缓存。
     
-    ![2](https://img-blog.csdnimg.cn/img_convert/1eff741363a120cc55883a69e5298eb7.png)
+    ![2](/img/spring/1eff741363a120cc55883a69e5298eb7.png)
     
 4.  接着A继续属性赋值，顺利从⼀级缓存拿到实例化且初始化完成的B对象，A对象创建也完成，删除⼆级缓存中的A，同时把A放⼊⼀级缓存
     
 5.  最后，⼀级缓存中保存着实例化、初始化都完成的A、B对象
     
 
-![5](https://img-blog.csdnimg.cn/img_convert/7b2bce59c3fbcf5ed3358a72928168de.png)
+![5](/img/spring/7b2bce59c3fbcf5ed3358a72928168de.png)
 
 所以，我们就知道为什么Spring能解决setter注入的循环依赖了，因为实例化和属性赋值是分开的，所以里面有操作的空间。如果都是构造器注入的化，那么都得在实例化这一步完成注入，所以自然是无法支持了。
 
@@ -902,7 +902,7 @@ A实例的初始化过程：
 
 假设只有⼆级缓存的情况，往⼆级缓存中放的显示⼀个普通的Bean对象，Bean初始化过程中，通过 BeanPostProcessor 去⽣成代理对象之后，覆盖掉⼆级缓存中的普通Bean对象，那么可能就导致取到的Bean对象不一致了。
 
-![二级缓存不行的原因](https://img-blog.csdnimg.cn/img_convert/100ff1bfb46bd49ae5c56de86458240c.png)
+![二级缓存不行的原因](/img/spring/100ff1bfb46bd49ae5c56de86458240c.png)
 
 18.@Autowired的实现原理？
 -------------------
@@ -977,19 +977,19 @@ AOP
 
 AOP：面向切面编程。简单说，就是把一些业务逻辑中的相同的代码抽取到一个独立的模块中，让业务逻辑更加清爽。
 
-![横向抽取](https://img-blog.csdnimg.cn/img_convert/abc9a7aed44bc38913ddc36f4b7f6d5d.png)
+![横向抽取](/img/spring/abc9a7aed44bc38913ddc36f4b7f6d5d.png)
 
 具体来说，假如我现在要crud写一堆业务，可是如何业务代码前后前后进行打印日志和参数的校验呢？
 
 我们可以把`日志记录`和`数据校验`可重用的功能模块分离出来，然后在程序的执行的合适的地方动态地植入这些代码并执行。这样就简化了代码的书写。
 
-![AOP应用示例](https://img-blog.csdnimg.cn/img_convert/cba989806b6643bbdfb1207c4c7bd303.png)
+![AOP应用示例](/img/spring/cba989806b6643bbdfb1207c4c7bd303.png)
 
 业务逻辑代码中没有参和通用逻辑的代码，业务模块更简洁，只包含核心业务代码。实现了业务逻辑和通用逻辑的代码分离，便于维护和升级，降低了业务逻辑和通用逻辑的耦合性。
 
 AOP 可以将遍布应用各处的功能分离出来形成可重用的组件。在编译期间、装载期间或运行期间实现在不修改源代码的情况下给程序动态添加功能。从而实现对业务逻辑的隔离，提高代码的模块化能力。
 
-![Java语言执行过程](https://img-blog.csdnimg.cn/img_convert/bfe7e94ed2bc871065a9df2c62df1936.png)
+![Java语言执行过程](/img/spring/bfe7e94ed2bc871065a9df2c62df1936.png)
 
 AOP 的核心其实就是**动态代理**，如果是实现了接口的话就会使用 JDK 动态代理，否则使用 CGLIB 代理，主要应用于处理一些具有横切性质的系统级服务，如日志收集、事务管理、安全检查、缓存、对象池管理等。
 
@@ -1028,7 +1028,7 @@ AOP 一般有 **5 种**环绕方式：
 *   后置通知 (@After)
 *   环绕通知 (@Around)
 
-![环绕方式](https://img-blog.csdnimg.cn/a2804bc89ecd48e79dce16e2b2a98ea0.png)
+![环绕方式](/img/spring/a2804bc89ecd48e79dce16e2b2a98ea0.png)
 
 多个切面的情况下，可以通过 @Order 指定先后顺序，数字越小，优先级越高。
 
@@ -1143,7 +1143,7 @@ PS：这道题老三的同事面试候选人的时候问到了，候选人说了
     ```
     
 *   执行结果：可以看到日志打印了入参、出参和执行时间  
-    ![执行结果](https://img-blog.csdnimg.cn/bfca14ef85264eb2ae7e6c761f99f8ac.png)
+    ![执行结果](/img/spring/bfca14ef85264eb2ae7e6c761f99f8ac.png)
     
 
 21.说说JDK 动态代理和 CGLIB 代理 ？
@@ -1165,11 +1165,11 @@ Spring的AOP是通过[动态代理](https://mp.weixin.qq.com/s/aZtfwik0weJN5JzYc
 
 我们来看一个常见的小场景，客服中转，解决用户问题：
 
-![用户向客服提问题](https://img-blog.csdnimg.cn/img_convert/0f989eacecab12960316bf365b1729a0.png)
+![用户向客服提问题](/img/spring/0f989eacecab12960316bf365b1729a0.png)
 
 **JDK动态代理实现：**
 
-![JDK动态代理类图](https://img-blog.csdnimg.cn/img_convert/2a85a16251ea55c6e98394754c58166b.png)
+![JDK动态代理类图](/img/spring/2a85a16251ea55c6e98394754c58166b.png)
 
 *   接口
     
@@ -1239,7 +1239,7 @@ Spring的AOP是通过[动态代理](https://mp.weixin.qq.com/s/aZtfwik0weJN5JzYc
 
 **Cglib动态代理实现：**
 
-![Cglib动态代理类图](https://img-blog.csdnimg.cn/img_convert/89e3edf4f3a9a0f8e5755fff2ce52c4a.png)
+![Cglib动态代理类图](/img/spring/89e3edf4f3a9a0f8e5755fff2ce52c4a.png)
 
 *   目标类：Solver，这里目标类不用再实现接口。
     
@@ -1335,7 +1335,7 @@ AspectJ 属于**静态织入**，通过修改代码来实现，在实际运行�
 
 整体对比如下：
 
-![Spring AOP和AspectJ对比](https://img-blog.csdnimg.cn/img_convert/0ca86a98e4d4690f645e3ad588329399.png)
+![Spring AOP和AspectJ对比](/img/spring/0ca86a98e4d4690f645e3ad588329399.png)
 
 事务
 ==
@@ -1347,7 +1347,7 @@ Spring 事务的本质其实就是数据库对事务的支持，没有数据库�
 
 Spring 支持`编程式事务`管理和`声明式`事务管理两种方式：
 
-![Spring事务分类](https://img-blog.csdnimg.cn/img_convert/8c20e889c803a2193debe0e05f8d4631.png)
+![Spring事务分类](/img/spring/8c20e889c803a2193debe0e05f8d4631.png)
 
 1.  编程式事务
 
@@ -1378,7 +1378,7 @@ Spring 事务的传播机制说的是，当多个事务同时存在的时候—�
 
 事务传播机制是使用简单的 ThreadLocal 实现的，所以，如果调用的方法是在新线程调用的，事务传播实际上是会失效的。
 
-![7种事务传播机制](https://img-blog.csdnimg.cn/img_convert/e91d5d372586496fc2065a7c163c2129.png)
+![7种事务传播机制](/img/spring/e91d5d372586496fc2065a7c163c2129.png)
 
 Spring默认的事务传播行为是PROPAFATION\_REQUIRED，它适合绝大多数情况，如果多个ServiceX#methodX()都工作在事务环境下（均被Spring事务增强），且程序中存在调用链Service1#method1()->Service2#method2()->Service3#method3()，那么这3个服务类的三个方法通过Spring的事务传播机制都工作在同一个事务中。
 
@@ -1391,7 +1391,7 @@ Spring默认的事务传播行为是PROPAFATION\_REQUIRED，它适合绝大多�
     
 *   **在执行目标方法时进行事务增强操作**：当通过代理对象调用Bean方法的时候，会触发对应的AOP增强拦截器，声明式事务是一种环绕增强，对应接口为`MethodInterceptor`，事务增强对该接口的实现为`TransactionInterceptor`，类图如下：
     
-    ![图片来源网易技术专栏](https://img-blog.csdnimg.cn/img_convert/a19906fc0f631203a7441e1cdb72dfba.png)
+    ![图片来源网易技术专栏](/img/spring/a19906fc0f631203a7441e1cdb72dfba.png)
     
     事务拦截器`TransactionInterceptor`在`invoke`方法中，通过调用父类`TransactionAspectSupport`的`invokeWithinTransaction`方法进行事务处理，包括开启事务、事务提交、异常回滚。
     
@@ -1399,7 +1399,7 @@ Spring默认的事务传播行为是PROPAFATION\_REQUIRED，它适合绝大多�
 27.声明式事务在哪些情况下会失效？
 ------------------
 
-![声明式事务的几种失效的情况](https://img-blog.csdnimg.cn/img_convert/49c2f784b27507d88f0deb560cf83e82.png)
+![声明式事务的几种失效的情况](/img/spring/49c2f784b27507d88f0deb560cf83e82.png)
 
 **1、@Transactional 应用在非 public 修饰的方法上**
 
@@ -1428,7 +1428,7 @@ protected TransactionAttribute computeTransactionAttribute(Method method,
 
 rollbackFor 可以指定能够触发事务回滚的异常类型。Spring默认抛出了未检查unchecked异常（继承自 RuntimeException的异常）或者 Error才回滚事务，其他异常不会触发回滚事务。
 
-![Spring默认支持的异常回滚](https://img-blog.csdnimg.cn/img_convert/c1e333e9289f1fc814e03ae64a37ccfc.png)
+![Spring默认支持的异常回滚](/img/spring/c1e333e9289f1fc814e03ae64a37ccfc.png)
 
 ```java
 // 希望自定义的异常可以进行回滚
@@ -1520,7 +1520,7 @@ MVC
 29.Spring MVC 的工作流程？
 --------------------
 
-![Spring MVC的工作流程](https://img-blog.csdnimg.cn/img_convert/13047a22e5c0506d5953bca86ad336d1.png)
+![Spring MVC的工作流程](/img/spring/13047a22e5c0506d5953bca86ad336d1.png)
 
 1.  客户端向服务端发送一次请求，这个请求会先到前端控制器DispatcherServlet(也叫中央控制器)。
 2.  DispatcherServlet接收到请求后会调用HandlerMapping处理器映射器。由此得知，该请求该由哪个Controller来处理（并未调用Controller，只是得知）
@@ -1551,7 +1551,7 @@ PS:这是一道全新的八股，毕竟ModelAndView这种方式应该没人用�
 
 加入了这个注解后，整体的流程上和使用ModelAndView大体上相同，但是细节上有一些不同：
 
-![Spring MVC Restful请求响应示意图](https://img-blog.csdnimg.cn/img_convert/75be4bbb2b6d45d5f6285a77e27d6d1d.png)
+![Spring MVC Restful请求响应示意图](/img/spring/75be4bbb2b6d45d5f6285a77e27d6d1d.png)
 
 1.  客户端向服务端发送一次请求，这个请求会先到前端控制器DispatcherServlet
     
@@ -1580,7 +1580,7 @@ Spring Boot
 
 Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。
 
-![SpringBoot图标](https://img-blog.csdnimg.cn/img_convert/0818e5a8414908994daf70f99170b24f.png)
+![SpringBoot图标](/img/spring/0818e5a8414908994daf70f99170b24f.png)
 
 Spring Boot 以`约定大于配置`核心思想开展工作，相比Spring具有如下优势：
 
@@ -1596,7 +1596,7 @@ Spring Boot 以`约定大于配置`核心思想开展工作，相比Spring具有
 
 SpringBoot开启自动配置的注解是`@EnableAutoConfiguration` ，启动类上的注解`@SpringBootApplication`是一个复合注解，包含了@EnableAutoConfiguration：
 
-![SpringBoot自动配置原理](https://img-blog.csdnimg.cn/img_convert/42e6f29685b92021531e82eec764b88b.png)
+![SpringBoot自动配置原理](/img/spring/42e6f29685b92021531e82eec764b88b.png)
 
 *   `EnableAutoConfiguration` 只是一个简单的注解，自动装配核心功能的实现实际是通过 `AutoConfigurationImportSelector`类
     
@@ -1731,7 +1731,7 @@ SpringBoot开启自动配置的注解是`@EnableAutoConfiguration` ，启动类�
         
     *   运行结果
         
-        ![运行结果](https://img-blog.csdnimg.cn/img_convert/9cc6be0615ac19a5479add241678b4cf.png)
+        ![运行结果](/img/spring/9cc6be0615ac19a5479add241678b4cf.png)
         
     
     至此，随手写的一个自定义SpringBoot-Starter就完成了，虽然比较简单，但是完成了主要的自动装配的能力。
@@ -1749,7 +1749,7 @@ SpringApplication 这个类主要做了以下四件事情：
 
 SpringBoot 启动大致流程如下 ：
 
-![SpringBoot 启动大致流程-图片来源网络](https://img-blog.csdnimg.cn/img_convert/1505ce176703b615590dda9cebae760e.png)
+![SpringBoot 启动大致流程-图片来源网络](/img/spring/1505ce176703b615590dda9cebae760e.png)
 
 Spring Cloud
 ============
@@ -1759,7 +1759,7 @@ Spring Cloud
 
 SpringCloud是Spring官方推出的微服务治理框架。
 
-![Spring Cloud Netfilx核心组件-来源参考[2]](https://img-blog.csdnimg.cn/img_convert/2ceb589e1d38675f1fbbf7b63ee1f05e.png)
+![Spring Cloud Netfilx核心组件-来源参考[2]](/img/spring/2ceb589e1d38675f1fbbf7b63ee1f05e.png)
 
 > **什么是微服务？**
 
@@ -1781,7 +1781,7 @@ SpringCloud是Spring官方推出的微服务治理框架。
 
 > **SpringCloud有哪些核心组件？**
 
-![SpringCloud](https://img-blog.csdnimg.cn/2c3dff7f06294bd597ff221e794764de.png)
+![SpringCloud](/img/spring/2c3dff7f06294bd597ff221e794764de.png)
 
 PS:微服务后面有机会再扩展，其实面试一般都是结合项目去问。
 

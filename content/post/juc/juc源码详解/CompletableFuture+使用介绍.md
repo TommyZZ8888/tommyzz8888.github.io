@@ -2,9 +2,11 @@
 name: completable-future
 title: CompletableFuture 使用介绍
 date: 2024-01-20 19:37:16
-tags: 
-categories: 
+tags:
+categories:
+- juc 
 ---
+
 本文安利一个 Java8 的工具 `CompletableFuture`，这是 Java8 带来的一个非常好用的用于异步编程的类。还没使用过的小伙伴，赶紧用起来吧。
 
 本文不介绍它的实现源码，仅介绍它的接口使用，本文也不做它和 RxJava 等其他异步编程框架的对比。

@@ -79,11 +79,11 @@ Bean的生命周期具体指的就是一个Bean对象从创建到销毁的过程
 
 > 创建AService得到原始对象 ， 然后去给BService属性赋值 ， 此时就会根据BService属性的类型或名字在BeanFactory寻找BService所对应的单例Bean ， 如果存在 ， 直接赋值给BService ， 如果不存在则需要生成一个BService对应的Bean ， 然后赋值给BService 如下图
 
-![](https://i-blog.csdnimg.cn/blog_migrate/8c8051b5e2e62385bb18dc0f6284e328.png)
+![](/img/spring/8c8051b5e2e62385bb18dc0f6284e328.png)
 
 通过上图 ， 我们可以很清晰的看出来循环依赖出现的原因 ， 如何打破这个循环呢？在中间加一层缓存 ， 如下图
 
-![](https://i-blog.csdnimg.cn/blog_migrate/09fce9c494ca263b4d57e5470b238111.png)
+![](/img/spring/09fce9c494ca263b4d57e5470b238111.png)
 
 流程我就不必多做解释了 ， 此时从缓存中获取的AService为原始对象 ， 还不是最终的Bean ， BService的原始对象依赖注入完后 ， BService的生命周期结束 ， 那么AService的生命周期也结束
 
@@ -104,31 +104,31 @@ AOP就是通过一个**BeanPostProcessor**来实现的 ， 而这个BeanPostProc
 
 **AnnotationAwareAspectJAutoProxyCreator，** 它的父类是**AbstractAutoProxyCreator（如下图）,**而在SpringAOP中要么利用**JDK动态代理** ， 要么利用**CGLib的动态代理** ， 所以如果给这个类中的某一个方法设置了切面 ， 那么它最后都会生成一个代理对象
 
-![](https://i-blog.csdnimg.cn/blog_migrate/c3e726d3a12166732b7ce8551b0476af.png)
+![](/img/spring/c3e726d3a12166732b7ce8551b0476af.png)
 
  基本流程看下图
 
-![](https://i-blog.csdnimg.cn/blog_migrate/646a8d9195656d1b9e378219ee2d2162.png)
+![](/img/spring/646a8d9195656d1b9e378219ee2d2162.png)
 
  而我们都知道 ， AOP是Spring除开IOC的另外一大功能 ， 而循环依赖又属于IOC的范围 ， 所以如果想要这两者功能共存 ， 就必须使用其他的手段：**三级缓存 singletonFactories**
 
 首先 这个缓存存放的是（beanName：ObjectFactory），在Bean的生命周期中 ， 构造完一个原始对象就生成一个ObjectFactory , 然后缓存起来 ，这个ObjectFactory是一个函数式接口 ， 所以支持lambda表达式 ， **() -> getEarlyBeanReference(beanName, mbd, bean);**而这个lambda就表示是一个ObjectFactory ， 他会去执行这个方法 ， 这个方法在**SmartInstantiationAwareBeanPostProcessor中**
 
-![](https://i-blog.csdnimg.cn/blog_migrate/22ba1efbca8fa7e7ad2fabfafc088fa1.png)
+![](/img/spring/22ba1efbca8fa7e7ad2fabfafc088fa1.png)
 
 代码的大概意思就是说  ，找到继承了**InstantiationAwareBeanPostProcessor**这个类的**BeanPostProcessor**，就表示你需要进行AOP ，然后获取 **SmartInstantiationAwareBeanPostProcessor**这个 **BeanPostProcessor ，** 然后执行**getEarlyBeanReference()**方法 ， 由于这是一个接口 ， 我们直接看实现类是如何实现的
 
-![](https://i-blog.csdnimg.cn/blog_migrate/b8acd3cddf16b2d533c07ce381ad41c4.png)
+![](/img/spring/b8acd3cddf16b2d533c07ce381ad41c4.png)
 
  1.首先是执行getCacheKey()获取key的名称 ， 如下
 
-![](https://i-blog.csdnimg.cn/blog_migrate/ab05c8f64580e9653a8b23e6ef2fe0ac.png)
+![](/img/spring/ab05c8f64580e9653a8b23e6ef2fe0ac.png)
 
 他会判断beanName是否为null ， 如果不为空 ， 那么判断是否是FactoryBean ， 如果是就拼接&符号 ， 否则直接返回 ， 如果beanName为null ， 最直接返回
 
 2.然后把cacheKey当作key ， bean当作value ， 放入**earlyProxyReferences（关于**earlyProxyReferences下面有解释**），**然后执行**wrapIfNecessary()**进行AOP
 
-![](https://i-blog.csdnimg.cn/blog_migrate/e07c82c6fca8b412b20f3df961a26514.png)
+![](/img/spring/e07c82c6fca8b412b20f3df961a26514.png)
 
  3.该方法大概意思就是如果你符合AOP的条件 ， 那么我就创建一个代理对象返回 ， 如果不需要，那么返回原始对象
 
@@ -136,7 +136,7 @@ AOP就是通过一个**BeanPostProcessor**来实现的 ， 而这个BeanPostProc
 
 那么什么时候调用**getEarlyBeanReference()**这个方法呢？回到循环依赖场景，用一张图就大概可以理清这个思路了
 
-![](https://i-blog.csdnimg.cn/blog_migrate/a73318999a8dcef57163ecb21818b0c8.png)
+![](/img/spring/a73318999a8dcef57163ecb21818b0c8.png)
 
  就是创建AService ， 然后会产生一个AService的原始对象 ， 并且key为beanName ， Value为**lambda**表达式放入三级缓存 ， 然后注入BService ， 生成BService原始对象 ， 此时需要注入AService就要从单例池获取 ， 取不到 ， 从二级缓存获取 ， 取不到 ， 然后从三级缓存获取 ， 并执行**lambda**表达式，如果符合AOP的条件 ， 那么返回代理对象 ， 如果不符合 ， 返回原始对象 ， 然后赋值给BService的AService ， 然后BService完成创建
 
@@ -144,25 +144,25 @@ AOP就是通过一个**BeanPostProcessor**来实现的 ， 而这个BeanPostProc
 
 1.放入三级缓存
 
-![](https://i-blog.csdnimg.cn/blog_migrate/f0541ef2d7a1443a052c0660c2092a91.png)
+![](/img/spring/f0541ef2d7a1443a052c0660c2092a91.png)
 
 2\. 从一二三级缓存获取，然后执行表达式
 
-![](https://i-blog.csdnimg.cn/blog_migrate/d514a7027f7768faefcb17ccca6ec3d9.png)
+![](/img/spring/d514a7027f7768faefcb17ccca6ec3d9.png)
 
  这是getSingletion方法
 
-![](https://i-blog.csdnimg.cn/blog_migrate/64af6d291a819a2cdcf22444ef3966f5.png)
+![](/img/spring/64af6d291a819a2cdcf22444ef3966f5.png)
 
 此时AService正常进行AOP，但是前面已经执行过AOP了 ， 所以对于AServicec本身而言就不需要AOP了所以就又产生了一个问题：**怎么判断是否执行过AOP了？**
 
 会利用**earlyProxyReferences，**就是上面方法提到的
 
-![](https://i-blog.csdnimg.cn/blog_migrate/b8acd3cddf16b2d533c07ce381ad41c4.png)
+![](/img/spring/b8acd3cddf16b2d533c07ce381ad41c4.png)
 
 再**AbstractAutoProxyCreator**类中的**postProcessAfterInitialization()**会判断
 
-![](https://i-blog.csdnimg.cn/blog_migrate/fcb792b958e37686f3862da7899c671a.png)
+![](/img/spring/fcb792b958e37686f3862da7899c671a.png)
 
 如果成功移除 ， 表示不需要AOP了， 否则就需要AOP
 

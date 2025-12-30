@@ -1,3 +1,12 @@
+---
+title: 12、mysql的事务日志.md
+date: '2025-12-28T09:38:23+08:00'
+
+categories:
+- DB
+---
+
+
 mysql的事务日志
 ==========
 
@@ -20,7 +29,7 @@ redo日志
 
 **1、在传统的情况下**：把更改的数据写到缓冲池，当执行提交事务操作后，数据库宕机了，缓冲池中的数据就会丢失、无法把数据刷入到磁盘上，违反了事务的持久性。  
 `事务的持久性：一个事务一旦被提交，它对数据库中数据的改变就是永久性的，接下来的其他操作和数据库故障不应该对其有任何影响。`  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220304231750490-563015138.png)  
+![image](/img/db/mysql/2345397-20220304231750490-563015138.png)  
 **2、如何保证事务的持久性（两种方式）：**  
 **方式一（简单的方式）**：在事务提交完成之前把该事务所修改的所有页面都刷新到磁盘，这样就可以保持事务的持久性。但是存在问题：  
 `1、innodb是以页作为磁盘和内存交互的基本单位，当仅仅修改某个页面中的一个字节时，就需要将整个页面刷新到磁盘当中，这样会增加磁盘IO的时间，使服务器性能降低。`  
@@ -44,16 +53,16 @@ redo日志
 
 *   重做日志缓冲（redo log buffer）：保存在内存中，容易丢失。  
     `默认大小是16M，最大值是4096M，最小值为1M`  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305010921603-296008198.png)
+    ![image](/img/db/mysql/2345397-20220305010921603-296008198.png)
     
 *   重做日志文件（redo log file）：保存在硬盘中，是持久的。  
     `在/var/lib/mysql目录下可以查看到ib_logfile0和ib_logfile1日志文件`  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305011410267-1776523466.png)
+    ![image](/img/db/mysql/2345397-20220305011410267-1776523466.png)
     
 
 ### 1.4redo的整体流程
 
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305012619815-985895468.png)
+![image](/img/db/mysql/2345397-20220305012619815-985895468.png)
 
 *   第1步：先将原始数据从磁盘中读入内存中来，修改数据的内存拷贝
 *   第2步：生成一条redo log重做日志并写入redo log buffer，记录的是数据被修改后的值
@@ -69,13 +78,13 @@ redo日志
 **innodb\_flush\_log\_at\_trx\_commit （默认值为1）**：表示何时将缓冲区的数据写入日志文件，并且将日志文件写入磁盘中。该参数对于innoDB引擎非常重要。**（系统默认master thread每隔1秒会将数据写入日志文件并将日志文件写入磁盘）**
 
 *   **值为 0 时**，表示**每隔1秒**将`数据写入日志文件（把redo log buffer中的redo日志写入到page cache，再将page cache中的redo日志刷盘到redo log file日志文件中）`并将`日志文件写入磁盘`。该模式速度最快，但不太安全，**在mysqld进程的崩溃或者操作系统宕机情况下会导致redo logo buffer中所有已提交事务的数据丢失，违反了事务的持久性**。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305120734445-1549959344.png)
+    ![image](/img/db/mysql/2345397-20220305120734445-1549959344.png)
     
 *   **值为 1 时**，表示**每次提交事务时**将`数据写入日志文件（把redo log buffer中的redo日志写入到page cache，再将page cache中的redo日志刷盘到redo log file日志文件中）`并将`日志文件写入磁盘`。该模式是最安全的，但也是最慢的一种方式。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305122450318-1794178965.png)
+    ![image](/img/db/mysql/2345397-20220305122450318-1794178965.png)
     
 *   **值为 2 时**，表示**每次提交事务时**将`数据写入日志文件（只是把redo log buffer中的redo日志写入到page cache；并不会把page cache中的redo日志刷盘到redo log file日志文件，该操作交给系统默认的master thread去执行）`，**每隔1秒**将`日志文件写入磁盘`。该模式速度较快，也比0安全一点，**在操作系统宕机的情况下会导致page cache中上一秒钟所有已提交事务的数据丢失，违反了事务的持久性**。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305123737346-656901832.png)
+    ![image](/img/db/mysql/2345397-20220305123737346-656901832.png)
     
 
 ### 1.7写入redo log buffer中的过程
@@ -83,19 +92,19 @@ redo日志
 #### 1.7.1Mini-Transaction
 
 MysQL把对底层页面中的一次原子访问的过程称之为一个Mini-Transaction，简称mtr。一个事务可以包含若干条语句，每一条语句可能操作若干个页面，每个页面对应一个mtr，一个mtr可以包含一组redo日志，在进行崩溃恢复时这一组redo日志作为一个不可分割的整体。  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305125331323-1226600094.png)
+![image](/img/db/mysql/2345397-20220305125331323-1226600094.png)
 
 #### 1.7.2redo 日志写入redo log buffer中
 
 `1、一个mtr执行过程中可能产生若干条redo日志，这些redo日志是一个不可分割的组，所以其实并不是每生成一条redo日志，就将其插入到log buffer中，而是每个mtr运行过程中产生的日志先暂时存到一个地方，当该mtr结束的时候，将过程中产生的一组redo日志再全部复制到log buffer中。`
 
 `2、向redo log buffer中写入每组redo日志的过程是顺序的，也就是先往前边的block中写，当该block的空闲空间用完之后再往下一个block中写。buf_free全局变量指明后续写入的redo日志应该写入到redo log buffer中的哪个位置，如图所示:`  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305130256353-127583212.png)
+![image](/img/db/mysql/2345397-20220305130256353-127583212.png)
 
 #### 1.7.3redo log block的结构
 
 **一个redo log block是由日志头、日志体、日志尾组成**。日志头占用12字节，日志尾占用8字节，日志体来真正存储的数据占用512-12-8=492字节。  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305130711160-1748996978.png)  
+![image](/img/db/mysql/2345397-20220305130711160-1748996978.png)  
 **为什么将redo log block设置为512字节**
 
 > 这个和磁盘的扇区有关，机械磁盘默认的扇区就是512字节，如果你要写入的数据大于512字节，那么要写入的扇区肯定不止一个，这时就要涉及到盘片的转动，找到下一个扇区，假设现在需要写入两个扇区A和B，如果扇区A写入成功，而扇区B写入失败，那么就会出现非原子性的写入，而如果每次只写入和扇区的大小一样的512字节，那么每次的写入都是原子性的。
@@ -106,22 +115,22 @@ MysQL把对底层页面中的一次原子访问的过程称之为一个Mini-Tran
 
 *   innodb\_log\_group\_home\_dir ：指定 redo log 文件组所在的路径，默认值为 ./ ，表示在数据库的数据目录下。MySQL的默认数据目录（ var/lib/mysql ）下默认有两个名为 ib\_logfile0 和ib\_logfile1 的文件，log buffer中的日志默认情况下就是刷新到这两个磁盘文件中。此redo日志文件位置还可以修改。
 *   innodb\_log\_files\_in\_group：指明redo log file的个数，命名方式如：ib\_logfile0，iblogfile1...iblogfilen。默认2个，最大100个。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305131233059-1475738030.png)
+    ![image](/img/db/mysql/2345397-20220305131233059-1475738030.png)
 *   innodb\_log\_file\_size：单个 redo log 文件设置大小，默认值为 48M 。最大值为512G，注意最大值指的是整个 redo log 系列文件之和，即（innodb\_log\_files\_in\_group \*innodb\_log\_file\_size ）不能大于最大值512G。  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305131347840-74695278.png)
+    ![image](/img/db/mysql/2345397-20220305131347840-74695278.png)
 
 #### 1.8.2日志文件组
 
 *   总共的redo日志文件大小其实就是: innodb\_log\_file\_size x innodb\_log\_files\_in\_group。
 *   采用循环使用的方式向redo日志文件组里写数据  
-    ![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305131630451-2013426184.png)
+    ![image](/img/db/mysql/2345397-20220305131630451-2013426184.png)
 
 #### 1.8.3 checkpoint
 
 1、checkpoint的作用：当采用循环使用的方式向redo日志文件组里写数据，保证不会覆盖以前写入的redo日志。  
 2、每次刷盘redo log记录到日志文件组中，write pos位置就会后移更新。每次MySQL加载日志文件组恢复数据时，会清空加载过的redo log记录，并把checkpoint后移更新。write pos和checkpoint之间的还空着的部分可以用来写入新的redo log记录。  
 3、当write pos追上checkpoint，表示日志文件组满了，这时候不能再写入新的redo log记录，需要等待mysql清空一些redo log记录，把check point往后移动。  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305132204665-996825363.png)
+![image](/img/db/mysql/2345397-20220305132204665-996825363.png)
 
 undo日志
 ------
@@ -197,18 +206,18 @@ redo log是事务持久性的保证，undo log是事务原子性的保证。**�
 ### 2.6undo日志是如何生成的
 
 **通过回滚指针DB\_ROLL\_PTR指向每次更改前的数据，形成一条undo log日志记录**  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305221904047-75385510.png)
+![image](/img/db/mysql/2345397-20220305221904047-75385510.png)
 
 当事务使用undo日志和redo日志的示意图
 ----------------------
 
 **undo日志用于保证原子性，redo日志保证持久性**  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305221054382-1885532325.png)
+![image](/img/db/mysql/2345397-20220305221054382-1885532325.png)
 
 ### 总结
 
 `undo log是逻辑日志，对事务回滚时，只是将数据库逻辑地恢复到原来的样子。`  
 `redo log是物理日志，记录的是数据页的物理变化，undo log不是redo log的逆过程。`  
-![image](https://img2022.cnblogs.com/blog/2345397/202203/2345397-20220305222606448-914790459.png)
+![image](/img/db/mysql/2345397-20220305222606448-914790459.png)
 
 本文转自 <https://www.cnblogs.com/worldusemycode/p/15966502.html>，如有侵权，请联系删除。

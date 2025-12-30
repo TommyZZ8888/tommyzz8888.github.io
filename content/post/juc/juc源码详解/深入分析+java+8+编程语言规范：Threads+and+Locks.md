@@ -2,8 +2,9 @@
 name: Threads-And-Locks-md
 title: 深入分析 java 8 编程语言规范：Threads and Locks
 date: 2024-01-20 19:38:19
-tags: 
-categories: concurrency
+tags:
+categories:
+- juc
 ---
 > **2018-02-27**
 >

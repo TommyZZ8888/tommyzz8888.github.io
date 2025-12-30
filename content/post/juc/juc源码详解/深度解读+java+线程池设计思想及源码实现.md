@@ -2,8 +2,9 @@
 name: java-thread-pool
 title: 深度解读 java 线程池设计思想及源码实现
 date: 2024-01-20 19:38:11
-tags: 
-categories: concurrency
+tags:
+categories:
+- juc
 ---
 我相信大家都看过很多的关于线程池的文章，基本上也是面试的时候必问的，如果你在看过很多文章以后，还是一知半解的，那希望这篇文章能让你真正的掌握好 Java 线程池。
 
@@ -17,7 +18,7 @@ categories: concurrency
 
 开篇来一些废话。下图是 java 线程池几个相关类的继承结构：
 
-![1](..\..\..\notes\img\juc\源码\1.jpg)
+![1](/img/juc/源码/1.jpg)
 
 先简单说说这个继承结构，Executor 位于最顶层，也是最简单的，就一个 execute(Runnable runnable) 接口方法定义。
 
@@ -29,7 +30,7 @@ ExecutorService 也是接口，在 Executor 接口的基础上添加了很多的
 
 另外，我们还涉及到下图中的这些类：
 
-![others](..\..\..\notes\img\juc\源码\others.png)
+![others](/img/juc/源码/others.png)
 
 同在并发包中的 Executors 类，类名中带字母 s，我们猜到这个是工具类，里面的方法都是静态方法，如以下我们最常用的用于生成 ThreadPoolExecutor 的实例的一些方法：
 
@@ -574,7 +575,7 @@ public <T> Future<T> submit(Callable<T> task) {
 
 我们回过神来继续往下看，我画了一个简单的示意图来描述线程池中的一些主要的构件：
 
-![pool-1](..\..\..\notes\img\juc\源码\pool-1.png)
+![pool-1](/img/juc/源码/pool-1.png)
 
 当然，上图没有考虑队列是否有界，提交任务时队列满了怎么办？什么情况下会创建新的线程？提交任务时线程池满了怎么办？空闲线程怎么关掉？这些问题下面我们会一一解决。
 

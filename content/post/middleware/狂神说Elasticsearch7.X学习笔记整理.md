@@ -9,29 +9,29 @@ categories:
 1\. [ElasticSearch](https://so.csdn.net/so/search?q=ElasticSearch&spm=1001.2101.3001.7020)概述
 --------------------------------------------------------------------------------------------
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/3ce0c53988eee6abbc742ebda78225b3.png#pic_center)
+![](/img/middleware/es/3ce0c53988eee6abbc742ebda78225b3.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/8d759c09b93d76ec6adc3a6c7f59aa89.png#pic_center)
+![](/img/middleware/es/8d759c09b93d76ec6adc3a6c7f59aa89.png)
 
 2\. ES与[Solr](https://so.csdn.net/so/search?q=Solr&spm=1001.2101.3001.7020)的差别
 ------------------------------------------------------------------------------
 
 ### 2.1. Solr简介
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/8da76b9b14e29e960d698f3c7fe539cc.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/8da76b9b14e29e960d698f3c7fe539cc.png)
 
 ### 2.2. [Lucene](https://so.csdn.net/so/search?q=Lucene&spm=1001.2101.3001.7020)简介
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/bf9f41533017dfddbbed368b7bd000eb.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/bf9f41533017dfddbbed368b7bd000eb.png)
 
 ### 2.3. ES VS Solr
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/9f58633016e432af84900d894dae2773.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/9f58633016e432af84900d894dae2773.png)
 
 3\. ElasticSearch 安装
 --------------------
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/b9c9a1b28f69fdf91e0eec232019b6c4.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/b9c9a1b28f69fdf91e0eec232019b6c4.png)
 
 [官网](https://www.elastic.co/cn/)
 
@@ -39,17 +39,17 @@ ElasticSearch: https://mirrors.huaweicloud.com/elasticsearch/?C=N&O=D logstash: 
 
 *   认识目录
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/bad7732029bf4af6fb42eb564f2432b8.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/bad7732029bf4af6fb42eb564f2432b8.png)
 
 1.  测试访问
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/1abe2ca0111564cab516b8522803ce0b.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/1abe2ca0111564cab516b8522803ce0b.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/409d6d66db0ba110d4e7391762fec48b.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/409d6d66db0ba110d4e7391762fec48b.png)
 
 这个，没有测试，等后期回来再看！[head的插件](https://www.bilibili.com/video/BV17a4y1x7zq?p=5)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/adf115af18112a22bbc4e04139841310.png)
+![在这里插入图片描述](/img/middleware/es/adf115af18112a22bbc4e04139841310.png)
 
 4\. Kibana安装
 ------------
@@ -64,7 +64,7 @@ server.port: 5601server.host: "0.0.0.0"elasticsearch.hosts: ["http://192.168.1.3
 
 访问测试
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/15ef9fcc39826b34f150b77182330ddc.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/15ef9fcc39826b34f150b77182330ddc.png)
 
 5\. ES核心概念
 ----------
@@ -73,19 +73,19 @@ server.port: 5601server.host: "0.0.0.0"elasticsearch.hosts: ["http://192.168.1.3
 *   字段类型（mapping）
 *   文档（document）
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/fe68fe3e2fd3eb1cf3224c0d2ec1d8d6.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/fe68fe3e2fd3eb1cf3224c0d2ec1d8d6.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/179128fd80e42dd0371260a92c3cab28.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/179128fd80e42dd0371260a92c3cab28.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/1a4f76b54d653bfc8869696e15313ecd.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/1a4f76b54d653bfc8869696e15313ecd.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/de50d480371a22bacfd673acb90f6547.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/de50d480371a22bacfd673acb90f6547.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/9e07012ae1941dffb97080f9b039e3b1.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/9e07012ae1941dffb97080f9b039e3b1.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/f7f26de5b8a80bf6b820d554cd484967.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/f7f26de5b8a80bf6b820d554cd484967.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/25329d4430e9d59230adc1a363895c17.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/25329d4430e9d59230adc1a363895c17.png)
 
 6\. IK分词器
 ---------
@@ -94,7 +94,7 @@ server.port: 5601server.host: "0.0.0.0"elasticsearch.hosts: ["http://192.168.1.3
 *   解压放入到es对应的plugins下即可
 *   重启观察ES，发现ik插件被加载了
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/d63954e4e10467bf60676fa0d8a7aa73.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/d63954e4e10467bf60676fa0d8a7aa73.png)
 
 *   也可以通过bin目录下elasticsearch-plugin list 查看已经加载的插件
     
@@ -102,27 +102,27 @@ server.port: 5601server.host: "0.0.0.0"elasticsearch.hosts: ["http://192.168.1.3
     
     *   ik\_smart: 最少切分
     
-    ![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/d9b8dfa28fcba6e24381b4248f555e01.png#pic_center)
+    ![在这里插入图片描述](/img/middleware/es/d9b8dfa28fcba6e24381b4248f555e01.png)
     
     *   ik\_max\_word为最细粒度划分！穷尽词库的可能， 字典！
     
-    ![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/791b374a7aa3e44a83b0794dfbe0f034.png#pic_center)
+    ![在这里插入图片描述](/img/middleware/es/791b374a7aa3e44a83b0794dfbe0f034.png)
     
 *   ik分词器增加自己的配置！
     
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/d21907390cb9780c454c589acd2362a8.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/d21907390cb9780c454c589acd2362a8.png)
 
 *   重启ES 和 Kibana
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/e393c6bfb2fc6b2bddb27137c5a5cd5b.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/e393c6bfb2fc6b2bddb27137c5a5cd5b.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/afd5cd6513b9ab9f2e07b08b5c352ae6.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/afd5cd6513b9ab9f2e07b08b5c352ae6.png)
 
 7\. Restful风格说明
 ---------------
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/caba83699511901581fa1c2ff3a5dbb7.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/caba83699511901581fa1c2ff3a5dbb7.png)
 
 > 基础测试
 
@@ -132,11 +132,11 @@ server.port: 5601server.host: "0.0.0.0"elasticsearch.hosts: ["http://192.168.1.3
 PUT /索引名/~类型名~/文档id{请求体} # PUT 创建命令  test1 索引 type1 类型 1 idPUT test1/type1/1{  "name": "xiaofan",  "age": 28} # 返回结果# 警告信息： 不支持在文档索引请求中的指定类型# 而是使用无类型的断点(/{index}/_doc/{id}, /{index}/_doc, or /{index}/_create/{id}).{  "_index" : "test1",   # 索引  "_type" : "type1",    # 类型（已经废弃）  "_id" : "1",          # id  "_version" : 1,       # 版本  "result" : "created", # 操作类型  "_shards" : {         # 分片信息    "total" : 2,    "successful" : 1,    "failed" : 0  },  "_seq_no" : 0,  "_primary_term" : 1}
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/2bdd3880cec43117eb0fa74ef210ac64.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/2bdd3880cec43117eb0fa74ef210ac64.png)
 
 *   指定字段的类型（创建规则）
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/fdfd5fd21f0711c713fcde606e5824de.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/fdfd5fd21f0711c713fcde606e5824de.png)
 
 *   获取具体的索引规则
 
@@ -144,7 +144,7 @@ PUT /索引名/~类型名~/文档id{请求体} # PUT 创建命令  test1 索引 
 # GET test2 {  "test2" : {    "aliases" : { },    "mappings" : {      "properties" : {        "age" : {          "type" : "integer"        },        "birthday" : {          "type" : "date"        },        "name" : {          "type" : "text"        }      }    },    "settings" : {      "index" : {        "creation_date" : "1599708623941",        "number_of_shards" : "1",        "number_of_replicas" : "1",        "uuid" : "ANWnhwArSMSl8k8iipgH1Q",        "version" : {          "created" : "7080099"        },        "provided_name" : "test2"      }    }  }} # 查看默认的规则PUT /test3/_doc/1{  "name": "狂神说Java",  "age": 28,  "birthday": "1997-01-05"} # GET test3 {  "test3" : {    "aliases" : { },    "mappings" : {      "properties" : {        "age" : {          "type" : "long"        },        "birthday" : {          "type" : "date"        },        "name" : {          "type" : "text",          "fields" : {            "keyword" : {              "type" : "keyword",              "ignore_above" : 256            }          }        }      }    },    "settings" : {      "index" : {        "creation_date" : "1599708906181",        "number_of_shards" : "1",        "number_of_replicas" : "1",        "uuid" : "LzPLCDgeQn6tdKo3xBBpbw",        "version" : {          "created" : "7080099"        },        "provided_name" : "test3"      }    }  }} 
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/5a10bc9338093174e8a1e24c35bc29af.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/5a10bc9338093174e8a1e24c35bc29af.png)
 
 *   修改索引 POST
 
@@ -152,7 +152,7 @@ PUT /索引名/~类型名~/文档id{请求体} # PUT 创建命令  test1 索引 
 # 只会修改指定项，其他内容保证不变POST /test3/_doc/1/_update{  "doc": {    "name":"暴徒狂神"  }} # GET test3/_doc/1 {  "_index" : "test3",  "_type" : "_doc",  "_id" : "1",  "_version" : 2,  "_seq_no" : 1,  "_primary_term" : 1,  "found" : true,  "_source" : {    "name" : "暴徒狂神",    "age" : 28,    "birthday" : "1997-01-05"  }} 
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/cd6ce0662880836a43e5ab31c99c9e10.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/cd6ce0662880836a43e5ab31c99c9e10.png)
 
 8\. 关于文档的基本操作
 -------------
@@ -165,7 +165,7 @@ put /kuangshen/user/1{  "name": "狂神说",  "age": 23,  "desc": "一顿操作�
 
 *   复杂操作(排序、分页、高亮、模糊查询、标准查询！)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/cd883b35ba8175783e2ac1892a922dda.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/cd883b35ba8175783e2ac1892a922dda.png)
 
 ```cobol
 # 模糊查询GET kuangshen/user/_search{  "query": {    "match": {      "name": "狂神"    }  }} # 对查询结果进行字段过滤GET kuangshen/user/_search{  "query": {    "match": {      "name": "狂神"    }  },  "_source": ["name", "desc"]} # 排序GET kuangshen/user/_search{  "query": {    "match": {      "name": "狂神"    }  },  "sort":[{    "age": "asc"  }]} # 分页GET kuangshen/user/_search{  "query": {    "match": {      "name": "狂神"    }  },  "sort":[{    "age": "asc"  }],   "from": 0,  "size": 2}
@@ -183,9 +183,9 @@ put /kuangshen/user/1{  "name": "狂神说",  "age": 23,  "desc": "一顿操作�
 GET kuangshen/user/_search{  "query": {    "match": {      "tags": "技术 男"    }  }}
 ```
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/834026231c9cd1a9005cd308e2f21cc9.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/834026231c9cd1a9005cd308e2f21cc9.png)
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/3559b8e14529881a11cf3192f5eafe59.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/3559b8e14529881a11cf3192f5eafe59.png)
 
 > keyword类型不会被分词器解析
 > 
@@ -245,6 +245,6 @@ package com.xiaofan; import com.alibaba.fastjson.JSON;import com.xiaofan.pojo.Us
 
 *   整体效果
 
-![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/f005d352217a93f365b1f0f85369cd67.png#pic_center)
+![在这里插入图片描述](/img/middleware/es/f005d352217a93f365b1f0f85369cd67.png)
 
 本文转自 <https://blog.csdn.net/qq_21197507/article/details/115076913>，如有侵权，请联系删除。

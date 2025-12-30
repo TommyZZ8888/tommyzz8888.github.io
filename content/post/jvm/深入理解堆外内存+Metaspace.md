@@ -2,8 +2,10 @@
 name: metaspace
 title: 深入理解堆外内存 Metaspace
 date: 2024-01-20 19:40:09
-tags: 
-categories: 
+tags:
+categories:
+- jvm
+
 ---
 
 在之前介绍的分代垃圾回收算法中，我们一直有一个**永久代**存在，叫 PermGen，内存上它是挨着堆的。为了垃圾回收方便，HotSpot 在永久代上一直是使用老年代的垃圾回收算法。

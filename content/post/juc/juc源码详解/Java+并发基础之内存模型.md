@@ -2,8 +2,9 @@
 name: java-memory-model
 title: Java 并发基础之内存模型
 date: 2024-01-20 19:37:55
-tags: 
-categories: 
+tags:
+categories:
+- juc
 ---
 很久没更新文章了，对隔三差五过来刷更新的读者说声抱歉。
 

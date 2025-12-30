@@ -2,8 +2,8 @@
 name: reentrant-read-write-lock
 title: Java 读写锁 ReentrantReadWriteLock 源码分析
 date: 2024-01-20 19:37:47
-tags: 
-categories: 
+categories:
+- juc
 ---
 本文内容：读写锁 ReentrantReadWriteLock 的源码分析，基于 Java7/Java8。
 
@@ -64,11 +64,11 @@ ReentrantReadWriteLock 分为读锁和写锁两个实例，读锁是共享锁，
 
 首先，我们来看下 ReentrantReadWriteLock 的结构，它有好些嵌套类：
 
-![11](..\..\..\notes\img\juc\源码\11.png)
+![11](/img/juc/源码/11.png)
 
 大家先仔细看看这张图中的信息。然后我们把 ReadLock 和 WriteLock 的代码提出来一起看，清晰一些：
 
-![12](..\..\..\notes\img\juc\源码\12.png)
+![12](/img/juc/源码/12.png)
 
 很清楚了，ReadLock 和 WriteLock 中的方法都是通过 Sync 这个类来实现的。Sync 是 AQS 的子类，然后再派生了公平模式和不公平模式。
 
@@ -78,7 +78,7 @@ ReentrantReadWriteLock 分为读锁和写锁两个实例，读锁是共享锁，
 
 这里给大家回顾下 AQS，我们横向对比下 AQS 的共享模式和独占模式：
 
-![13](..\..\..\notes\img\juc\源码\13.png)
+![13](/img/juc/源码/13.png)
 
 AQS 的精髓在于内部的属性 **state**：
 
@@ -572,6 +572,6 @@ protected final boolean tryAcquire(int acquires) {
 
 ## 总结
 
-![14](..\..\..\notes\img\juc\源码\14.png)
+![14](/img/juc/源码/14.png)
 
 （全文完）

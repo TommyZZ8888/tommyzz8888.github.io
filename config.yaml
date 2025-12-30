@@ -86,7 +86,7 @@ params:
     cover:
       enabled: true
     content:
-      enabled: true
+      enabled: false
 
   # 补充：i18n 配置，确保搜索提示文字正确
   toggleMenu:

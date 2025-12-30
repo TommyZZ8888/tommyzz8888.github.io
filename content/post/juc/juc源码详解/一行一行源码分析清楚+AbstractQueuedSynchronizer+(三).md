@@ -2,8 +2,9 @@
 name: AbstractQueuedSynchronizer-3
 title: 一行一行源码分析清楚 AbstractQueuedSynchronizer (三)
 date: 2024-01-20 19:38:31
-tags: 
-categories: concurrency
+tags:
+categories:
+- juc
 ---
 这篇文章是 AQS 系列的最后一篇，第一篇，我们通过 ReentrantLock 公平锁分析了 AQS 的核心，第二篇的重点是把 Condition 说明白，同时也说清楚了对于线程中断的使用。
 
@@ -119,7 +120,7 @@ class Worker implements Runnable {
 
 
 
-![5](..\..\..\notes\img\juc\源码\5.png)
+![5](/img/juc/源码/5.png)
 
 如果始终只有一个线程调用 await 方法等待任务完成，那么 CountDownLatch 就会简单很多，所以之后的源码分析读者一定要在脑海中构建出这么一个场景：有 m 个线程是做任务的，有 n 个线程在某个栅栏上等待这 m 个线程做完任务，直到所有 m 个任务完成后，n 个线程同时通过栅栏。
 
@@ -289,23 +290,23 @@ private void doAcquireSharedInterruptibly(int arg)
 
 我们来仔细分析这个方法，线程 t3 经过第 1 步 addWaiter 入队以后，我们应该可以得到这个：
 
-![2](..\..\..\notes\img\juc\源码\2-fz.png)
+![2](/img/juc/源码/2-fz.png)
 
 由于 tryAcquireShared 这个方法会返回 -1，所以 if (r >= 0) 这个分支不会进去。到 shouldParkAfterFailedAcquire 的时候，t3 将 head 的 waitStatus 值设置为 -1，如下：
 
-![3](..\..\..\notes\img\juc\源码\3-fz.png)
+![3](/img/juc/源码/3-fz.png)
 
 然后进入到 parkAndCheckInterrupt 的时候，t3 挂起。
 
 我们再分析 t4 入队，t4 会将前驱节点 t3 所在节点的 waitStatus 设置为 -1，t4 入队后，应该是这样的：
 
-![4](..\..\..\notes\img\juc\源码\4-fz.png)
+![4](/img/juc/源码/4-fz.png)
 
 然后，t4 也挂起。接下来，t3 和 t4 就等待唤醒了。
 
 接下来，我们来看唤醒的流程。为了让下面的示意图更丰富些，我们假设用 10 初始化 CountDownLatch。
 
-![1](..\..\..\notes\img\juc\源码\1-fz.png)
+![1](/img/juc/源码/1-fz.png)
 
 当然，我们的例子中，其实没有 10 个线程，只有 2 个线程 t1 和 t2，只是为了让图好看些罢了。
 
@@ -471,7 +472,7 @@ for 循环第一轮的时候会唤醒 t4，t4 醒后会将自己设置为头节�
 
 字面意思是“可重复使用的栅栏”或“周期性的栅栏”，总之不是用了一次就没用了的，CyclicBarrier 相比 CountDownLatch 来说，要简单很多，其源码没有什么高深的地方，它是 ReentrantLock 和 Condition 的组合使用。看如下示意图，CyclicBarrier 和 CountDownLatch 是不是很像，只是 CyclicBarrier 可以有不止一个栅栏，因为它的栅栏（Barrier）可以重复使用（Cyclic）。
 
-![cyclicbarrier-2](..\..\..\notes\img\juc\源码\cyclicbarrier-2.png)
+![cyclicbarrier-2](/img/juc/源码/cyclicbarrier-2.png)
 
 首先，CyclicBarrier 的源码实现和 CountDownLatch 大相径庭，CountDownLatch 基于 AQS 的共享模式的使用，而 CyclicBarrier 基于 Condition 来实现。
 
@@ -479,7 +480,7 @@ for 循环第一轮的时候会唤醒 t4，t4 醒后会将自己设置为头节�
 
 先用一张图来描绘下 CyclicBarrier 里面的一些概念，和它的基本使用流程：
 
-![cyclicbarrier-3](..\..\..\notes\img\juc\源码\cyclicbarrier-3.png)
+![cyclicbarrier-3](/img/juc/源码/cyclicbarrier-3.png)
 
 > 看图我们也知道了，CyclicBarrier 的源码最重要的就是 await() 方法了。
 
