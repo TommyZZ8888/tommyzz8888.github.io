@@ -236,6 +236,14 @@
 
     <div class="tagCloud-tags">
         
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
             <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
                 中间件
             </a>
@@ -256,12 +264,8 @@
                 部署
             </a>
         
-            <a href="/categories/concurrency/" class="font_size_6">
-                Concurrency
-            </a>
-        
-            <a href="/categories/juc/" class="font_size_5">
-                Juc
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
             </a>
         
             <a href="/categories/nio/" class="font_size_5">
@@ -270,10 +274,6 @@
         
             <a href="/categories/java-base/" class="font_size_4">
                 Java Base
-            </a>
-        
-            <a href="/categories/jvm/" class="font_size_4">
-                Jvm
             </a>
         
     </div>
@@ -400,7 +400,7 @@
 <blockquote>
 <p>创建AService得到原始对象 ， 然后去给BService属性赋值 ， 此时就会根据BService属性的类型或名字在BeanFactory寻找BService所对应的单例Bean ， 如果存在 ， 直接赋值给BService ， 如果不存在则需要生成一个BService对应的Bean ， 然后赋值给BService 如下图</p>
 </blockquote>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/8c8051b5e2e62385bb18dc0f6284e328.png"
+<p><img src="/img/spring/8c8051b5e2e62385bb18dc0f6284e328.png"
 	
 	
 	
@@ -409,7 +409,7 @@
 	
 ></p>
 <p>通过上图 ， 我们可以很清晰的看出来循环依赖出现的原因 ， 如何打破这个循环呢？在中间加一层缓存 ， 如下图</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/09fce9c494ca263b4d57e5470b238111.png"
+<p><img src="/img/spring/09fce9c494ca263b4d57e5470b238111.png"
 	
 	
 	
@@ -426,7 +426,7 @@
 </h2><p>还是AService ， BService相互依赖的场景 ， 但是多了一层AOP ， 就是AService的原始对象赋值给BService时 ， 进行了<strong>AOP ,</strong> 那么AService进行AOP之后 ， 它的真实对象是代理对象 ， 那么BService中AService的值是原始对象的值 ，那么就会产生<strong>BService的AService值和AService的实际值不符的问题</strong></p>
 <p>AOP就是通过一个<strong>BeanPostProcessor</strong>来实现的 ， 而这个BeanPostProcessor就是</p>
 <p><strong>AnnotationAwareAspectJAutoProxyCreator，</strong> 它的父类是<strong>AbstractAutoProxyCreator（如下图）,<strong>而在SpringAOP中要么利用</strong>JDK动态代理</strong> ， 要么利用<strong>CGLib的动态代理</strong> ， 所以如果给这个类中的某一个方法设置了切面 ， 那么它最后都会生成一个代理对象</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/c3e726d3a12166732b7ce8551b0476af.png"
+<p><img src="/img/spring/c3e726d3a12166732b7ce8551b0476af.png"
 	
 	
 	
@@ -435,7 +435,7 @@
 	
 ></p>
 <p> 基本流程看下图</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/646a8d9195656d1b9e378219ee2d2162.png"
+<p><img src="/img/spring/646a8d9195656d1b9e378219ee2d2162.png"
 	
 	
 	
@@ -445,7 +445,7 @@
 ></p>
 <p> 而我们都知道 ， AOP是Spring除开IOC的另外一大功能 ， 而循环依赖又属于IOC的范围 ， 所以如果想要这两者功能共存 ， 就必须使用其他的手段：<strong>三级缓存 singletonFactories</strong></p>
 <p>首先 这个缓存存放的是（beanName：ObjectFactory），在Bean的生命周期中 ， 构造完一个原始对象就生成一个ObjectFactory , 然后缓存起来 ，这个ObjectFactory是一个函数式接口 ， 所以支持lambda表达式 ， <strong>() -&gt; getEarlyBeanReference(beanName, mbd, bean);<strong>而这个lambda就表示是一个ObjectFactory ， 他会去执行这个方法 ， 这个方法在</strong>SmartInstantiationAwareBeanPostProcessor中</strong></p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/22ba1efbca8fa7e7ad2fabfafc088fa1.png"
+<p><img src="/img/spring/22ba1efbca8fa7e7ad2fabfafc088fa1.png"
 	
 	
 	
@@ -454,7 +454,7 @@
 	
 ></p>
 <p>代码的大概意思就是说  ，找到继承了<strong>InstantiationAwareBeanPostProcessor</strong>这个类的<strong>BeanPostProcessor</strong>，就表示你需要进行AOP ，然后获取 <strong>SmartInstantiationAwareBeanPostProcessor</strong>这个 <strong>BeanPostProcessor ，</strong> 然后执行**getEarlyBeanReference()**方法 ， 由于这是一个接口 ， 我们直接看实现类是如何实现的</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/b8acd3cddf16b2d533c07ce381ad41c4.png"
+<p><img src="/img/spring/b8acd3cddf16b2d533c07ce381ad41c4.png"
 	
 	
 	
@@ -463,7 +463,7 @@
 	
 ></p>
 <p> 1.首先是执行getCacheKey()获取key的名称 ， 如下</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/ab05c8f64580e9653a8b23e6ef2fe0ac.png"
+<p><img src="/img/spring/ab05c8f64580e9653a8b23e6ef2fe0ac.png"
 	
 	
 	
@@ -473,7 +473,7 @@
 ></p>
 <p>他会判断beanName是否为null ， 如果不为空 ， 那么判断是否是FactoryBean ， 如果是就拼接&amp;符号 ， 否则直接返回 ， 如果beanName为null ， 最直接返回</p>
 <p>2.然后把cacheKey当作key ， bean当作value ， 放入<strong>earlyProxyReferences（关于</strong>earlyProxyReferences下面有解释**），<strong>然后执行</strong>wrapIfNecessary()**进行AOP</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/e07c82c6fca8b412b20f3df961a26514.png"
+<p><img src="/img/spring/e07c82c6fca8b412b20f3df961a26514.png"
 	
 	
 	
@@ -484,7 +484,7 @@
 <p> 3.该方法大概意思就是如果你符合AOP的条件 ， 那么我就创建一个代理对象返回 ， 如果不需要，那么返回原始对象</p>
 <p>到这其实可以体会到<strong>二级缓存为什么放的是残级Bean，因为此时创建一个代理对象 ， 还没有完成Bean的生命周期 ， 而三级缓存的ObjectFactory的lambda也可以理解为一段逻辑（大概就是需要AOP的时候， 那么返回一个代理对象 ， 如果不需要AOP我还是返回的原始对象），但是不管返回什么对象都是没有完成Bean生命周期的</strong></p>
 <p>那么什么时候调用**getEarlyBeanReference()**这个方法呢？回到循环依赖场景，用一张图就大概可以理清这个思路了</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/a73318999a8dcef57163ecb21818b0c8.png"
+<p><img src="/img/spring/a73318999a8dcef57163ecb21818b0c8.png"
 	
 	
 	
@@ -495,7 +495,7 @@
 <p> 就是创建AService ， 然后会产生一个AService的原始对象 ， 并且key为beanName ， Value为<strong>lambda</strong>表达式放入三级缓存 ， 然后注入BService ， 生成BService原始对象 ， 此时需要注入AService就要从单例池获取 ， 取不到 ， 从二级缓存获取 ， 取不到 ， 然后从三级缓存获取 ， 并执行<strong>lambda</strong>表达式，如果符合AOP的条件 ， 那么返回代理对象 ， 如果不符合 ， 返回原始对象 ， 然后赋值给BService的AService ， 然后BService完成创建</p>
 <p>源码如下：</p>
 <p>1.放入三级缓存</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/f0541ef2d7a1443a052c0660c2092a91.png"
+<p><img src="/img/spring/f0541ef2d7a1443a052c0660c2092a91.png"
 	
 	
 	
@@ -504,7 +504,7 @@
 	
 ></p>
 <p>2. 从一二三级缓存获取，然后执行表达式</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/d514a7027f7768faefcb17ccca6ec3d9.png"
+<p><img src="/img/spring/d514a7027f7768faefcb17ccca6ec3d9.png"
 	
 	
 	
@@ -513,7 +513,7 @@
 	
 ></p>
 <p> 这是getSingletion方法</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/64af6d291a819a2cdcf22444ef3966f5.png"
+<p><img src="/img/spring/64af6d291a819a2cdcf22444ef3966f5.png"
 	
 	
 	
@@ -523,7 +523,7 @@
 ></p>
 <p>此时AService正常进行AOP，但是前面已经执行过AOP了 ， 所以对于AServicec本身而言就不需要AOP了所以就又产生了一个问题：<strong>怎么判断是否执行过AOP了？</strong></p>
 <p>会利用**earlyProxyReferences，**就是上面方法提到的</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/b8acd3cddf16b2d533c07ce381ad41c4.png"
+<p><img src="/img/spring/b8acd3cddf16b2d533c07ce381ad41c4.png"
 	
 	
 	
@@ -532,7 +532,7 @@
 	
 ></p>
 <p>再<strong>AbstractAutoProxyCreator</strong>类中的**postProcessAfterInitialization()**会判断</p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/fcb792b958e37686f3862da7899c671a.png"
+<p><img src="/img/spring/fcb792b958e37686f3862da7899c671a.png"
 	
 	
 	

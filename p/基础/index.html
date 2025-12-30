@@ -348,6 +348,14 @@
 
     <div class="tagCloud-tags">
         
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
             <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
                 中间件
             </a>
@@ -368,12 +376,8 @@
                 部署
             </a>
         
-            <a href="/categories/concurrency/" class="font_size_6">
-                Concurrency
-            </a>
-        
-            <a href="/categories/juc/" class="font_size_5">
-                Juc
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
             </a>
         
             <a href="/categories/nio/" class="font_size_5">
@@ -382,10 +386,6 @@
         
             <a href="/categories/java-base/" class="font_size_4">
                 Java Base
-            </a>
-        
-            <a href="/categories/jvm/" class="font_size_4">
-                Jvm
             </a>
         
     </div>
@@ -460,7 +460,7 @@
     >面渣逆袭</a> 系列继续。这节我们回到梦开始的地方——Java基础，其实过了萌新阶段，面试问基础就问的不多，但是保不齐突然问一下。想一下，总不能张口高并发、闭口分布式，结果什么是面向对象，说不清，那多少有点魔幻。所以赶紧来看看，这些基础有没有你不会的！</p>
 <h1 id="java概述">Java概述
 </h1><h3 id="1什么是java">1.什么是Java？
-</h3><p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115100150.png"
+</h3><p><img src="/img/javabase/base/20220115100150.png"
 	
 	
 	
@@ -474,7 +474,7 @@
 <p>Java是一门面向对象的编程语言，不仅吸收了C++语言的各种优点，还摒弃了C++里难以理解的多继承、指针等概念，因此Java语言具有功能强大和简单易用两个特征。Java语言作为静态面向对象编程语言的优秀代表，极好地实现了面向对象理论，允许程序员以优雅的思维方式进行复杂的编程 。</p>
 <h3 id="2java语言有哪些特点">2.Java语言有哪些特点？
 </h3><p>Java语言有很多优秀（可吹）的特点，以下几个是比较突出的：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115102217.png"
+<p><img src="/img/javabase/base/20220115102217.png"
 	
 	
 	
@@ -495,7 +495,7 @@
 <p><strong>JRE</strong>： Java 运⾏时环境。它是运⾏已编译 Java 程序所需的所有内容的集合，包括 Java 虚拟机（JVM），Java 类库，Java 命令和其他的⼀些基础构件。但是，它不能⽤于创建新程序。</p>
 <p><strong>JDK</strong>: Java Development Kit，它是功能⻬全的 Java SDK。它拥有 JRE 所拥有的⼀切，还有编译器（javac）和⼯具（如 javadoc 和 jdb）。它能够创建和编译程序。</p>
 <p>简单来说，JDK包含JRE，JRE包含JVM。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115103315.png"
+<p><img src="/img/javabase/base/20220115103315.png"
 	
 	
 	
@@ -516,7 +516,7 @@
 <li><strong>解释</strong>：虚拟机执行Java字节码，将字节码翻译成机器能识别的机器码</li>
 <li><strong>执行</strong>：对应的机器执行二进制机器码</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115104405.png"
+<p><img src="/img/javabase/base/20220115104405.png"
 	
 	
 	
@@ -532,7 +532,7 @@
 <p>简单来说，编译型语言是指编译器针对特定的操作系统将源代码一次性翻译成可被该平台执行的机器码；解释型语言是指解释器对源程序逐行解释成特定平台的机器码并立即执行。</p>
 <p>比如，你想读一本外国的小说，你可以找一个翻译人员帮助你翻译，有两种选择方式，你可以先等翻译人员将全本的小说（也就是源码）都翻译成汉语，再去阅读，也可以让翻译人员翻译一段，你在旁边阅读一段，慢慢把书读完。</p>
 <p>Java 语言既具有编译型语言的特征，也具有解释型语言的特征，因为 Java 程序要经过先编译，后解释两个步骤，由 Java 编写的程序需要先经过编译步骤，生成字节码（<code>\*.class</code> 文件），这种字节码必须再经过JVM，解释成操作系统能识别的机器码，在由操作系统执行。因此，我们可以认为 Java 语言<strong>编译</strong>与<strong>解释</strong>并存。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115104257.png"
+<p><img src="/img/javabase/base/20220115104257.png"
 	
 	
 	
@@ -546,7 +546,7 @@
 </h1><h3 id="7java有哪些数据类型">7.Java有哪些数据类型？
 </h3><p>**定义：**Java语言是强类型语言，对于每一种数据都定义了明确的具体的数据类型，在内存中分配了不同大小的内存空间。</p>
 <p>Java语言数据类型分为两种：<strong>基本数据类型</strong>和<strong>引用数据类型</strong>。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115125651.png"
+<p><img src="/img/javabase/base/20220115125651.png"
 	
 	
 	
@@ -636,7 +636,7 @@
 </ul>
 <h3 id="8自动类型转换强制类型转换看看这几行代码">8.自动类型转换、强制类型转换？看看这几行代码？
 </h3><p>Java 所有的数值型变量可以相互转换，当把一个表数范围小的数值或变量直接赋给另一个表数范围大的变量时，可以进行自动类型转换；反之，需要强制转换。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115191949.png"
+<p><img src="/img/javabase/base/20220115191949.png"
 	
 	
 	
@@ -662,7 +662,7 @@
 <li><strong>拆箱</strong>：将包装类型转换为基本数据类型；</li>
 </ul>
 <p>Java可以自动对基本数据类型和它们的包装类进行装箱和拆箱。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115193443.png"
+<p><img src="/img/javabase/base/20220115193443.png"
 	
 	
 	
@@ -699,7 +699,7 @@
 <li>continue 跳出本次循环，继续执行下次循环(<strong>结束正在执行的循环 进入下一个循环条件</strong>)</li>
 <li>return 程序返回，不再执行下面的代码(<strong>结束当前的方法 直接返回</strong>)</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115195245.png"
+<p><img src="/img/javabase/base/20220115195245.png"
 	
 	
 	
@@ -800,7 +800,7 @@
 <li><strong>⾯向对象</strong> ：面向对象，把构成问题的事务分解成各个对象，而建立对象的目的也不是为了完成一个个步骤，而是为了描述某个事件在解决整个问题的过程所发生的行为。 目的是为了写出通用的代码，加强代码的重用，屏蔽差异性。</li>
 </ul>
 <p>用一个比喻：面向过程是编年体；面向对象是纪传体。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115203351.png"
+<p><img src="/img/javabase/base/20220115203351.png"
 	
 	
 	
@@ -811,7 +811,7 @@
 	
 ></p>
 <h3 id="16面向对象有哪些特性">16.面向对象有哪些特性
-</h3><p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115203617.png"
+</h3><p><img src="/img/javabase/base/20220115203617.png"
 	
 	
 	
@@ -876,7 +876,7 @@
 <li><strong>public</strong> : 对所有类可见。可以修饰类、接口、变量、方法</li>
 <li><strong>protected</strong> : 对同一包内的类和所有子类可见。可以修饰变量、方法。<strong>注意：不能修饰类（外部类）</strong>。</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220115215058.png"
+<p><img src="/img/javabase/base/20220115215058.png"
 	
 	
 	
@@ -1006,7 +1006,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>一张图说明：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220116212446.png"
+<p><img src="/img/javabase/base/20220116212446.png"
 	
 	
 	
@@ -1119,7 +1119,7 @@
 </h3><p>Java语言是<strong>值传递</strong>。Java 语言的方法调用只支持参数的值传递。当一个对象实例作为一个参数被传递到方法中时，参数的值就是对该对象的引用。对象的属性可以在被调用过程中被改变，但对对象引用的改变是不会影响到调用者的。</p>
 <p>JVM 的内存分为堆和栈，其中栈中存储了基本数据类型和引用数据类型实例的地址，也就是对象地址。</p>
 <p>而对象所占的空间是在堆中开辟的，所以传递的时候可以理解为把变量存储的对象地址给传递过去，因此引用类型也是值传递。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220116220451.png"
+<p><img src="/img/javabase/base/20220116220451.png"
 	
 	
 	
@@ -1135,7 +1135,7 @@
 <li><strong>深拷贝</strong>：完全拷贝一个对象，拷贝被拷贝对象的成员变量的值，堆中的对象也会拷贝一份。</li>
 </ul>
 <p>例如现在有一个order对象，里面有一个products列表，它的浅拷贝和深拷贝的示意图：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220116222517.png"
+<p><img src="/img/javabase/base/20220116222517.png"
 	
 	
 	
@@ -1159,7 +1159,7 @@
 </ul>
 <h3 id="30java-创建对象有哪几种方式">30.Java 创建对象有哪几种方式？
 </h3><p>Java中有以下四种创建对象的方式:</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220116223506.png"
+<p><img src="/img/javabase/base/20220116223506.png"
 	
 	
 	
@@ -1196,7 +1196,7 @@
 </ul>
 <h3 id="33string-str1--new-stringabc和string-str2--abc-和-区别">33.String str1 = new String(&ldquo;abc&rdquo;)和String str2 = &ldquo;abc&rdquo; 和 区别？
 </h3><p>两个语句都会去字符串常量池中检查是否已经存在 “abc”，如果有则直接使用，如果没有则会在常量池中创建 “abc” 对象。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220116230542.png"
+<p><img src="/img/javabase/base/20220116230542.png"
 	
 	
 	
@@ -1233,7 +1233,7 @@
 </div>
 </div><p>在<strong>jdk1.8之前</strong>，a和b初始化时位于字符串常量池，ab拼接后的对象位于堆中。经过拼接新生成了String对象。如果拼接多次，那么会生成多个中间对象。</p>
 <p>内存如下：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220117085549.png"
+<p><img src="/img/javabase/base/20220117085549.png"
 	
 	
 	
@@ -1371,7 +1371,7 @@
 </blockquote>
 <p>因为根据实践发现大部分的数据操作都集中在值比较小的范围，因此 Integer 搞了个缓存池，默认范围是 -128 到 127，可以根据通过设置<code>JVM-XX:AutoBoxCacheMax=</code>来修改缓存的最大值，最小值改不了。</p>
 <p>实现的原理是int 在自动装箱的时候会调用Integer.valueOf，进而用到了 IntegerCache。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220117230058.png"
+<p><img src="/img/javabase/base/20220117230058.png"
 	
 	
 	
@@ -1475,7 +1475,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>去掉枝枝蔓蔓（当然这些枝枝蔓蔓可以去看看，源码cover了很多情况），其实剩下的就是一个简单的字符串遍历计算，不过计算方式有点反常规，是用负的值累减。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220118073051.png"
+<p><img src="/img/javabase/base/20220118073051.png"
 	
 	
 	
@@ -1488,7 +1488,7 @@
 <h2 id="object">Object
 </h2><h3 id="38object-类的常见方法">38.Object 类的常见方法?
 </h3><p>Object 类是一个特殊的类，是所有类的父类，也就是说所有类都可以调用它的方法。它主要提供了以下 11 个方法，大概可以分为六类：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220118075626.png"
+<p><img src="/img/javabase/base/20220118075626.png"
 	
 	
 	
@@ -1530,7 +1530,7 @@
 <h1 id="异常处理">异常处理
 </h1><h3 id="39java-中异常处理体系">39.Java 中异常处理体系?
 </h3><p>Java的异常体系是分为多层的。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220118083050.png"
+<p><img src="/img/javabase/base/20220118083050.png"
 	
 	
 	
@@ -1547,7 +1547,7 @@
 </ul>
 <h3 id="40异常的处理方式">40.异常的处理方式？
 </h3><p>针对异常的处理主要有两种方式：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220118084205.png"
+<p><img src="/img/javabase/base/20220118084205.png"
 	
 	
 	
@@ -1716,7 +1716,7 @@
 <li><strong>InputStream</strong>/<strong>Reader</strong>: 所有的输入流的基类，前者是字节输入流，后者是字符输入流。</li>
 <li><strong>OutputStream</strong>/<strong>Writer</strong>: 所有输出流的基类，前者是字节输出流，后者是字符输出流。</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211011215419.jpeg"
+<p><img src="/img/javabase/base/20211011215419.jpeg"
 	
 	
 	
@@ -1731,7 +1731,7 @@
 </blockquote>
 <p>其实，Java的IO流体系还用到了一个设计模式——<strong>装饰器模式</strong>。</p>
 <p>InputStream相关的部分类图如下，篇幅有限，装饰器模式就不展开说了。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220118224856.png"
+<p><img src="/img/javabase/base/20220118224856.png"
 	
 	
 	
@@ -1745,7 +1745,7 @@
 </h3><p>其实字符流是由 Java 虚拟机将字节转换得到的，问题就出在这个过程还比较耗时，并且，如果我们不知道编码类型就很容易出现乱码问题。</p>
 <p>所以， I/O 流就干脆提供了一个直接操作字符的接口，方便我们平时对字符进行流操作。如果音频文件、图片等媒体文件用字节流比较好，如果涉及到字符的话使用字符流比较好。</p>
 <h3 id="44bionioaio">44.BIO、NIO、AIO？
-</h3><p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220119001928.png"
+</h3><p><img src="/img/javabase/base/20220119001928.png"
 	
 	
 	
@@ -1756,7 +1756,7 @@
 	
 ></p>
 <p><strong>BIO</strong>(blocking I/O) ： 就是传统的IO，同步阻塞，服务器实现模式为一个连接一个线程，即<strong>客户端有连接请求时服务器端就需要启动一个线程进行处理</strong>，如果这个连接不做任何事情会造成不必要的线程开销，可以通过连接池机制改善(实现多个客户连接服务器)。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220119004611.png"
+<p><img src="/img/javabase/base/20220119004611.png"
 	
 	
 	
@@ -1769,7 +1769,7 @@
 <p>BIO方式适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高，并发局限于应用中，JDK1.4 以前的唯一选择，程序简单易理解。</p>
 <p><strong>NIO</strong> ：全称 java non-blocking IO，是指 JDK 提供的新 API。从JDK1.4开始，Java 提供了一系列改进的输入/输出的新特性，被统称为NIO(即New IO)。</p>
 <p>NIO是<strong>同步非阻塞</strong>的，服务器端用一个线程处理多个连接，客户端发送的连接请求会注册到多路复用器上，多路复用器轮询到连接有IO请求就进行处理：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220119004630.png"
+<p><img src="/img/javabase/base/20220119004630.png"
 	
 	
 	
@@ -1781,7 +1781,7 @@
 ></p>
 <p>NIO的数据是面向<strong>缓冲区Buffer</strong>的，必须从Buffer中读取或写入。</p>
 <p>所以完整的NIO示意图：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220119005251.png"
+<p><img src="/img/javabase/base/20220119005251.png"
 	
 	
 	
@@ -1805,7 +1805,7 @@
 </h1><h3 id="45什么是序列化什么是反序列化">45.什么是序列化？什么是反序列化？
 </h3><p>什么是序列化，序列化就是<strong>把Java对象转为二进制流</strong>，方便存储和传输。</p>
 <p>所以<strong>反序列化就是把二进制流恢复成对象</strong>。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220120094441.png"
+<p><img src="/img/javabase/base/20220120094441.png"
 	
 	
 	
@@ -1848,7 +1848,7 @@
 <p><code>transient</code> 关键字的作用是：阻止实例中那些用此关键字修饰的的变量序列化；当对象被反序列化时，被 <code>transient</code> 修饰的变量值不会被持久化和恢复。<code>transient</code> 只能修饰变量，不能修饰类和方法。</p>
 <h3 id="46说说有几种序列化方式">46.说说有几种序列化方式？
 </h3><p>Java序列化方式有很多，常见的有三种：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220120095418.png"
+<p><img src="/img/javabase/base/20220120095418.png"
 	
 	
 	
@@ -1898,7 +1898,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>泛型一般有三种使用方式:<strong>泛型类</strong>、<strong>泛型接口</strong>、<strong>泛型方法</strong>。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220121091637.png"
+<p><img src="/img/javabase/base/20220121091637.png"
 	
 	
 	
@@ -2075,7 +2075,7 @@
 <h1 id="注解">注解
 </h1><h3 id="48说一下你对注解的理解">48.说一下你对注解的理解？
 </h3><p><strong>Java注解本质上是一个标记</strong>，可以理解成生活中的一个人的一些小装扮，比如戴什么什么帽子，戴什么眼镜。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220121085537.png"
+<p><img src="/img/javabase/base/20220121085537.png"
 	
 	
 	
@@ -2096,7 +2096,7 @@
 </ul>
 <p>所以我上文写的是解析的时候，没写具体是解析啥，因为不同的生命周期的解析动作是不同的。</p>
 <p>像常见的：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220121090438.png"
+<p><img src="/img/javabase/base/20220121090438.png"
 	
 	
 	
@@ -2108,7 +2108,7 @@
 ></p>
 <p>就是给编译器用的，编译器编译的时候检查没问题就over了，class文件里面不会有 Override 这个标记。</p>
 <p>再比如 Spring 常见的 Autowired ，就是 RUNTIME 的，所以<strong>在运行的时候可以通过反射得到注解的信息</strong>，还能拿到标记的值 required 。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220121090608.png"
+<p><img src="/img/javabase/base/20220121090608.png"
 	
 	
 	
@@ -2127,7 +2127,7 @@
 <p>而如果，我们想在时候动态地获取类信息、创建类实例、调用类方法这时候就要用到<strong>反射</strong>。</p>
 <p>通过反射你可以获取任意一个类的所有属性和方法，你还可以调用这些方法和属性。</p>
 <p>反射最核心的四个类：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220121220853.png"
+<p><img src="/img/javabase/base/20220121220853.png"
 	
 	
 	
@@ -2153,7 +2153,7 @@
 </h1><p>JDK已经出到17了，但是你迭代你的版本，我用我的8。JDK1.8的一些新特性，当然现在也不新了，其实在工作中已经很常用了。</p>
 <h3 id="50jdk18都有哪些新特性">50.JDK1.8都有哪些新特性？
 </h3><p>JDK1.8有不少新特性，我们经常接触到的新特性如下：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220121223429.png"
+<p><img src="/img/javabase/base/20220121223429.png"
 	
 	
 	
@@ -2444,7 +2444,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>以上是常见的几种流式操作，还有其它的一些流式操作，可以帮助我们更便捷地处理集合数据。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220121232729.png"
+<p><img src="/img/javabase/base/20220121232729.png"
 	
 	
 	
@@ -2490,7 +2490,7 @@
 <p>[15].<a class="link" href="https://www.cnblogs.com/cxuanBlog/p/13551797.html"  target="_blank" rel="noopener"
     >学会反射后，我被录取了（干货）</a></p>
 <hr>
-<p><img src="https://img2022.cnblogs.com/blog/1659274/202201/1659274-20220124214709248-441069911.png"
+<p><img src="/img/javabase/base/1659274-20220124214709248-441069911.png"
 	
 	
 	

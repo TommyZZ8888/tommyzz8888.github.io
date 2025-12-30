@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" msyql逻辑架构 ========= 逻辑架构的解析 逻辑架构图如下（序号代表的是：服务器处理客户端请求的流程）\n1.1connectors connectors是指使用不同语言的客户端与mysql server服务器进行交互。\n">
+<title>3、myql的逻辑架构和sql的执行流程.md</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/3myql%E7%9A%84%E9%80%BB%E8%BE%91%E6%9E%B6%E6%9E%84%E5%92%8Csql%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.md/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="3、myql的逻辑架构和sql的执行流程.md">
+<meta property='og:description' content=" msyql逻辑架构 ========= 逻辑架构的解析 逻辑架构图如下（序号代表的是：服务器处理客户端请求的流程）\n1.1connectors connectors是指使用不同语言的客户端与mysql server服务器进行交互。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/3myql%E7%9A%84%E9%80%BB%E8%BE%91%E6%9E%B6%E6%9E%84%E5%92%8Csql%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.md/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="3、myql的逻辑架构和sql的执行流程.md">
+<meta name="twitter:description" content=" msyql逻辑架构 ========= 逻辑架构的解析 逻辑架构图如下（序号代表的是：服务器处理客户端请求的流程）\n1.1connectors connectors是指使用不同语言的客户端与mysql server服务器进行交互。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#逻辑架构的解析">逻辑架构的解析</a>
+      <ol>
+        <li><a href="#11connectors">1.1connectors</a></li>
+        <li><a href="#12连接层">1.2连接层</a></li>
+        <li><a href="#13服务层">1.3服务层</a></li>
+        <li><a href="#14引擎层">1.4引擎层</a></li>
+        <li><a href="#15存储层">1.5存储层</a></li>
+      </ol>
+    </li>
+    <li><a href="#mysql中sql的执行流程">mysql中sql的执行流程</a>
+      <ol>
+        <li><a href="#21sql的执行流程">2.1sql的执行流程</a>
+          <ol>
+            <li><a href="#查询流程查询缓存解析器优化器执行器返回结果">查询流程：查询缓存&ndash;&gt;解析器&ndash;&gt;优化器&ndash;&gt;执行器&ndash;&gt;返回结果</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#数据库缓冲池buffer-pool">数据库缓冲池（buffer pool）</a>
+      <ol>
+        <li><a href="#31缓冲池">3.1缓冲池</a></li>
+        <li><a href="#32缓冲池如何读取数据">3.2缓冲池如何读取数据</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/db/" >
+            DB
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/3myql%E7%9A%84%E9%80%BB%E8%BE%91%E6%9E%B6%E6%9E%84%E5%92%8Csql%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.md/">3、myql的逻辑架构和sql的执行流程.md</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 6 分钟
+                
+                
+                , 2583 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <ul>
+<li>msyql逻辑架构
+=========</li>
+</ul>
+<h2 id="逻辑架构的解析">逻辑架构的解析
+</h2><p><strong>逻辑架构图如下（序号代表的是：服务器处理客户端请求的流程）</strong><br>
+<img src="/img/db/mysql/2345397-20220221214758434-1320760982.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="11connectors">1.1connectors
+</h3><p>connectors是指使用不同语言的客户端与mysql server服务器进行交互。</p>
+<h3 id="12连接层">1.2连接层
+</h3><p>客户端访问mysql服务器之前，需要先建立TCP连接；<strong>当mysql服务器收到客户端的连接请求后会从connections pool线程池中分配一个线程与客户端进行交互</strong>。</p>
+<ul>
+<li>msyql服务器对TCP传输过来的账号密码做身份认证、权限获取。用户名或者密码不正确，客户端程序结束运行；用户名密码正确，客户端与服务器建立连接，从权限表中读取该用户拥有的权限信息，当执行sql语句时依据读取到的权限信息进行判断。</li>
+</ul>
+<h3 id="13服务层">1.3服务层
+</h3><p><strong>1、SQL Interface: SQL接口</strong></p>
+<ul>
+<li><strong>接收用户的SQL命令，并且返回用户需要查询的结果</strong>。比如SELECT &hellip; FROM就是调用SQL Interface</li>
+<li>MySQL支持DML（数据操作语言）、DDL（数据定义语言）、存储过程、视图、触发器、自定义函数等多种SQL语言接口</li>
+</ul>
+<p><strong>2、Parser: 解析器</strong></p>
+<ul>
+<li><strong>在解析器中对SQL语句进行语法分析、词法分析</strong>。将SQL语句分解成数据结构，并将这个结构传递到后续步骤，以后SQL语句的传递和处理就是基于这个结构的。如果在分解构成中遇到错误，那么就说明这个SQL语句的语法是不合理的。</li>
+<li><strong>在SQL命令传递到解析器的时候会被解析器验证和解析，并为其创建语法树，并根据数据字典丰富查询语法树，会验证该客户端是否具有执行该查询的权限</strong>。创建好语法树后，MySQL还会对SQl查询进行语法上的优化，进行查询重写。</li>
+</ul>
+<p><strong>3、Optimizer: 查询优化器</strong></p>
+<ul>
+<li><strong>SQL语句在语法解析之后、查询之前会使用查询优化器确定SQL语句的执行路径，生成一个执行计划</strong>。</li>
+<li>这个执行计划表明应该使用哪些索引进行查询（全表检索还是使用索引检索），表之间的连接顺序如何，最后会按照执行计划中的步骤调用存储引擎提供的方法来真正的执行查询，并将查询结果返回给用户。</li>
+</ul>
+<p><strong>4、Caches &amp; Buffers： 查询缓存组件</strong></p>
+<ul>
+<li>MySQL内部维持着一些Cache和Buffer，比如<strong>Query Cache用来缓存一条SELECT语句的执行结果</strong>，如果能够在其中找到对应的查询结果，<strong>那么就不必再进行查询解析、优化和执行的整个过程了</strong>，直接将结果反馈给客户端。</li>
+<li>这个缓存机制是由一系列小缓存组成的。比如表缓存，记录缓存，key缓存，权限缓存等 。</li>
+<li><strong>这个查询缓存可以在不同客户端之间共享</strong>。</li>
+<li>从MySQL 5.7.20开始，不推荐使用查询缓存，并<strong>在MySQL 8.0中删除</strong> 。</li>
+</ul>
+<h3 id="14引擎层">1.4引擎层
+</h3><p><strong>插件式存储引擎层（ Storage Engines），真正的负责了MySQL中数据的存储和提取，对物理服务器级别维护的底层数据执行操作，服务器通过API与存储引擎进行通信</strong>。不同的存储引擎具有的功能不同，这样我们可以根据自己的实际需要进行选取。<br>
+<strong>查询默认支持的存储引擎：show engines;（下一个章节对存储引擎有详细的讲解）</strong><br>
+<img src="/img/db/mysql/2345397-20220221230308177-135977349.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="15存储层">1.5存储层
+</h3><p><strong>所有的数据，数据库、表的定义，表的每一行的内容，索引，都是存在文件系统上，以文件的方式存在的，并完成与存储引擎的交互。</strong></p>
+<h2 id="mysql中sql的执行流程">mysql中sql的执行流程
+</h2><h3 id="21sql的执行流程">2.1sql的执行流程
+</h3><p><img src="/img/db/mysql/2345397-20220221231132235-1784731524.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="查询流程查询缓存解析器优化器执行器返回结果">查询流程：查询缓存&ndash;&gt;解析器&ndash;&gt;优化器&ndash;&gt;执行器&ndash;&gt;返回结果
+</h4><p>1、查询缓存</p>
+<ul>
+<li><strong>查询缓存是提前把查询结果缓存起来，这样下次不需要执行就可以直接拿到结果</strong>。需要说明的是，在MySQL中的查询缓存，不是缓存查询计划，而是缓存查询结果。只有相同的查询操作才会命中查询缓存（两个相同查询的概念：请求在任何字符上（如空格、注释、大小写）必须相同，否则不会命中缓存）。</li>
+<li><strong>开启缓存机制</strong>：在配置文件中加入：query_cache_type=1（0：不开启、1：开启、2：demand按需使用SQL_CACHE、SQL_NO_CACHE）</li>
+<li><strong>监控查询命中率</strong>：show status like &ldquo;%Qcache%&rdquo;;<br>
+<img src="/img/db/mysql/2345397-20220221232323327-1136970123.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<strong>Qcache_free_blocks</strong> :表示<strong>查询缓存中还有多少剩余的blocks</strong>，如果该值显示较大，则说明查询缓存中的内存碎片过多了，可能在一定的时间进行整理。|<br>
+<strong>Qcache_free_memory</strong> :<strong>查询缓存的内存大小</strong>，通过这个参数可以很清晰的知道当前系统的查询内存是否够用，是多了，还是不够用，DBA可以根据实际情况做出调整。<br>
+<strong>Qcache_hits</strong> :表示<strong>有多少次命中缓存</strong>。我们主要可以通过该值来验证我们的查询缓存的效果。数字越大，缓存效果越理想。<br>
+<strong>Qcache_inserts</strong>:表示<strong>多少次未命中然后插入</strong>，意思是新来的SQL请求在缓存中未找到，不得不执行查询处理，执行查询处理后把结果insert到查询缓存中。这样的情况的次数越多，表示查询缓存应用到的比较少效果也就不理想。当然系统刚启动后，查询缓存是空的，这很正常。<br>
+<strong>Qcache_lowmem_prunes</strong> :该参数<strong>记录有多少条查询因为内存不足而被移除出查询缓存</strong>。通过这个值,用户可以适当的调整缓存大小。<br>
+<strong>Qcache_not_cached</strong> :表示因为query_cache_type的设置而<strong>没有被缓存的查询数量</strong>。<strong>Qcache_queries_in_cache</strong>:<strong>当前缓存中缓存的查询数量</strong>。<br>
+<strong>Qcache_total_blocks</strong>:<strong>当前缓存的block数量</strong>。</li>
+</ul>
+<p><strong>2、解析器：在解析器中对 SQL 语句进行语法分析、语义分析，生成一个语法树。</strong><br>
+<img src="/img/db/mysql/2345397-20220221233502352-576074538.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p><strong>3、优化器：在优化器中会确定SQL语句的执行路径并生成一个执行计划</strong>，比如是根据全表检索，还是根据索引检索等。在查询优化器中，可以分为<strong>逻辑查询优化阶段</strong>（语句的执行顺序）和<strong>物理查询优化阶段</strong>（建立索引）。<br>
+<strong>4、执行器：按照执行计划中的步骤调用存储引擎提供的方法来真正的执行查询，并将查询结果返回给用户。</strong></p>
+<h2 id="数据库缓冲池buffer-pool">数据库缓冲池（buffer pool）
+</h2><p>存储引擎将部分内存来作为数据缓冲池，在真正访问页面之前，需要把在磁盘上的页数据缓存到内存中的Buffer Pool 之后才可以访问，这样会减少与磁盘直接进行 I/O 的时间。</p>
+<h3 id="31缓冲池">3.1缓冲池
+</h3><p><strong>数据库缓冲池中存储的是：</strong><br>
+<img src="/img/db/mysql/2345397-20220221235736422-1980106373.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="32缓冲池如何读取数据">3.2缓冲池如何读取数据
+</h3><p><strong>1、缓冲池管理器会尽量将经常使用的数据保存起来，在数据库进行页面读操作的时候，首先会判断该页面是否在缓冲池中，如果存在就直接读取，如果不存在，就会通过内存或磁盘将页面存放到缓冲池中再进行读取。</strong><br>
+缓存在数据库中的结构和作用如下图所示：<br>
+<img src="/img/db/mysql/2345397-20220221235936182-1195404917.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+2、查看缓冲池的大小：show variables like &lsquo;innodb_buffer_pool_size&rsquo;;<br>
+<img src="/img/db/mysql/2345397-20220222000104602-373580130.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+3、查看缓冲池的个数：show variables like &lsquo;innodb_buffer_pool_instances&rsquo;;<br>
+<img src="/img/db/mysql/2345397-20220222000151911-1771348221.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p>本文转自 <a class="link" href="https://www.cnblogs.com/worldusemycode/p/15920851.html"  target="_blank" rel="noopener"
+    >https://www.cnblogs.com/worldusemycode/p/15920851.html</a>，如有侵权，请联系删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/10mysql%E7%9A%84%E8%B0%83%E4%BC%98.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">10、mysql的调优.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/11%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">11、事务的基础概念.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/12mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">12、mysql的事务日志.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/13mysql%E9%94%81.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">13、mysql锁.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/14%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">14、多版本并发控制.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

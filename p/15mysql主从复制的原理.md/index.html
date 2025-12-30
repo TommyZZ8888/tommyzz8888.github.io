@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="mysql主从复制 要想实现mysql的主从复制需要先了解二进制日志（bin log）和中继日志（relay log）。\n二进制日志（bin log） binlog即binary log，二进制日志文件，也叫作变更日志（update log），数据库服务每次重启之后都会生成一个对应的bin log日志文件。它记录了数据库所有执行的DDL（数据库定义语言） 和 DML（数据库操作语言） 等数据库更新事件的语句，但是不包含没有修改任何数据的语句（如数据查询语句select、show等）。它是事件形式记录并保存在二进制文件中。\n">
+<title>15、mysql主从复制的原理.md</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/15mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%8E%9F%E7%90%86.md/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="15、mysql主从复制的原理.md">
+<meta property='og:description' content="mysql主从复制 要想实现mysql的主从复制需要先了解二进制日志（bin log）和中继日志（relay log）。\n二进制日志（bin log） binlog即binary log，二进制日志文件，也叫作变更日志（update log），数据库服务每次重启之后都会生成一个对应的bin log日志文件。它记录了数据库所有执行的DDL（数据库定义语言） 和 DML（数据库操作语言） 等数据库更新事件的语句，但是不包含没有修改任何数据的语句（如数据查询语句select、show等）。它是事件形式记录并保存在二进制文件中。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/15mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%8E%9F%E7%90%86.md/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="15、mysql主从复制的原理.md">
+<meta name="twitter:description" content="mysql主从复制 要想实现mysql的主从复制需要先了解二进制日志（bin log）和中继日志（relay log）。\n二进制日志（bin log） binlog即binary log，二进制日志文件，也叫作变更日志（update log），数据库服务每次重启之后都会生成一个对应的bin log日志文件。它记录了数据库所有执行的DDL（数据库定义语言） 和 DML（数据库操作语言） 等数据库更新事件的语句，但是不包含没有修改任何数据的语句（如数据查询语句select、show等）。它是事件形式记录并保存在二进制文件中。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#二进制日志bin-log">二进制日志（bin log）</a>
+      <ol>
+        <li><a href="#11bin-log文件的作用">1.1bin log文件的作用</a></li>
+        <li><a href="#12开启bin-log日志">1.2开启bin log日志</a>
+          <ol>
+            <li><a href="#1看记录二进制日志是否开启在mysql8中默认情况下二进制文件是开启的">1、看记录二进制日志是否开启：在MySQL8中默认情况下，二进制文件是开启的。</a></li>
+            <li><a href="#2日志的参数设置">2、日志的参数设置</a></li>
+          </ol>
+        </li>
+        <li><a href="#13查看bin-log日志">1.3查看bin log日志</a></li>
+        <li><a href="#14使用binlog日志进行恢复数据">1.4使用binlog日志进行恢复数据</a>
+          <ol>
+            <li><a href="#特定的场景">特定的场景</a></li>
+          </ol>
+        </li>
+        <li><a href="#15删除二进制日志">1.5删除二进制日志</a></li>
+        <li><a href="#16bin-log的写入机制">1.6bin log的写入机制</a>
+          <ol>
+            <li><a href="#161写入机制">1.6.1、写入机制</a></li>
+            <li><a href="#162bin-log的刷盘策略">1.6.2、bin log的刷盘策略</a></li>
+            <li><a href="#163bin-log和redo-log的区别">1.6.3、bin log和redo log的区别</a></li>
+            <li><a href="#164bin-log和redo-log的写入时机">1.6.4、bin log和redo log的写入时机</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#中继日志relay-log">中继日志（relay log）</a>
+      <ol>
+        <li><a href="#21什么是中继日志">2.1什么是中继日志</a></li>
+        <li><a href="#22查看中继日志">2.2查看中继日志</a></li>
+        <li><a href="#23使用中继日志时应注意的问题">2.3使用中继日志时应注意的问题</a></li>
+      </ol>
+    </li>
+    <li><a href="#主从复制">主从复制</a>
+      <ol>
+        <li><a href="#31主从复制的作用">3.1主从复制的作用</a></li>
+        <li><a href="#32-主从复制的原理">3.2 主从复制的原理</a>
+          <ol>
+            <li><a href="#321原理剖析">3.2.1原理剖析</a></li>
+            <li><a href="#322主从复制的基本原则">3.2.2主从复制的基本原则</a></li>
+          </ol>
+        </li>
+        <li><a href="#33主从同步的数据一致性的问题">3.3主从同步的数据一致性的问题</a>
+          <ol>
+            <li><a href="#331主从同步的要求">3.3.1主从同步的要求</a></li>
+            <li><a href="#332主从延迟会导致主从同步时发生数据不一致的问题">3.3.2主从延迟会导致主从同步时发生数据不一致的问题</a></li>
+            <li><a href="#333如何减少主从延迟">3.3.3如何减少主从延迟</a></li>
+            <li><a href="#334主从同步时如何解决数据不一致的问题">3.3.4主从同步时如何解决数据不一致的问题</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/db/" >
+            DB
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/15mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%8E%9F%E7%90%86.md/">15、mysql主从复制的原理.md</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 13 分钟
+                
+                
+                , 6204 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="mysql主从复制">mysql主从复制
+</h1><p><strong>要想实现mysql的主从复制需要先了解二进制日志（bin log）和中继日志（relay log）。</strong></p>
+<h2 id="二进制日志bin-log">二进制日志（bin log）
+</h2><p><strong>binlog即binary log，二进制日志文件，也叫作变更日志（update log），数据库服务每次重启之后都会生成一个对应的bin log日志文件</strong>。它记录了数据库所有执行的DDL（数据库定义语言） 和 DML（数据库操作语言） 等数据库更新事件的语句，但是不包含没有修改任何数据的语句（如数据查询语句select、show等）。<strong>它是事件形式记录并保存在二进制文件中</strong>。</p>
+<h3 id="11bin-log文件的作用">1.1bin log文件的作用
+</h3><ul>
+<li>数据恢复：如果DBA误操作使mysql数据库中的数据删除并提交了事务，这时可以通过二进制日志文件来查看用户执行了哪些操作对数据库服务器进行了修改，然后根据二进制日志文件中的记录来恢复数据库中的数据。</li>
+<li>数据复制：由于日志的延续性和时效性，master主服务器把二进制文件传递给slaves从服务器来达到master和slaves数据一致的目的。（数据的备份、主备、主主、主从的场景都需要bin log来同步数据，保证数据的一致性）</li>
+</ul>
+<h3 id="12开启bin-log日志">1.2开启bin log日志
+</h3><h4 id="1看记录二进制日志是否开启在mysql8中默认情况下二进制文件是开启的">1、看记录二进制日志是否开启：在MySQL8中默认情况下，二进制文件是开启的。
+</h4><p><img src="/img/db/mysql/2345397-20220310193311215-40070923.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="2日志的参数设置">2、日志的参数设置
+</h4><p><strong>方式1、永久性方式</strong><br>
+修改my.cnf<br>
+<code>[mysqld]</code><br>
+<code>#启用二进制日志</code><br>
+<code>log-bin=binloglog</code><br>
+<code>binlog_expire_logs_seconds=600</code><br>
+<code>max_binlog_size=100M</code><br>
+<img src="/img/db/mysql/2345397-20220310195028369-855689704.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+设置my.cnf之后，然后重启mysql服务<br>
+<code>systemctl restart mysqld</code><br>
+重启之后，重新查看bin log日志<br>
+<img src="/img/db/mysql/2345397-20220310194744088-1316503733.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<strong>设置带文件夹的bin log日志存放目录时，一定要该目录为mysql用户</strong><br>
+<code>[mysqld]</code><br>
+<code>log-bin=&quot;/var/lib/mysql/binlog/binloglog&quot;</code></p>
+<blockquote>
+<p>修改该目录的属主、属组<br>
+chown -R -v mysql:mysql binlog</p>
+</blockquote>
+<p><strong>方式2：临时性方式</strong><br>
+在mysql8中只有会话级别的设置，没有了global级别的设置。<br>
+<img src="/img/db/mysql/2345397-20220310195931887-1666092187.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="13查看bin-log日志">1.3查看bin log日志
+</h3><p>1、当MySQL创建二进制日志文件时，先创建一个以“filename”为名称、以“.index”为后缀的文件，再创建一个以“filename”为名称、以“.000001”为后缀的文件。<br>
+2、MySQL服务重新启动一次，以“.000001”为后缀的文件就会增加一个，并且后缀名按1递增。即日志文件的个数与MySQL服务启动的次数相同；如果日志长度超过了 max_binlog_size 的上限（默认是1GB），就会创建一个新的日志文件。<br>
+<strong>3、查看当前的二进制日志文件列表及大小</strong><br>
+<img src="/img/db/mysql/2345397-20220310203350038-1276049999.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<strong>4、显示bin log日志文件的命令</strong></p>
+<ul>
+<li><strong>文件中有时间日期的</strong><br>
+显示被修改的数据和binlog格式：<code>mysqlbinlog -v &quot;/var/lib/mysql/binlog/binloglog.000002&quot;</code><br>
+只显示被修改的数据(排除binlog格式)：<code>mysqlbinlog -v --base64-output=DECODE-ROWS &quot;/var/lib/mysql/binlog/binloglog.000002&quot;</code></li>
+<li><strong>文件中有偏移量（position）</strong><br>
+显示偏移量： <code>show binlog events [IN 'log_name'] [FROM pos] [LIMIT [offset,] row_count];</code><br>
+<img src="/img/db/mysql/2345397-20220310204841938-1524267115.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<p><strong>5、binlog日志的格式</strong><br>
+<img src="/img/db/mysql/2345397-20220310205136972-530984470.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<ul>
+<li>statement<br>
+<code>每一条会修改数据的sql语句都会记录在binlog中。</code><br>
+<strong>优点</strong>：不需要记录每一行的变化，减少了binlog日志量，节约了IO，提高性能。</li>
+<li>row<br>
+<code>5.1.5版本的MySQL才开始支持，不记录每条sql语句的上下文信息，仅记录哪条数据被修改了。</code><br>
+<strong>优点</strong>：row level 的日志内容会非常清楚的记录下每一行数据修改的细节。而且不会出现某些特定情况下的存储过程，或function，以及trigger的调用和触发无法被正确复制的问题。</li>
+<li>mixed<br>
+<code>在Mixed模式下，一般的语句修改使用statment格式保存binlog，一些函数和存储过程采用row格式保存binlog。</code></li>
+</ul>
+<h3 id="14使用binlog日志进行恢复数据">1.4使用binlog日志进行恢复数据
+</h3><p><strong>恢复命令</strong>：<code>mysqlbinlog [option] filename | mysql –u user -p pass;</code></p>
+<ul>
+<li>filename ：是日志文件名。</li>
+<li>option ：可选项，比较重要的两对option参数是&ndash;start-date、&ndash;stop-date 和 &ndash;start-position、&ndash;stop-position。<br>
+<code>1、--start-date 和 --stop-date ：可以指定恢复数据库的起始时间点和结束时间点。(使用mysqlbinlog命令显示文件中的信息)</code><br>
+<img src="/img/db/mysql/2345397-20220310211538945-1285606988.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<code>2、--start-position和--stop-position ：可以指定恢复数据的开始位置和结束位置。</code><br>
+<img src="/img/db/mysql/2345397-20220310211620966-251695485.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h4 id="特定的场景">特定的场景
+</h4><p><strong>如果程序员误操作使用truncate或者drop命令删除库和表，可以使用以下方式进行恢复：</strong></p>
+<ol>
+<li>取最近一次<strong>全量备份</strong>，假设这个库是一天一备，上次备份是当天凌晨2点 ；</li>
+<li>用备份恢复出一个临时库 ；</li>
+<li>从<strong>binlog日志文件</strong>里面，取出凌晨2点之后的日志；</li>
+<li>把这些日志，除了误删除数据的语句外，全部应用到临时库。</li>
+</ol>
+<p><strong>如果遇到数据量大、数据库和数据表很多（比如分库分表的应用）的场景，用二进制日志进行数<br>
+据恢复，是很有挑战性的，因为起止位置不容易管理。</strong></p>
+<ul>
+<li>在这种情况下，一个有效的解决办法是<strong>配置主从数据库服务器</strong>，甚至是一主多从的架构，把二进制日志文件的内容通过中继日志，同步到从数据库服务器中，这样就可以有效避免数据库故障导致的数据异常等问题（当主服务器上发生异常可以切换到从服务器上）。</li>
+</ul>
+<h3 id="15删除二进制日志">1.5删除二进制日志
+</h3><p>MySQL的二进制文件可以配置自动删除，同时MySQL也提供了安全的手动删除二进制文件的方法。</p>
+<p><strong>手动删除的方式：</strong></p>
+<ul>
+<li>PURGE MASTER LOGS：删除指定日志文件<br>
+<code>PURGE {MASTER | BINARY} LOGS TO ‘指定日志文件名’</code><br>
+<code>PURGE {MASTER | BINARY} LOGS BEFORE ‘指定日期’</code></li>
+<li>RESET MASTER：删除所有的二进制日志文件</li>
+</ul>
+<h3 id="16bin-log的写入机制">1.6bin log的写入机制
+</h3><h4 id="161写入机制">1.6.1、写入机制
+</h4><p><strong>bin log的写入时机和redo log相似</strong>，<strong>事务执行过程中</strong>先把bin log日志写到bin log cache中；<strong>事务提交的时候</strong>先把bin log cache中的数据写入page cache中，再把page cache中的数据刷盘到binlog文件中。因为一个事务的bin log不能被拆开，无论这个事务多大，也要确保一次性写入，所以系统会给每个线程分配一个块内存作为bin log cache。<br>
+<img src="/img/db/mysql/2345397-20220310230346789-895758372.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="162bin-log的刷盘策略">1.6.2、bin log的刷盘策略
+</h4><p><strong>刷盘策略由参数sync_binlog控制：默认为0</strong></p>
+<ul>
+<li><strong>当参数sync_binlog为0时</strong>，表示每次提交事务时都只执行write，由系统自行判断什么时候执行fsync（与redo log刷盘策略参数innodb_flush_log_at_trx_commit为2相似）：<code>如果机器宕机，page cache中的binlog日志会丢失</code><br>
+<img src="/img/db/mysql/2345397-20220310230936115-678221997.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li><strong>当参数sync_binlog为1时</strong>，表示每次提交事务时write和fsync都会执行。（与redo log刷盘策略参数innodb_flush_log_at_trx_commit为1相似）<br>
+<img src="/img/db/mysql/2345397-20220310231312124-563443009.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li><strong>当参数sync_binlog为2时</strong>，表示每次提交事务时都会执行write，但是N个事务后才会执行fsync（N的值可以自己进行设置）：<code>如果机器宕机，page cache中最近N个事务的binlog日志会丢失</code>。<br>
+<img src="/img/db/mysql/2345397-20220310231512053-1080249478.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h4 id="163bin-log和redo-log的区别">1.6.3、bin log和redo log的区别
+</h4><p><strong>redo log</strong>：是<strong>物理日志</strong>，记录内容是“<strong>在某个表空间上的某个数据页上的某个字节做了什么修改</strong>”，<strong>属于InnoDB存储引擎层产生的</strong>。<br>
+<strong>bin log</strong>：是<strong>逻辑日志</strong>，记录内容是“<strong>语句的原始逻辑</strong>”，类似于“给ID=2这一行的c字段加1”，<strong>属于MySQL Server层</strong>。<br>
+<code>redo log：当数据库宕机后，如果已提交的事务的信息还没有刷新到磁盘上，在重启后重新执行redo log文件把数据刷到磁盘上，保证了事务的持久性</code><br>
+<code>bin log：主要保证了mysql集群架构数据的一致性和数据误删之后的数据恢复</code></p>
+<h4 id="164bin-log和redo-log的写入时机">1.6.4、bin log和redo log的写入时机
+</h4><p><strong>1、在执行更新语句过程，会记录redo log与bin log两块日志，都是以基本的事务为单位：</strong></p>
+<ul>
+<li>redo log：在事务执行过程中可以不断写入redo log file文件中（每1秒写入一次）</li>
+<li>bin log：只有在提交事务时才会写入bin log file文件中（每次提交事务才会写入）<br>
+<img src="/img/db/mysql/2345397-20220310232939005-382909307.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<p><strong>2、写入时机不一致会出现的问题：</strong></p>
+<ul>
+<li>如果在执行过程中已经把redo log写入到redo log file文件后，在提交事务时bin log在写入bin log file时mysql程序出现异常。（把id=2的c字段的值从0改为1）<br>
+<img src="/img/db/mysql/2345397-20220310234507347-175618092.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li>由于mysql程序出现异常，因此bin log没有对应的修改记录，在重启之后主服务器会使用redo log进行数据的恢复，从服务器会使用bin log进行恢复数据，因此会出现主从服务器的数据不一致的问题。<br>
+<img src="/img/db/mysql/2345397-20220310234914820-1518612383.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li>为了解决上述数据不一致的问题，InnoDB存储引擎使用两阶段提交方案（将redo log写入到redo log file文件分为两个阶段：prepare和commit）。<br>
+<img src="/img/db/mysql/2345397-20220310235342568-1815725886.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<code>两阶段提交的原理：在写入bin log时mysql程序出现了异常，重启之后mysql主服务器根据redo log进行恢复数据时，发现redo log处于prepare阶段，然后就会判断是否有bin log日志（如果没有就会进行回滚事务，如果有就会进行提交事务）</code><br>
+<img src="/img/db/mysql/2345397-20220310235559809-1644408458.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h2 id="中继日志relay-log">中继日志（relay log）
+</h2><h3 id="21什么是中继日志">2.1什么是中继日志
+</h3><ul>
+<li><strong>中继日志只在主从服务器架构的从服务器上存在</strong>。从服务器为了与主服务器保持一致，要从主服务器读取二进制日志（bin log）的内容，并且把读取到的信息写入本地的日志文件中，这个从服务器本地的日志文件就叫中继日志。</li>
+<li>搭建好主从服务器之后，<strong>中继日志默认会保存在从服务器的数据目录</strong>下。</li>
+<li>文件名的格式是：<strong>从服务器名-relay-bin.序号</strong>。中继日志还有一个索引文件：<strong>从服务器名-relaybin.index</strong>，用来定位当前正在使用的中继日志。</li>
+</ul>
+<h3 id="22查看中继日志">2.2查看中继日志
+</h3><p><strong>中继日志与二进制日志的格式相同，可以用mysqlbinlog工具进行查看。</strong></p>
+<p>中继日志的文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="kt">SET</span><span class="w"> </span><span class="kt">TIMESTAMP</span><span class="o">=</span><span class="mi">1618558728</span><span class="cm">/*!*/</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">BEGIN</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="cm">/*!*/</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1"># at 950
+</span></span></span><span class="line"><span class="cl"><span class="c1">#210416 15:38:48 server id 1 end_log_pos 832 CRC32 0xcc16d651 Table_map:
+</span></span></span><span class="line"><span class="cl"><span class="o">`</span><span class="n">atguigu</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">test</span><span class="o">`</span><span class="w"> </span><span class="n">mapped</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="mi">91</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1"># at 1000
+</span></span></span><span class="line"><span class="cl"><span class="c1">#210416 15:38:48 server id 1 end_log_pos 872 CRC32 0x07e4047c Delete_rows: table id
+</span></span></span><span class="line"><span class="cl"><span class="mi">91</span><span class="w"> </span><span class="n">flags</span><span class="p">:</span><span class="w"> </span><span class="n">STMT_END_F</span><span class="w"> </span><span class="c1">-- server id 1 是主服务器，意思是主服务器删了一行数据
+</span></span></span><span class="line"><span class="cl"><span class="n">BINLOG</span><span class="w"> </span><span class="s1">&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">CD95YBMBAAAAMgAAAEADAAAAAFsAAAAAAAEABGRlbW8ABHRlc3QAAQMAAQEBAFHWFsw=
+</span></span></span><span class="line"><span class="cl"><span class="s1">CD95YCABAAAAKAAAAGgDAAAAAFsAAAAAAAEAAgAB/wABAAAAfATkBw==
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;</span><span class="cm">/*!*/</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1"># at 1040
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>解读上面的中继日志文件（主服务器（“server id 1”）对表atguigu.test进行了2步操作）</strong></p>
+<ul>
+<li>定位到表atguigu.test编号是91的记录，日志位置是832；</li>
+<li>删除编号是91的记录，日志位置是872。</li>
+</ul>
+<h3 id="23使用中继日志时应注意的问题">2.3使用中继日志时应注意的问题
+</h3><p><strong>如果从服务器宕机，有的时候为了系统恢复，要重装操作系统，这样就可能会导致你的服务器名称与之前不同</strong>。而中继日志里是包含从服务器名的。在这种情况下，就可能导致你恢复从服务器的时候，无法从宕机前的中继日志里读取数据，以为是日志文件损坏了，其实是名称不对了，把中继日志中的从服务器名改为现在的服务器名，就可以恢复数据了。</p>
+<h2 id="主从复制">主从复制
+</h2><h3 id="31主从复制的作用">3.1主从复制的作用
+</h3><ul>
+<li><strong>读写分离</strong>：主服务器master负责写入数据，从服务器slave负责读取数据，当主服务器进行更新的时候，会自动将数据复制到从服务器中，当客户端进行读取数据的时候会向从服务器进行读取。<br>
+<code>1、从服务器提供负载均衡，让不同的请求按照策略均匀分发到不同的从服务器上，提升了读取的效率</code><br>
+<code>2、读写分离可以减少锁表的影响（当在一个服务器进行读写操作时，写操作执行的时候就会加上排它锁，其他事务的读操作和写操作都需要等待释放锁）</code></li>
+<li><strong>数据备份</strong>：通过主从复制机制将主库中的数据复制到从库上，相当于是一种热备份机制。</li>
+<li><strong>高可用性</strong>：当主服务器宕机或者出现故障时，可以切换到从服务器上，保证服务的正常运行。</li>
+</ul>
+<h3 id="32-主从复制的原理">3.2 主从复制的原理
+</h3><p><strong>slave从服务器会从master主服务器上读取bin log日志进行数据的同步。</strong></p>
+<h4 id="321原理剖析">3.2.1原理剖析
+</h4><p><strong>实际上主从复制的原理就是基于bin log日志实现数据同步，通过以下三个线程来操作：（ MySQL复制是异步的且串行化的，而且重启后从接入点开始复制。）</strong><br>
+<img src="/img/db/mysql/2345397-20220311113738053-2083481787.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<ul>
+<li><strong>二进制日志转储线程（bin log dump thread）</strong>：是一个主库线程，当从库线程连接的时候，<strong>主库的二进制日志转储线程可以将二进制日志发送给从库</strong>，当主库读取事件（Event）的时候，会在binlog文件上加共享锁，读取完成之后，再将共享锁释放掉。</li>
+<li><strong>从库I/O线程</strong>：会连接到主库，向主库发送请求更新的binlog日志。这时<strong>从库的I/O线程就可以读取到主库的二进制日志转储线程发送的binlog更新部分，并且拷贝到本地的中继日志（relay log）</strong>。</li>
+<li><strong>从库SQL线程</strong>：<strong>会读取从库中的中继日志，并且执行日志中的事件</strong>，将从库中的数据与主库保持同步。</li>
+</ul>
+<blockquote>
+<p>主从复制最大的问题就是：延时</p>
+</blockquote>
+<h4 id="322主从复制的基本原则">3.2.2主从复制的基本原则
+</h4><ul>
+<li>每个Slave只有一个Master</li>
+<li>每个Slave只能有一个唯一的服务器ID</li>
+<li>每个Master可以有多个Slave</li>
+</ul>
+<h3 id="33主从同步的数据一致性的问题">3.3主从同步的数据一致性的问题
+</h3><h4 id="331主从同步的要求">3.3.1主从同步的要求
+</h4><ul>
+<li>读库和写库的数据一致(最终一致)；</li>
+<li>写数据必须写到写库；</li>
+<li>读数据必须到读库(当业务对数据实时性要求强时，需要读取写库中的数据)；</li>
+</ul>
+<h4 id="332主从延迟会导致主从同步时发生数据不一致的问题">3.3.2主从延迟会导致主从同步时发生数据不一致的问题
+</h4><p><strong>主从延迟</strong>：在网络正常情况下，主从延迟的主要来源是从库接收完binlog并执行完成bin log日志中的事件所消耗的时间。<br>
+<strong>主备延迟最直接的表现</strong>：从库执行中继日志（relay log）的速度，比主库生产binlog的速度要慢。<br>
+<strong>主从延迟的主要原因</strong>：</p>
+<ul>
+<li>从库的机器性能比主库要差</li>
+<li>从库的压力大</li>
+<li>大事务的执行</li>
+</ul>
+<h4 id="333如何减少主从延迟">3.3.3如何减少主从延迟
+</h4><p>若想要减少主从延迟的时间，可以采取下面的办法：</p>
+<ol>
+<li><strong>降低多线程大事务并发</strong>的概率，优化业务逻辑</li>
+<li>优化SQL，避免慢SQL，<strong>减少批量操作</strong>，建议写脚本以update-sleep这样的形式完成。</li>
+<li><strong>提高从库机器的配置</strong>，减少主库写binlog和从库读binlog的效率差。</li>
+<li>尽量采用<strong>短的链路</strong>，也就是主库和从库服务器的距离尽量要短，提升端口带宽，减少binlog传输的网络延时。</li>
+<li><strong>实时性要求的业务读强制走主库</strong>，从库只做灾备，备份。</li>
+</ol>
+<h4 id="334主从同步时如何解决数据不一致的问题">3.3.4主从同步时如何解决数据不一致的问题
+</h4><p>解决主从同步数据不一致的问题，就需要解决主从之间的数据复制方式的问题。</p>
+<ul>
+<li><strong>异步复制</strong><br>
+<strong>异步模式就是客户端提交COMMIT之后不需要等从库返回任何结果，而是直接将结果返回给客户端</strong>，这样做的好处是不会影响主库写的效率，但可能会存在主库宕机，而Binlog还没有同步到从库的情况，也就是此时的主库和从库数据不一致。这时候从从库中选择一个作为新主，那么新主则可能缺少原来主服务器中已提交的事务。所以，这种复制模式下的数据一致性是最弱的。<br>
+<img src="/img/db/mysql/2345397-20220311152915249-1045203600.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li><strong>半同步复制</strong><br>
+1、<strong>MySQL5.5版本之后开始支持半同步复制的方式。原理是在客户端提交COMMIT之后不直接将结果返回给客户端，而是等待至少有一个从库接收到了Binlog，并且写入到中继日志中，再返回给客户端</strong>。这样做的好处就是提高了数据的一致性，当然相比于异步复制来说，至少多增加了一个网络连接的延迟，降低了主库写的效率。<br>
+2、在MySQL5.7版本中还增加了一个rpl_semi_sync_master_wait_for_slave_count参数，可以对应答的从库数量进行设置，默认为1，也就是说只要有1个从库进行了响应，就可以返回给客户端。如果将这个参数调大，可以提升数据一致性的强度，但也会增加主库等待从库响应的时间。<br>
+<img src="/img/db/mysql/2345397-20220311153830320-1710214355.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li>组复制<br>
+半同步复制是通过判断从库响应的个数来决定是否返回给客户端，虽然数据一致性相比于异步复制有提升，但仍然无法满足对数据一致性要求高的场景，比如金融领域。MGR 很好地弥补了这两种复制模式的不足。<br>
+<code>1、在执行读写（RW）事务的时候，需要通过一致性协议层（Consensus 层）的同意，也就是读写事务想要进行提交，必须要经过组里“大多数人”（对应 Node 节点）的同意，大多数指的是同意的节点数量需要大于 （N/2+1），这样才可以进行提交</code><br>
+<code>2、在只读（RO）事务，则不需要经过组内同意，直接COMMIT即可。</code><br>
+<img src="/img/db/mysql/2345397-20220311154818168-1918190169.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<p>本文转自 <a class="link" href="https://www.cnblogs.com/worldusemycode/p/15991048.html"  target="_blank" rel="noopener"
+    >https://www.cnblogs.com/worldusemycode/p/15991048.html</a>，如有侵权，请联系删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/10mysql%E7%9A%84%E8%B0%83%E4%BC%98.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">10、mysql的调优.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/11%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">11、事务的基础概念.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/12mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">12、mysql的事务日志.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/13mysql%E9%94%81.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">13、mysql锁.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/14%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">14、多版本并发控制.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

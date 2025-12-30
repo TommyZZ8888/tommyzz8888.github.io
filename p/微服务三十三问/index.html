@@ -292,6 +292,14 @@
 
     <div class="tagCloud-tags">
         
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
             <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
                 中间件
             </a>
@@ -312,12 +320,8 @@
                 部署
             </a>
         
-            <a href="/categories/concurrency/" class="font_size_6">
-                Concurrency
-            </a>
-        
-            <a href="/categories/juc/" class="font_size_5">
-                Juc
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
             </a>
         
             <a href="/categories/nio/" class="font_size_5">
@@ -326,10 +330,6 @@
         
             <a href="/categories/java-base/" class="font_size_4">
                 Java Base
-            </a>
-        
-            <a href="/categories/jvm/" class="font_size_4">
-                Jvm
             </a>
         
     </div>
@@ -418,7 +418,7 @@
 </li>
 </ul>
 <p>需要注意的是，微服务是一种特定的架构风格，而SOA是一种设计原则。微服务可以看作是对SOA思想的一种具体实践方式，但并不等同于SOA。</p>
-<p><img src="https://img-blog.csdnimg.cn/c8a07c2312524e68b688a0e13d3e5f8c.png"
+<p><img src="/img/spring/c8a07c2312524e68b688a0e13d3e5f8c.png"
 	
 	
 	
@@ -431,7 +431,7 @@
 <p>微服务与单体服务的区别在于规模和部署方式。微服务将应用程序拆分为更小的、自治的服务单元，每个服务都有自己的数据库和代码库，可以独立开发、测试、部署和扩展，带来了更大的灵活性、可维护性、可扩展性和容错性。</p>
 <h2 id="2微服务带来了哪些挑战">2.微服务带来了哪些挑战？
 </h2><p>微服务架构不是万金油，尽它有很多优点，但是对于是否采用微服务架构，是否将原来的单体服务进行拆分，还是要考虑到服务拆分后可能带来的一些挑战和问题：</p>
-<p><img src="https://img-blog.csdnimg.cn/4a10c50592cf46eb93e2270d176ab8b3.png"
+<p><img src="/img/spring/4a10c50592cf46eb93e2270d176ab8b3.png"
 	
 	
 	
@@ -456,7 +456,7 @@
 <ol>
 <li>
 <p>Dubbo：</p>
-<p><img src="https://img-blog.csdnimg.cn/40614333190647e5881885c4605aef28.png"
+<p><img src="/img/spring/40614333190647e5881885c4605aef28.png"
 	
 	
 	
@@ -591,7 +591,7 @@
 </blockquote>
 <h2 id="4说下微服务有哪些组件">4.说下微服务有哪些组件？
 </h2><p>微服务给系统开发带来了一些问题和挑战，如服务调用的复杂性、分布式事务的处理、服务的动态管理等。为了更好地解决这些问题和挑战，各种微服务治理的组件应运而生，充当微服务架构的基石和支撑。</p>
-<p><img src="https://img-blog.csdnimg.cn/8c9811bc67cb4becb1ccaf2438dd5a4f.png"
+<p><img src="/img/spring/8c9811bc67cb4becb1ccaf2438dd5a4f.png"
 	
 	
 	
@@ -654,7 +654,7 @@
 <h1 id="注册中心">注册中心
 </h1><h2 id="5注册中心是用来干什么的">5.注册中心是用来干什么的？
 </h2><p>注册中心是用来管理和维护分布式系统中各个服务的地址和元数据的组件。它主要用于实现<code>服务发现</code>和<code>服务注册</code>功能。</p>
-<p><img src="https://img-blog.csdnimg.cn/fc4c654efa1a48029bc063b9726b01fc.png"
+<p><img src="/img/spring/fc4c654efa1a48029bc063b9726b01fc.png"
 	
 	
 	
@@ -750,7 +750,7 @@
 </table></div>
 <p>可以看到Eureka和ZooKeeper的最大区别是一个支持<code>AP</code>，一个支持<code>CP</code>，Nacos既支持既支持<code>AP</code>，也支持<code>CP</code>。</p>
 <h2 id="8eureka实现原理了解吗">8.Eureka实现原理了解吗？
-</h2><p><img src="https://img-blog.csdnimg.cn/abb9f21b3c74459c891be59287a3962c.png"
+</h2><p><img src="/img/spring/abb9f21b3c74459c891be59287a3962c.png"
 	
 	
 	
@@ -771,7 +771,7 @@
 </blockquote>
 <h2 id="9eureka-server怎么保证高可用">9.Eureka Server怎么保证高可用？
 </h2><p>Eureka Server保证高可用，主要通过这三个方面来实现：</p>
-<p><img src="https://img-blog.csdnimg.cn/25e291d7eb1b4a408fd092d9b39faf54.png"
+<p><img src="/img/spring/25e291d7eb1b4a408fd092d9b39faf54.png"
 	
 	
 	
@@ -802,7 +802,7 @@
 </ol>
 <h2 id="12nacos配置中心的原理了解吗">12.Nacos配置中心的原理了解吗？
 </h2><p>配置中心，说白了就是一句话：配置信息的CRUD。</p>
-<p><img src="https://img-blog.csdnimg.cn/1bfe99c7840c407fa45aa2fde08aedf1.png"
+<p><img src="/img/spring/1bfe99c7840c407fa45aa2fde08aedf1.png"
 	
 	
 	
@@ -823,7 +823,7 @@
 </h2><p>一般来说客户端和服务端的交互分为两种：<code>推（Push）</code>和<code>拉（Pull）</code>，Nacos在<code>Pull</code>的基础上，采用了长轮询来进行配置的动态刷新。</p>
 <p>在长轮询模式下，客户端定时向服务端发起请求，检查配置信息是否发生变更。如果没有变更，服务端会&quot;hold&quot;住这个请求，即暂时不返回结果，直到配置发生变化或达到一定的超时时间。</p>
 <p>具体的实现过程如下：</p>
-<p><img src="https://img-blog.csdnimg.cn/1c27547b1f234a56a03ff21ffbda72ca.png"
+<p><img src="/img/spring/1c27547b1f234a56a03ff21ffbda72ca.png"
 	
 	
 	
@@ -843,7 +843,7 @@
 <h1 id="远程调用">远程调用
 </h1><h2 id="14能说下http和rpc的区别吗">14.能说下HTTP和RPC的区别吗？
 </h2><p>严格来讲，HTTP和不是一个层面的东西：</p>
-<p><img src="https://img-blog.csdnimg.cn/bbe87e7dde074944b8008bfe459c4744.png"
+<p><img src="/img/spring/bbe87e7dde074944b8008bfe459c4744.png"
 	
 	
 	
@@ -958,7 +958,7 @@
 <h2 id="16说一下fegin">16.说一下Fegin?
 </h2><p>Feign是一个声明式的Web服务客户端，它简化了使用基于HTTP的远程服务的开发。</p>
 <p>Feign是在RestTemplate 和 Ribbon的基础上进一步封装，使用RestTemplate实现Http调用，使用Ribbon实现负载均衡。</p>
-<p><img src="https://gitee.com/sanfene/picgo2/raw/master/20210525233129.png"
+<p><img src="/img/spring/20210525233129.png"
 	
 	
 	
@@ -1066,7 +1066,7 @@
 </h2><p>在Feign中，负载均衡是通过集成Ribbon来实现的。</p>
 <p>Ribbon是Netflix开源的一个客户端负载均衡器，可以与Feign无缝集成，为Feign提供负载均衡的能力。</p>
 <p>Ribbon通过从服务注册中心获取可用服务列表，并通过负载均衡算法选择合适的服务实例进行请求转发，实现客户端的负载均衡。</p>
-<p><img src="https://img-blog.csdnimg.cn/80820666dbff4e26a784d29e7ae62701.png"
+<p><img src="/img/spring/80820666dbff4e26a784d29e7ae62701.png"
 	
 	
 	
@@ -1078,7 +1078,7 @@
 ></p>
 <h2 id="20说说有哪些负载均衡算法">20.说说有哪些负载均衡算法？
 </h2><p>常见的负载均衡算法包含以下几种：</p>
-<p><img src="https://img-blog.csdnimg.cn/a55671bcf0f345a99d70ac09edb9a140.png"
+<p><img src="/img/spring/a55671bcf0f345a99d70ac09edb9a140.png"
 	
 	
 	
@@ -1103,7 +1103,7 @@
 <h1 id="服务容灾">服务容灾
 </h1><h2 id="21什么是服务雪崩">21.什么是服务雪崩？
 </h2><p>在微服务中，假如一个或者多个服务出现故障，如果这时候，依赖的服务还在不断发起请求，或者重试，那么这些请求的压力会不断在下游堆积，导致下游服务的负载急剧增加。不断累计之下，可能会导致故障的进一步加剧，可能会导致级联式的失败，甚至导致整个系统崩溃，这就叫服务雪崩。</p>
-<p><img src="https://img-blog.csdnimg.cn/a371abba3f7f4742ab15eb3fe8ce59a2.png"
+<p><img src="/img/spring/a371abba3f7f4742ab15eb3fe8ce59a2.png"
 	
 	
 	
@@ -1208,7 +1208,7 @@
 </table></div>
 <h2 id="23hystrix怎么实现服务容错">23.Hystrix怎么实现服务容错？
 </h2><p>尽管已经不再更新，但是Hystrix是非常经典的服务容错开源库，它提供了多种机制来保护系统：</p>
-<p><img src="https://img-blog.csdnimg.cn/244c65a71a35423da987977b4ebd223c.png"
+<p><img src="/img/spring/244c65a71a35423da987977b4ebd223c.png"
 	
 	
 	
@@ -1347,7 +1347,7 @@
 </div><ol start="3">
 <li>监控流量：Sentinel会监控每个资源的流量情况，包括请求的QPS（每秒请求数）、线程数、响应时间等。</li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/364bbbd4ccc14cc0b9772acbbb8101f0.png"
+<p><img src="/img/spring/364bbbd4ccc14cc0b9772acbbb8101f0.png"
 	
 	
 	
@@ -1360,7 +1360,7 @@
 <ol start="4">
 <li>限流控制：当请求到达时，Sentinel会根据资源的限流规则判断是否需要进行限流控制。如果请求超过了限流阈值，则可以进行限制、拒绝或进行其他降级处理。</li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/3b8231bf9a924a558d621a6518984af3.png"
+<p><img src="/img/spring/3b8231bf9a924a558d621a6518984af3.png"
 	
 	
 	
@@ -1379,7 +1379,7 @@
 <h3 id="sentinel怎么实现集群限流">Sentinel怎么实现集群限流？
 </h3><p>Sentinel利用了Token Server和Token Client的机制来实现集群限流。</p>
 <p>开启集群限流后，Client向Token Server发送请求，Token Server根据配置的规则决定是否限流。T</p>
-<p><img src="https://img-blog.csdnimg.cn/956f306eef1240bfabd664a5fc541974.png"
+<p><img src="/img/spring/956f306eef1240bfabd664a5fc541974.png"
 	
 	
 	
@@ -1392,7 +1392,7 @@
 <h1 id="服务网关">服务网关
 </h1><h2 id="25什么是api网关">25.什么是API网关？
 </h2><p>API网关（API Gateway）是一种中间层服务器，用于集中管理、保护和路由对后端服务的访问。它充当了客户端与后端服务之间的入口点，提供了一组统一的接口来管理和控制API的访问。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20210610201607.png"
+<p><img src="/img/spring/20210610201607.png"
 	
 	
 	
@@ -1424,7 +1424,7 @@
 </ol>
 <p>……</p>
 <h2 id="27spring-cloud-gateway核心概念">27.Spring Cloud Gateway核心概念？
-</h2><p><img src="https://img-blog.csdnimg.cn/4cf66dcdaffb46f6864745775d34b460.png"
+</h2><p><img src="/img/spring/4cf66dcdaffb46f6864745775d34b460.png"
 	
 	
 	
@@ -1441,7 +1441,7 @@
 <li><strong>Filter（过滤器）</strong>：过滤器用于对请求进行处理和转换，可以修改请求、响应以及执行其他自定义逻辑。Spring Cloud Gateway提供了多个内置的过滤器，如请求转发、请求重试、请求限流等。同时也支持自定义过滤器，可以根据需求编写自己的过滤器逻辑。</li>
 </ul>
 <p>我们再来看下Spring Cloud Gateway的具体工作流程：</p>
-<p><img src="https://img-blog.csdnimg.cn/3be97bafc3d14c11b244d4f2045e1727.png"
+<p><img src="/img/spring/3be97bafc3d14c11b244d4f2045e1727.png"
 	
 	
 	
@@ -1459,7 +1459,7 @@
 <h1 id="链路追踪">链路追踪
 </h1><h2 id="28为什么要用微服务链路追踪">28.为什么要用微服务链路追踪？
 </h2><p>在微服务中，有的山下游可能有十几个服务，如果某一环出了问题，排查起来非常困难，所以，就需要进行链路追踪，来帮助排查问题。</p>
-<p><img src="https://img-blog.csdnimg.cn/c2336eb2e9ca4aa8bb4e54a3eab9bf88.png"
+<p><img src="/img/spring/c2336eb2e9ca4aa8bb4e54a3eab9bf88.png"
 	
 	
 	
@@ -1475,7 +1475,7 @@
 <ol>
 <li>Zipkin：Zipkin 是一个开源的分布式实时追踪系统，由 Twitter 开发并贡献给开源社区。Spring Cloud Sleuth 提供了与 Zipkin 的集成，可以通过在微服务中添加相应的依赖和配置，将追踪信息发送到 Zipkin 服务器，并通过 Zipkin UI 进行可视化展示和查询。</li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/3a84a346fc804e37967a5d120ca65711.png"
+<p><img src="/img/spring/3a84a346fc804e37967a5d120ca65711.png"
 	
 	
 	
@@ -1493,7 +1493,7 @@
 <p>SkyWalking：Apache SkyWalking 是一款开源的应用性能监控与分析系统，提供了对 Java、.NET 和 Node.js 等语言的支持。它可以与 Spring Cloud Sleuth 集成，将追踪数据发送到 SkyWalking 服务器进行可视化展示和分析。</p>
 </li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/8a11b8e3528b44e29496051675e32495.png"
+<p><img src="/img/spring/8a11b8e3528b44e29496051675e32495.png"
 	
 	
 	
@@ -1506,7 +1506,7 @@
 <ol start="4">
 <li>Pinpoint：Pinpoint 是 Naver 开源的分布式应用性能监控系统，支持 Java 和 .NET。它提供了与 Spring Cloud Sleuth 的集成，可以将追踪数据发送到 Pinpoint 服务器，并通过其 UI 进行分析和监控。</li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/b34372eb01384704bb09f1711fa2afcb.png"
+<p><img src="/img/spring/b34372eb01384704bb09f1711fa2afcb.png"
 	
 	
 	
@@ -1524,7 +1524,7 @@
 <ol>
 <li>AT（Atomikos）模式：AT模式是Seata默认支持的模式，也是最常用的模式之一。在AT模式下，Seata通过在业务代码中嵌入事务上下文，实现对分布式事务的管理。Seata会拦截并解析业务代码中的SQL语句，通过对数据库连接进行拦截和代理，实现事务的管理和协调。</li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/33cc1b676a4e4d1b99cfcbab58dbfe3b.png"
+<p><img src="/img/spring/33cc1b676a4e4d1b99cfcbab58dbfe3b.png"
 	
 	
 	
@@ -1537,7 +1537,7 @@
 <ol start="2">
 <li>TCC（Try-Confirm-Cancel）模式：TCC模式是一种基于补偿机制的分布式事务模式。在TCC模式中，业务逻辑需要实现Try、Confirm和Cancel三个阶段的操作。Seata通过调用业务代码中的Try、Confirm和Cancel方法，并在每个阶段记录相关的操作日志，来实现分布式事务的一致性。</li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/1fe4edb45dd745a293fbbb4730d7358e.png"
+<p><img src="/img/spring/1fe4edb45dd745a293fbbb4730d7358e.png"
 	
 	
 	
@@ -1550,7 +1550,7 @@
 <ol start="3">
 <li>SAGA模式：SAGA模式是一种基于事件驱动的分布式事务模式。在SAGA模式中，每个服务都可以发布和订阅事件，通过事件的传递和处理来实现分布式事务的一致性。Seata提供了与SAGA模式兼容的Saga框架，用于管理和协调分布式事务的各个阶段。</li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/4271c3e1356a4db3945cb820abc8fe8e.png"
+<p><img src="/img/spring/4271c3e1356a4db3945cb820abc8fe8e.png"
 	
 	
 	
@@ -1563,7 +1563,7 @@
 <ol start="4">
 <li>XA模式：XA模式是一种基于两阶段提交（Two-Phase Commit）协议的分布式事务模式。在XA模式中，Seata通过与数据库的XA事务协议进行交互，实现对分布式事务的管理和协调。XA模式需要数据库本身支持XA事务，并且需要在应用程序中配置相应的XA数据源。</li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/8e980b9fa12f46678abb474c44320fe2.png"
+<p><img src="/img/spring/8e980b9fa12f46678abb474c44320fe2.png"
 	
 	
 	
@@ -1580,7 +1580,7 @@
 <li><strong>事务管理器（Transaction Manager）</strong>：事务管理器负责全局事务的管理和控制。它协调各个分支事务的提交或回滚，并保证分布式事务的一致性和隔离性。事务管理器还负责与事务协调器进行通信，并将事务的状态变更进行持久化。</li>
 <li><strong>资源管理器（Resource Manager）</strong>：资源管理器负责管理和控制各个参与者（Participant）的事务操作。它与事务管理器进行通信，并根据事务管理器的指令执行相应的事务操作，包括提交和回滚。</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/401ecd77ad7241b9a0f77181f556251e.png"
+<p><img src="/img/spring/401ecd77ad7241b9a0f77181f556251e.png"
 	
 	
 	
@@ -1615,7 +1615,7 @@
 <h3 id="全局事务id和分支事务id是怎么传递的">全局事务ID和分支事务ID是怎么传递的？
 </h3><p>全局事务ID和分支事务ID在分布式事务中通过上下文传递的方式进行传递。常见的传递方式包括参数传递、线程上下文传递和消息中间件传递。具体的传递方式可以根据业务场景和技术选型进行选择和调整。</p>
 <h3 id="seata的事务回滚是怎么实现的">Seata的事务回滚是怎么实现的？
-</h3><p><img src="https://img-blog.csdnimg.cn/c6833f56b9e6441c9135f10195b18a7e.png"
+</h3><p><img src="/img/spring/c6833f56b9e6441c9135f10195b18a7e.png"
 	
 	
 	
@@ -1639,7 +1639,7 @@
 <p>Grafana：Grafana 是一个开源的可视化仪表板工具，可以与 Prometheus 结合使用，创建实时和历史数据的仪表板。Grafana 提供了丰富的图表和可视化选项，可以帮助用户更好地理解和分析微服务的性能和状态。</p>
 </li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/d884c966b6024e779ce35546969c6107.png"
+<p><img src="/img/spring/d884c966b6024e779ce35546969c6107.png"
 	
 	
 	
@@ -1658,7 +1658,7 @@
 </ul>
 <p>简单说，这三者里<strong>Elasticsearch</strong>提供数据存储和检索能力，<strong>Logstash</strong>负责将日志收集到ES，<strong>Kibana</strong>负责日志数据的可视化分析。</p>
 <p>使用ELK进行微服务日志收集的一般流程如下：</p>
-<p><img src="https://img-blog.csdnimg.cn/db2326edcd0e46b6a2c9c6509ab50c12.png"
+<p><img src="/img/spring/db2326edcd0e46b6a2c9c6509ab50c12.png"
 	
 	
 	
@@ -1726,7 +1726,7 @@
 </ul>
 <hr>
 <p>面渣逆袭系列已经结集成册，持续更新维护中，关注公众号「<strong>三分恶</strong>」，回复「<strong>666</strong>」即可无套路获取！</p>
-<p><img src="https://img-blog.csdnimg.cn/a8235e93b78c450c8b0e2e922aeffe75.png"
+<p><img src="/img/spring/a8235e93b78c450c8b0e2e922aeffe75.png"
 	
 	
 	

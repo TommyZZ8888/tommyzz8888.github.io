@@ -269,6 +269,14 @@
 
     <div class="tagCloud-tags">
         
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
             <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
                 中间件
             </a>
@@ -289,12 +297,8 @@
                 部署
             </a>
         
-            <a href="/categories/concurrency/" class="font_size_6">
-                Concurrency
-            </a>
-        
-            <a href="/categories/juc/" class="font_size_5">
-                Juc
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
             </a>
         
             <a href="/categories/nio/" class="font_size_5">
@@ -303,10 +307,6 @@
         
             <a href="/categories/java-base/" class="font_size_4">
                 Java Base
-            </a>
-        
-            <a href="/categories/jvm/" class="font_size_4">
-                Jvm
             </a>
         
     </div>
@@ -324,6 +324,14 @@
     
 
 <div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/juc/" >
+            Juc
+        </a>
+        
+    </header>
     
 
     <div class="article-title-wrapper">
@@ -377,7 +385,7 @@
 <h2 id="java7-hashmap">Java7 HashMap
 </h2><p>HashMap 是最简单的，一来我们非常熟悉，二来就是它不支持并发操作，所以源码也非常简单。</p>
 <p>首先，我们用下面这张图来介绍 HashMap 的结构。</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c1.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/1.png"
 	
 	
 	
@@ -668,7 +676,7 @@
 </h2><p>ConcurrentHashMap 和 HashMap 思路是差不多的，但是因为它支持并发操作，所以要复杂一些。</p>
 <p>整个 ConcurrentHashMap 由一个个 Segment 组成，Segment 代表”部分“或”一段“的意思，所以很多地方都会将其描述为<strong>分段锁</strong>。注意，行文中，我很多地方用了“<strong>槽</strong>”来代表一个 segment。</p>
 <p>简单理解就是，ConcurrentHashMap 是一个 Segment 数组，Segment 通过继承 ReentrantLock 来进行加锁，所以每次需要加锁的操作锁住的是一个 segment，这样只要保证每个 Segment 是线程安全的，也就实现了全局的线程安全。</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c3.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/3.png"
 	
 	
 	
@@ -1329,7 +1337,7 @@
 <p>根据 Java7 HashMap 的介绍，我们知道，查找的时候，根据 hash 值我们能够快速定位到数组的具体下标，但是之后的话，需要顺着链表一个个比较下去才能找到我们需要的，时间复杂度取决于链表的长度，为 <strong>O(n)</strong>。</p>
 <p>为了降低这部分的开销，在 Java8 中，当链表中的元素达到了 8 个时，会将链表转换为红黑树，在这些位置进行查找的时候可以降低时间复杂度为 <strong>O(logN)</strong>。</p>
 <p>来一张图简单示意一下吧：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c2.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/2.png"
 	
 	
 	
@@ -1737,7 +1745,7 @@
 </h2><p>Java7 中实现的 ConcurrentHashMap 说实话还是比较复杂的，Java8 对 ConcurrentHashMap 进行了比较大的改动。建议读者可以参考 Java8 中 HashMap 相对于 Java7 HashMap 的改动，对于 ConcurrentHashMap，Java8 也引入了红黑树。</p>
 <p><strong>说实话，Java8 ConcurrentHashMap 源码真心不简单，最难的在于扩容，数据迁移操作不容易看懂。</strong></p>
 <p>我们先用一个示意图来描述下其结构：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c4.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/4.png"
 	
 	
 	
@@ -2773,6 +2781,80 @@
     
 
     
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/concurrent/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CONCURRENT</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/java%E5%B9%B6%E5%8F%91%E5%85%AD%E5%8D%81%E9%97%AE/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Java并发六十问</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/juc/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">juc</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/juc%E5%85%A5%E9%97%A8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">juc入门</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/threadpool/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">threadpool</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
 
      
     

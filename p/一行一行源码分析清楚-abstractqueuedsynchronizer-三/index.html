@@ -223,6 +223,14 @@
 
     <div class="tagCloud-tags">
         
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
             <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
                 中间件
             </a>
@@ -243,12 +251,8 @@
                 部署
             </a>
         
-            <a href="/categories/concurrency/" class="font_size_6">
-                Concurrency
-            </a>
-        
-            <a href="/categories/juc/" class="font_size_5">
-                Juc
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
             </a>
         
             <a href="/categories/nio/" class="font_size_5">
@@ -257,10 +261,6 @@
         
             <a href="/categories/java-base/" class="font_size_4">
                 Java Base
-            </a>
-        
-            <a href="/categories/jvm/" class="font_size_4">
-                Jvm
             </a>
         
     </div>
@@ -281,8 +281,8 @@
     
     <header class="article-category">
         
-        <a href="/categories/concurrency/" >
-            Concurrency
+        <a href="/categories/juc/" >
+            Juc
         </a>
         
     </header>
@@ -506,7 +506,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>这个例子中，doneSignal 同第一个例子的使用，我们说说这里的 startSignal。N 个新开启的线程都调用了startSignal.await() 进行阻塞等待，它们阻塞在<strong>栅栏</strong>上，只有当条件满足的时候（startSignal.countDown()），它们才能同时通过这个栅栏，目的是让所有的线程站在一个起跑线上。</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c5.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/5.png"
 	
 	
 	
@@ -813,7 +813,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>我们来仔细分析这个方法，线程 t3 经过第 1 步 addWaiter 入队以后，我们应该可以得到这个：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c2-fz.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/2-fz.png"
 	
 	
 	
@@ -824,7 +824,7 @@
 	
 ></p>
 <p>由于 tryAcquireShared 这个方法会返回 -1，所以 if (r &gt;= 0) 这个分支不会进去。到 shouldParkAfterFailedAcquire 的时候，t3 将 head 的 waitStatus 值设置为 -1，如下：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c3-fz.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/3-fz.png"
 	
 	
 	
@@ -836,7 +836,7 @@
 ></p>
 <p>然后进入到 parkAndCheckInterrupt 的时候，t3 挂起。</p>
 <p>我们再分析 t4 入队，t4 会将前驱节点 t3 所在节点的 waitStatus 设置为 -1，t4 入队后，应该是这样的：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c4-fz.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/4-fz.png"
 	
 	
 	
@@ -848,7 +848,7 @@
 ></p>
 <p>然后，t4 也挂起。接下来，t3 和 t4 就等待唤醒了。</p>
 <p>接下来，我们来看唤醒的流程。为了让下面的示意图更丰富些，我们假设用 10 初始化 CountDownLatch。</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c1-fz.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/1-fz.png"
 	
 	
 	
@@ -1144,7 +1144,7 @@
 <p>for 循环第一轮的时候会唤醒 t4，t4 醒后会将自己设置为头节点，如果在 t4 设置头节点后，for 循环才跑到 if (h == head)，那么此时会返回 false，for 循环会进入下一轮。t4 唤醒后也会进入到这个方法里面，那么 for 循环第二轮和 t4 就有可能在这个 CAS 相遇，那么就只会有一个成功了。</p>
 <h2 id="cyclicbarrier">CyclicBarrier
 </h2><p>字面意思是“可重复使用的栅栏”或“周期性的栅栏”，总之不是用了一次就没用了的，CyclicBarrier 相比 CountDownLatch 来说，要简单很多，其源码没有什么高深的地方，它是 ReentrantLock 和 Condition 的组合使用。看如下示意图，CyclicBarrier 和 CountDownLatch 是不是很像，只是 CyclicBarrier 可以有不止一个栅栏，因为它的栅栏（Barrier）可以重复使用（Cyclic）。</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5ccyclicbarrier-2.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/cyclicbarrier-2.png"
 	
 	
 	
@@ -1157,7 +1157,7 @@
 <p>首先，CyclicBarrier 的源码实现和 CountDownLatch 大相径庭，CountDownLatch 基于 AQS 的共享模式的使用，而 CyclicBarrier 基于 Condition 来实现。</p>
 <p>因为 CyclicBarrier 的源码相对来说简单许多，读者只要熟悉了前面关于 Condition 的分析，那么这里的源码是毫无压力的，就是几个特殊概念罢了。</p>
 <p>先用一张图来描绘下 CyclicBarrier 里面的一些概念，和它的基本使用流程：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5ccyclicbarrier-3.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/cyclicbarrier-3.png"
 	
 	
 	
@@ -1989,12 +1989,12 @@
             
                 
 <article class="">
-    <a href="/p/%E4%B8%80%E8%A1%8C%E4%B8%80%E8%A1%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E6%B8%85%E6%A5%9Aabstractqueuedsynchronizer/">
+    <a href="/p/concurrent/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">一行一行源码分析清楚AbstractQueuedSynchronizer</h2>
+            <h2 class="article-title">CONCURRENT</h2>
         </div>
     </a>
 </article>
@@ -2002,12 +2002,12 @@
             
                 
 <article class="">
-    <a href="/p/%E4%B8%80%E8%A1%8C%E4%B8%80%E8%A1%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E6%B8%85%E6%A5%9A-abstractqueuedsynchronizer-%E4%BA%8C/">
+    <a href="/p/java%E5%B9%B6%E5%8F%91%E5%85%AD%E5%8D%81%E9%97%AE/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">一行一行源码分析清楚 AbstractQueuedSynchronizer (二)</h2>
+            <h2 class="article-title">Java并发六十问</h2>
         </div>
     </a>
 </article>
@@ -2015,12 +2015,12 @@
             
                 
 <article class="">
-    <a href="/p/%E8%A7%A3%E8%AF%BB-java-%E5%B9%B6%E5%8F%91%E9%98%9F%E5%88%97-blockingqueue/">
+    <a href="/p/juc/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">解读 java 并发队列 BlockingQueue</h2>
+            <h2 class="article-title">juc</h2>
         </div>
     </a>
 </article>
@@ -2028,12 +2028,12 @@
             
                 
 <article class="">
-    <a href="/p/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90-java-8-%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E8%A7%84%E8%8C%83threads-and-locks/">
+    <a href="/p/juc%E5%85%A5%E9%97%A8/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">深入分析 java 8 编程语言规范：Threads and Locks</h2>
+            <h2 class="article-title">juc入门</h2>
         </div>
     </a>
 </article>
@@ -2041,12 +2041,12 @@
             
                 
 <article class="">
-    <a href="/p/%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BB-java-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3%E5%8F%8A%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0/">
+    <a href="/p/threadpool/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">深度解读 java 线程池设计思想及源码实现</h2>
+            <h2 class="article-title">threadpool</h2>
         </div>
     </a>
 </article>

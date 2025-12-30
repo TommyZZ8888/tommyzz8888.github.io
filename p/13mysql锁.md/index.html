@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="mysql锁 事务的隔离性是通过锁来实现的。为保证数据的一致性，需要锁对并发事务操作进行控制。同时锁机制也为实现MySQL的各个隔离级别提供了保证。\nmysql并发事务访问相同的记录会出现什么问题（在没有锁的情况下） 1.1读-读情况 读-读情况：即并发事务相继读取相同的记录。读取操作本身不会对记录有任何影响，并不会引起什么问题，所以允许这种情况的发生。\n">
+<title>13、mysql锁.md</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/13mysql%E9%94%81.md/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="13、mysql锁.md">
+<meta property='og:description' content="mysql锁 事务的隔离性是通过锁来实现的。为保证数据的一致性，需要锁对并发事务操作进行控制。同时锁机制也为实现MySQL的各个隔离级别提供了保证。\nmysql并发事务访问相同的记录会出现什么问题（在没有锁的情况下） 1.1读-读情况 读-读情况：即并发事务相继读取相同的记录。读取操作本身不会对记录有任何影响，并不会引起什么问题，所以允许这种情况的发生。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/13mysql%E9%94%81.md/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="13、mysql锁.md">
+<meta name="twitter:description" content="mysql锁 事务的隔离性是通过锁来实现的。为保证数据的一致性，需要锁对并发事务操作进行控制。同时锁机制也为实现MySQL的各个隔离级别提供了保证。\nmysql并发事务访问相同的记录会出现什么问题（在没有锁的情况下） 1.1读-读情况 读-读情况：即并发事务相继读取相同的记录。读取操作本身不会对记录有任何影响，并不会引起什么问题，所以允许这种情况的发生。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#mysql并发事务访问相同的记录会出现什么问题在没有锁的情况下">mysql并发事务访问相同的记录会出现什么问题（在没有锁的情况下）</a>
+      <ol>
+        <li><a href="#11读-读情况">1.1读-读情况</a></li>
+        <li><a href="#12写-写情况">1.2写-写情况</a></li>
+        <li><a href="#13读-写或写-读情况">1.3读-写或写-读情况</a></li>
+        <li><a href="#14针对以上并发问题的解决方案">1.4针对以上并发问题的解决方案</a>
+          <ol>
+            <li><a href="#解决脏写脏读不可重复读幻读有两种方案">解决脏写、脏读、不可重复读、幻读，有两种方案：</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#锁的不同分类">锁的不同分类</a>
+      <ol>
+        <li><a href="#21从数据操作的类型划分读锁写锁">2.1从数据操作的类型划分：读锁、写锁</a>
+          <ol>
+            <li><a href="#211锁定读">2.1.1锁定读</a></li>
+            <li><a href="#212写操作">2.1.2写操作</a></li>
+          </ol>
+        </li>
+        <li><a href="#22从数据操作的粒度划分表级锁页级锁行级锁">2.2从数据操作的粒度划分：表级锁、页级锁、行级锁</a>
+          <ol>
+            <li><a href="#221表级锁">2.2.1表级锁</a></li>
+            <li><a href="#222行级锁">2.2.2行级锁</a></li>
+            <li><a href="#223页锁">2.2.3页锁</a></li>
+          </ol>
+        </li>
+        <li><a href="#23从对待锁的态度划分乐观锁悲观锁">2.3从对待锁的态度划分:乐观锁、悲观锁</a>
+          <ol>
+            <li><a href="#231悲观锁pessimistic-locking">2.3.1悲观锁（Pessimistic Locking）</a></li>
+            <li><a href="#232乐观锁optimistic-locking">2.3.2乐观锁（Optimistic Locking）</a></li>
+            <li><a href="#234悲观锁和乐观锁的适用场景">2.3.4悲观锁和乐观锁的适用场景</a></li>
+          </ol>
+        </li>
+        <li><a href="#24按加锁的方式划分显式锁隐式锁">2.4按加锁的方式划分：显式锁、隐式锁</a>
+          <ol>
+            <li><a href="#241显示锁">2.4.1显示锁</a></li>
+            <li><a href="#242隐式锁">2.4.2隐式锁</a></li>
+          </ol>
+        </li>
+        <li><a href="#25其他锁">2.5其他锁</a>
+          <ol>
+            <li><a href="#251全局锁">2.5.1全局锁</a></li>
+            <li><a href="#252死锁">2.5.2死锁</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#锁的内存结构">锁的内存结构</a></li>
+    <li><a href="#锁监控">锁监控</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/db/" >
+            DB
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/13mysql%E9%94%81.md/">13、mysql锁.md</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 15 分钟
+                
+                
+                , 7351 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="mysql锁">mysql锁
+</h1><p><strong>事务的隔离性是通过锁来实现的。为保证数据的一致性，需要锁对并发事务操作进行控制。同时锁机制也为实现MySQL的各个隔离级别提供了保证。</strong></p>
+<h2 id="mysql并发事务访问相同的记录会出现什么问题在没有锁的情况下">mysql并发事务访问相同的记录会出现什么问题（在没有锁的情况下）
+</h2><h3 id="11读-读情况">1.1读-读情况
+</h3><p><strong>读-读情况</strong>：即并发事务相继读取相同的记录。读取操作本身不会对记录有任何影响，并不会引起什么问题，所以允许这种情况的发生。</p>
+<h3 id="12写-写情况">1.2写-写情况
+</h3><p><strong>写-写情况</strong>：即并发事务相继对相同的记录做出改动。在这种情况下会出现<strong>脏写的问题</strong>。任何一种隔离级别都不允许脏写这种问题的发生，所以在多个未提交事务相继对一条记录做改动时，需要让它们排队执行，这个排队的过程其实是通过锁来实现的。</p>
+<h3 id="13读-写或写-读情况">1.3读-写或写-读情况
+</h3><p><strong>写-读情况</strong>：当一个事务执行修改操作，另一个事务执行读取操作。这种情况下会出现<strong>脏读的问题</strong>。<br>
+<strong>读-写情况</strong>：当一个事务执行读取操作，另一个事务执行修改操作。这种情况下会出现<strong>不可重复读和幻读的问题</strong>。</p>
+<h3 id="14针对以上并发问题的解决方案">1.4针对以上并发问题的解决方案
+</h3><h4 id="解决脏写脏读不可重复读幻读有两种方案">解决脏写、脏读、不可重复读、幻读，有两种方案：
+</h4><p><strong>方案一：读操作利用MVCC多版本并发控制（快照读），写操作进行加排它锁（当前读）。</strong></p>
+<ul>
+<li>所谓的MVCC，就是生成一个ReadView，通过ReadView找到符合条件的记录版本（历史版本由undo日志构建)。查询语句只能读到在生成Readview之前已提交事务所做的更改，在生成ReadView之前未提交的事务或者之后才开启的事务所做的更改是看不到的。而写操作肯定针对的是最新版本的记录，读记录的历史版本和改动记录的最新版本本身并不冲突，也就是采用MVCC时，读-写操作并不冲突。</li>
+</ul>
+<blockquote>
+<p><strong>普通的SELECT语句在READ COMMITTED和REPEATABLE READ隔离级别下会使用到MVCC读取记录。</strong><br>
+<code>在 READ COMMITTED 隔离级别下，一个事务在执行过程中每次执行SELECT操作时都会生成一个ReadView,ReadView的存在本身就保证了事务不可以读取到未提交的事务所做的更改,也就是避免了脏读现象；</code><br>
+<code>在 REPEATABLE READ 隔离级别下，一个事务在执行过程中只有第一次执行SELECT操作才会生成一个ReadView，之后的SELECT操作都复用这个ReadView，这样也就避免了不可重复读和幻读的问题。</code></p>
+</blockquote>
+<p><strong>方案二：读操作和写操作都使用加锁的方式</strong><br>
+<strong>如果我们一些业务场景不允许读取记录的旧版本，而需要每次都必须去读取记录的最新版本，这时读操作就需要采取加锁的方式解决。</strong></p>
+<ul>
+<li><strong>脏读的产生</strong>是因为当前事务读取了另一个未提交事务写的一条记录<br>
+<code>如果另一个事务在写记录的时候就给这条记录加排它记录锁，那么当前事务就无法继续读取该记录了，所以也就不会有脏读问题的产生了。</code></li>
+<li><strong>不可重复读的产生</strong>是因为当前事务先读取一条记录，另外一个事务对该记录做了改动之后并提交之后，当前事务再次读取时会获得不同的值，<br>
+<code>如果在当前事务读取记录时就给该记录加排它记录锁，那么另一个事务就无法修改该记录，自然也不会发生不可重复读了。</code></li>
+<li><strong>幻读问题的产生</strong>是因为当前事务读取了一个范围的记录，然后另外的事务向该范围内插入了新记录，当前事务再次读取该范围的记录时发现了新插入的新记录。<br>
+<code>如果在当前事务读取记录时就给该范围的记录加上排它间隙锁，那么另一个事务就无法插入新的记录，自然也不会发生幻读了</code></li>
+</ul>
+<p><strong>两种方案的对比：</strong></p>
+<ul>
+<li><strong>方案一</strong>：采用MVCC的方式，读-写操作彼此并不冲突，并发执行效果好，性能高。</li>
+<li><strong>方案二</strong>：采用加锁的方式，读-写操作彼此需要排队执行，影响性能。</li>
+</ul>
+<h2 id="锁的不同分类">锁的不同分类
+</h2><p><img src="/img/db/mysql/2345397-20220311185632525-680422439.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="21从数据操作的类型划分读锁写锁">2.1从数据操作的类型划分：读锁、写锁
+</h3><p>对于写-写、读-写或写-读这些情况可能会引起一些问题，需要使用MVCC或者加锁的方式来解决它们。<strong>在使用加锁的方式解决问题时，由于既要允许读-读情况不受影响，又要使写-写、读-写或写-读情况中的操作相互阻塞</strong>，所以MySQL实现一个由两种类型的锁组成的锁系统来解决。这两种类型的锁通常被称为<strong>共享锁</strong>(Shared Lock，SLock)和<strong>排他锁</strong>（Exclusive Lock，XLock)，也叫<strong>读锁</strong>（(readlock)和<strong>写锁</strong>(write lock)。</p>
+<ul>
+<li><strong>读锁</strong><br>
+<code>1、针对读-读操作，读锁视为共享锁（用S表示）。针对同一份数据，多个事务的读操作可以同时进行而不会互相影响，相互不阻塞的。</code><br>
+<code>2、针对读-写操作，读锁视为排他锁（用X表示）。针对同一份数据，一个事务在进行读操作的时候，另一个事务不能进行读操作或者写操作</code></li>
+<li><strong>写锁</strong><br>
+<code>针对写-写、写-读操作，写锁视为排他锁（用X表示）。当前事务的写操作没有完成前，其他事务的写操作或读操作都不可以执行。这样就能确保在给定的时间里，只有一个事务能执行写入，并防止其他用户读取正在写入的同一资源。</code></li>
+</ul>
+<blockquote>
+<p>对于InnoDB引擎来说，共享锁和排他锁可以加在表上（加在表上是表锁），也可以加在行上（加载行上是行锁）。</p>
+</blockquote>
+<p><strong>针对共享锁和排他锁的兼容性（兼容是指对同一张表或者同一个记录是共享的，不互相制约）</strong><br>
+<img src="/img/db/mysql/2345397-20220311203048178-915404691.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="211锁定读">2.1.1锁定读
+</h4><p><strong>采用加锁的方式解决脏读、不可重复读、幻读的问题时，读取一条记录时可以对该记录加共享锁（S锁）或者排他锁（X锁）</strong></p>
+<ul>
+<li>对读取的记录加共享锁（S锁）：<code>select .....lock in share mode</code>或者<code>select .....for share(mysql8.0的语法)</code><br>
+<img src="/img/db/mysql/2345397-20220311205543429-1315389061.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li>对读取的记录加排他锁（X锁）：<code>select ..... for update</code><br>
+<img src="/img/db/mysql/2345397-20220311205752406-905291085.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h4 id="212写操作">2.1.2写操作
+</h4><p>当使用DML中的delete、update、insert操作修改数据时，会对该记录加排他锁（X锁）。</p>
+<ul>
+<li>delete<br>
+<img src="/img/db/mysql/2345397-20220311212647441-1342006436.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li>update<br>
+<img src="/img/db/mysql/2345397-20220311212709747-1354882878.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li>insert（隐式锁相当于是排他锁）<br>
+<img src="/img/db/mysql/2345397-20220311212730349-317700713.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h3 id="22从数据操作的粒度划分表级锁页级锁行级锁">2.2从数据操作的粒度划分：表级锁、页级锁、行级锁
+</h3><h4 id="221表级锁">2.2.1表级锁
+</h4><p><strong>该锁会锁定整张表</strong>，它是MysQL中最基本的锁策略，并不依赖于存储引擎(不管你是MysQL的什么存储引擎，对于表锁的策略都是一样的)，并且表锁是<strong>开销最小</strong>的策略（因为粒度比较大)。由于表级锁一次会将整个表锁定，所以可以很好的<strong>避免死锁</strong>问题。当然，锁的粒度大所带来最大的负面影响就是出现锁资源争用的概率也会最高，导致<strong>并发率低</strong>。</p>
+<h5 id="一表级别的s锁x锁">一、表级别的S锁、X锁
+</h5><h6 id="11表级别的s锁和x锁的使用场景">1.1表级别的S锁和X锁的使用场景
+</h6><p><strong>1、在系统崩溃恢复的时候使用，在系统变量autocommit=0，innodb_table_locks=1时，手动获取InnoDB存储引擎提供的表t的S锁或者X锁</strong></p>
+<ul>
+<li>LOCK TABLES t READ：InnoDB存储引擎会对表t加表级别的共享锁（S锁）</li>
+<li>LOCK TABLES t WRITE：InnoDB存储引擎会对表t加表级别的排他锁（X锁）</li>
+</ul>
+<p><strong>2、查看表上加过的锁</strong><br>
+<code>show open tables</code>：主要看In_use大于0的数据。</p>
+<h6 id="12mysql的表级锁有两种模式">1.2mysql的表级锁有两种模式
+</h6><ul>
+<li>表共享锁（表读锁）</li>
+<li>表排他锁（表写锁）<br>
+<img src="/img/db/mysql/2345397-20220311225559834-1728331805.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h5 id="二意向锁">二、意向锁
+</h5><p><strong>InnoDB支持多粒度锁（multiple granularity locking），它允许行级锁与表级锁共存，而意向锁是一种不与行级共享或排他锁冲突的表级锁，但是意向锁会与表级共享或排他锁发生冲突。意向锁是由存储引擎自己维护的，用户无法手动操作意向锁。</strong></p>
+<h6 id="21意向锁分类">2.1意向锁分类：
+</h6><ul>
+<li><strong>意向共享锁</strong>（intention shared lock, IS）：事务有意向对表中的某些行加共享锁（S锁）<br>
+<code>- 事务要获取某些行的 S 锁，必须先获得表的 IS 锁。</code><br>
+<code>SELECT column FROM table ... LOCK IN SHARE MODE;</code></li>
+<li><strong>意向排他锁</strong>（intention exclusive lock, IX）：事务有意向对表中的某些行加排他锁（X锁）<br>
+<code>-- 事务要获取某些行的 X 锁，必须先获得表的 IX 锁。</code><br>
+<code>SELECT column FROM table ... FOR UPDATE;</code></li>
+</ul>
+<h6 id="22意向锁生成和要解决的问题">2.2意向锁生成和要解决的问题
+</h6><p><strong>意向锁的生成</strong>：</p>
+<ul>
+<li>如果我们给某一行数据加上了排他锁，数据库会自动给数据页或数据表加上意向排他锁，该意向锁会告诉其它事务这个数据表中的某些数据已经有事务上过排它锁了。</li>
+</ul>
+<p><strong>意向锁要解决的问题</strong>：</p>
+<ul>
+<li>现在有两个事务，分别是T1和T2，其中T2试图在该表级别上应用共享或排它锁，如果T1没有生成意向锁，那么T2就需要去检查各个页或行是否存在锁;如果T1生成意向锁，那么此时就会受到由T1控制的表级别意向锁的阻塞。T2在锁定该表前不必检查各个页或行锁，而只需检查表上的意向锁，如果表级共享或排他锁与意向锁发生不兼容，该表级共享或排他锁就会阻塞。</li>
+</ul>
+<p><strong>意向锁和意向锁之间是兼容的</strong><br>
+<img src="/img/db/mysql/2345397-20220312094810340-1894854947.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p><strong>意向锁与表级共享或排他锁是不兼容的</strong>（意向锁与行级共享或排他锁是兼容的）<br>
+<img src="/img/db/mysql/2345397-20220312103955773-876160521.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h5 id="三自增锁">三、自增锁
+</h5><h6 id="31自增锁的介绍">3.1自增锁的介绍
+</h6><ul>
+<li>AUTO-INC锁是当向使用含有AUTO_INCREMENT列的表中插入数据时需要获取的一种特殊的表级锁</li>
+<li>一个事务在持有AUTO-INC锁的过程中，其他事务的插入语句都要被阻塞</li>
+<li>当我们向一个有AUTO_INCREMENT关键字的主键插入值的时候，每条语句都要对这个表锁进行竞争，这样的并发潜力其实是很低下的，所以innodb通过innodb_autoinc_lock_mode的不同取值来提供不同的锁定机制，来显著提高sql语句的可伸缩性和性能。</li>
+</ul>
+<h6 id="32插入数据的方式">3.2插入数据的方式
+</h6><ul>
+<li>“Simple inserts” （简单插入）<br>
+<code>可以预先确定要插入的行数（当语句被初始处理时）的语句。包括没有嵌套子查询的单行、多行没有指定自增值INSERT...VALUES() 和 REPLACE 语句。</code></li>
+<li>“Bulk inserts” （批量插入）<br>
+<code>事先不知道要插入的行数 （和所需自动递增值的数量）的语句。比如 INSERT ... SELECT，REPLACE... SELECT 和 LOAD DATA 语句，但不包括纯INSERT。</code></li>
+<li>“Mixed-mode inserts” （混合模式插入）<br>
+<code>这些是“Simple inserts”语句但是指定部分新行的自动递增值。例如 INSERT INTO teacher (id,name)VALUES (1,'a'), (NULL,'b'), (5,'c'), (NULL,'d'); 只是指定了部分id的值。另一种类型的“混合模式插入”是 INSERT ... ON DUPLICATE KEY UPDATE 。</code></li>
+</ul>
+<h5 id="四元数据锁">四、元数据锁
+</h5><h6 id="41元数据锁的介绍">4.1元数据锁的介绍
+</h6><ul>
+<li>在对某个表执行一些诸如ALTER TABLE、DROP TABLE这类的DDL语句时，其他事务对这个表并发执行诸如SELECT、INSERT、DELETE、UPDATE的语句会发生阻塞。同理，某个事务中对某个表执行SELECT、INSERT、DELETE、UPDATE语句时，在其他会话中对这个表执行DDL语句也会发生阻塞。这个过程其实是通过在server层使用一种称之为元数据锁 （英文名： Metadata Locks ，简称 MDL ）结构来实现的。</li>
+<li><strong>当对一个表做增删改查操作的时候，加MDL读锁；当要对表做结构变更操作的时候，加MDL写锁。</strong></li>
+<li>元数据锁不需要显示使用，在访问一个表的时候会自动加上。<strong>MDL读锁与MDL读锁之间兼容、MDL读锁与MDL写锁之间不兼容、MDL写锁与MDL写锁之间不兼容。</strong></li>
+</ul>
+<h6 id="42查看元数据锁">4.2查看元数据锁
+</h6><p><strong>使用命令</strong>：<code>show processlist</code><br>
+<img src="/img/db/mysql/2345397-20220312112905817-580479276.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<strong>元数据锁可能带来的问题</strong><br>
+<img src="/img/db/mysql/2345397-20220312113722682-1330824441.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="222行级锁">2.2.2行级锁
+</h4><p><strong>行级锁并发效率高、开销大、有可能产生死锁。</strong></p>
+<h5 id="一记录锁record-locks">一、记录锁（Record Locks）
+</h5><ul>
+<li>记录锁也就是仅仅把一条记录锁上，官方的类型名称为： LOCK_REC_NOT_GAP 。比如我们把id值为8的那条记录加一个记录锁的示意图如图所示。仅仅是锁住了id值为8的记录，对周围的数据没有影响。<br>
+<img src="/img/db/mysql/2345397-20220312114112180-1132645025.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li><strong>记录锁解决了脏写、脏读、不可重复读</strong></li>
+<li>使用记录锁的举例<br>
+<img src="/img/db/mysql/2345397-20220312114704517-23505960.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li><strong>记录锁的分类：共享型记录锁（S型记录锁）和排他型记录锁（X型记录锁）</strong><br>
+<code>1、当一个事务获取了一条记录的S型记录锁后，其他事务也可以继续获取该记录的S型记录锁，但不可以继续获取X型记录锁；</code><br>
+<code>2、当一个事务获取了一条记录的X型记录锁后，其他事务既不可以继续获取该记录的S型记录锁，也不可以继续获取X型记录锁。</code></li>
+</ul>
+<h5 id="二间隙锁gap-locks">二、间隙锁（Gap Locks）
+</h5><ul>
+<li>
+<p><strong>MySQL在REPEATABLE READ隔离级别下是可以解决幻读问题的</strong>，解决方案有两种，可以使用MVCC方案解决，也可以采用加锁方案解决。</p>
+</li>
+<li>
+<p><strong>但是在使用加锁方案解决时有个大问题，就是事务在第一次执行读取id为5操作时，该幻影记录尚不存在，我们无法给这些幻影记录加上记录锁，那就需要id为8的值加一个间隙锁，意味着不允许别的事务在id值为8的记录前边的间隙插入新记录，其实就是id列的值(3, 8)这个区间的新记录是不允许立即插入的</strong>。比如，有另外一个事务再想插入一条id值为4的新记录，它定位到该条新记录的下一条记录的id值为8，而这条记录上又有一个gap锁，所以就会阻塞插入操作，直到拥有这个gap锁的事务提交了之后，id列的值在区间(3, 8)中的新记录才可以被插入。<br>
+<img src="/img/db/mysql/2345397-20220312122902619-1714584757.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+</li>
+<li>
+<p><strong>当两个不同的事务同时使用共享间隙锁或者排他间隙锁对同一条记录进行加锁，是不会有冲突的，因为它们的间隙锁作用在间隙上，保护这个间隙，不允许插入值。</strong><br>
+<img src="/img/db/mysql/2345397-20220312124422595-165814901.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+</li>
+<li>
+<p><strong>间隙锁可能出现死锁</strong><br>
+<img src="/img/db/mysql/2345397-20220312124338804-1633514658.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+</li>
+</ul>
+<h5 id="三临键锁next-key-locks">三、临键锁（Next-Key Locks）
+</h5><ul>
+<li>Next-Key Locks是在存储引擎innodb、事务级别在可重复读的情况下使用的数据库锁，innodb默认的锁就是Next-Key locks。</li>
+<li>临键锁是记录锁和间隙锁的合体，锁住的是某条记录和该记录前的间隙。</li>
+<li>加临键锁语句<br>
+<code>select * from student where id &lt;=8 and id &gt; 3 for update;</code></li>
+</ul>
+<h5 id="四插入意向锁">四、插入意向锁
+</h5><ul>
+<li>一个事务在插入一条记录时需要判断一下插入位置是不是被别的事务加了gap锁（next-key锁也包含 gap锁），如果有gap锁的情况下，插入操作就需要等待，同时对该insert插入操作生成一个插入意向锁（Insert Intention Locks）</li>
+<li>插入意向锁是一种间隙锁，不是意向锁。</li>
+<li>插入意向锁并不会阻止别的事务继续获取该记录上任何类型的锁。</li>
+</ul>
+<h4 id="223页锁">2.2.3页锁
+</h4><ul>
+<li><strong>页锁的开销介于表锁和行锁之间，会出现死锁。锁定粒度介于表锁和行锁之间，并发度一般。</strong></li>
+</ul>
+<p><strong>锁升级</strong><br>
+<code>每个层级的锁数量是有限制的，因为锁会占用内存空间，锁空间的大小是有限的 。当某个层级的锁数量 超过了这个层级的阈值时，就会进行锁升级。锁升级就是用更大粒度的锁替代多个更小粒度的锁，比如 InnoDB 中行锁升级为表锁，这样做的好处是占用的锁空间降低了，但同时数据的并发度也下降了。</code></p>
+<h3 id="23从对待锁的态度划分乐观锁悲观锁">2.3从对待锁的态度划分:乐观锁、悲观锁
+</h3><p><strong>乐观锁和悲观锁并不是锁，而是锁的设计思想。</strong></p>
+<h4 id="231悲观锁pessimistic-locking">2.3.1悲观锁（Pessimistic Locking）
+</h4><ul>
+<li><strong>通过数据库自身的锁机制来实现，从而保证数据操作的排它性</strong>。</li>
+<li>悲观锁总是假设最坏的情况，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会阻塞直到它拿到锁（共享资源每次只给一个线程使用，其它线程阻塞，用完后再把资源转让给其它线程）。Java中 synchronized 和 ReentrantLock 等独占锁就是悲观锁思想的实现。</li>
+<li><code>select .. for update语句是悲观锁</code>，在执行过程中所有扫描的行都会被锁上，因此在MySQL中用悲观锁必须确定使用了索引，而不是全表扫描，否则将会把整个表锁住。</li>
+</ul>
+<h4 id="232乐观锁optimistic-locking">2.3.2乐观锁（Optimistic Locking）
+</h4><ul>
+<li><strong>不采用数据库自身的锁机制，而是通过程序来实现（版本号机制或CAS机制）</strong></li>
+<li>乐观锁不用每次都对数据上锁，但是在更新的时候使用版本号机制或CAS机制来判断一下在此期间别人有没有去更新这个数据。</li>
+</ul>
+<h4 id="234悲观锁和乐观锁的适用场景">2.3.4悲观锁和乐观锁的适用场景
+</h4><ul>
+<li><strong>乐观锁适合读操作多的场景</strong>，相对来说写的操作比较少。它的优点在于程序实现，不存在死锁问题，不过适用场景也会相对乐观，因为它阻止不了除了程序以外的数据库操作。</li>
+<li><strong>悲观锁适合写操作多的场景</strong>，因为写的操作具有排它性。采用悲观锁的方式，可以在数据库层面阻止其他事务对该数据的操作权限，防止写-读和写-写的冲突。</li>
+</ul>
+<h3 id="24按加锁的方式划分显式锁隐式锁">2.4按加锁的方式划分：显式锁、隐式锁
+</h3><h4 id="241显示锁">2.4.1显示锁
+</h4><p><strong>通过特定的语句进行加锁，我们一般称之为显示加锁，例如：</strong></p>
+<ul>
+<li>显示加共享锁<br>
+<code>select .... lock in share mode</code></li>
+<li>显示加排他锁<br>
+<code>select .... for update</code></li>
+</ul>
+<h4 id="242隐式锁">2.4.2隐式锁
+</h4><ul>
+<li>一般情况下一个事务对新插入的记录不加锁，当其他的事务在对这条记录加S锁或者X锁时，<strong>会根据trx_id的状态</strong>为该新插入的记录生成一个隐式锁（排他锁），然后其他事务自己再生成一个锁结构后进入等待状态。<br>
+<img src="/img/db/mysql/2345397-20220312133547936-32709647.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li><strong>隐式锁是一种延迟加锁的机制，从而来减少加锁的数量。</strong></li>
+<li><strong>只有其他事务在锁等待的时候，隐式锁才会转为显示锁。下面的命令是查看锁</strong><br>
+<img src="/img/db/mysql/2345397-20220312134508065-1031298144.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h3 id="25其他锁">2.5其他锁
+</h3><h4 id="251全局锁">2.5.1全局锁
+</h4><ul>
+<li><strong>全局锁就是对整个数据库实例加锁。当你需要让整个库处于只读状态的时候</strong>，可以使用这个命令，之后其他线程的以下语句会被阻塞：数据更新语句（数据的增删改）、数据定义语句（包括建表、修改表结构等）和更新类事务的提交语句。</li>
+<li><strong>全局锁的典型使用场景是全库逻辑备份</strong> 。</li>
+<li>全局锁的命令：<code>Flush tables with read lock</code></li>
+</ul>
+<h4 id="252死锁">2.5.2死锁
+</h4><h5 id="1死锁的产生">1、死锁的产生
+</h5><ul>
+<li><strong>两个或多个事务都持有对方需要的锁，但是都不释放，就会导致死锁。</strong></li>
+<li><strong>事务1在等待事务2释放id=2的行锁，而事务2在等待事务1释放id=1的行锁。事务1和事务2在互相等待对方的资源释放，就是进入了死锁状态。</strong><br>
+<img src="/img/db/mysql/2345397-20220312140050183-2124121307.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h5 id="2死锁的处理">2、死锁的处理
+</h5><ul>
+<li>直接进入等待，直到超时。这个超时时间可以通过参数innodb_lock_wait_timeout 来设置。</li>
+<li>发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务（将持有最少行级排他锁的事务进行回滚），让其他事务得以继续执行。将参数 innodb_deadlock_detect 设置为on，表示开启这个逻辑。</li>
+</ul>
+<h5 id="3如何避免死锁">3、如何避免死锁
+</h5><ul>
+<li>合理设计索引，使业务SQL尽可能通过索引定位更少的行，减少锁竞争。</li>
+<li>调整业务逻辑sQL执行顺序，避免update/delete长时间持有锁的SQL在事务前面。</li>
+<li>避免大事务，尽量将大事务拆成多个小事务来处理，小事务缩短锁定资源的时间，发生锁冲突的几率也更小。</li>
+<li>在并发比较高的系统中，不要显式加锁，特别是是在事务里显式加锁。如select &hellip; for update语句，如果是在事务里运行了start transaction或设置了autocommit等于o，那么就会锁定所查找到的记录。</li>
+<li>降低隔离级别。如果业务允许，将隔离级别调低也是较好的选择，比如将隔离级别从RR调整为RC，可以避免掉很多因为gap锁造成的死锁。</li>
+</ul>
+<h2 id="锁的内存结构">锁的内存结构
+</h2><p><img src="/img/db/mysql/2345397-20220312141321267-1664678261.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h2 id="锁监控">锁监控
+</h2><p>1、使用命令：<code>show status like 'innodb_row_lock%';</code><br>
+<img src="/img/db/mysql/2345397-20220312141416194-1442180368.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<ul>
+<li>Innodb_row_lock_current_waits：当前正在等待锁定的数量；</li>
+<li>Innodb_row_lock_time ：从系统启动到现在锁定总时间长度；（等待总时长）</li>
+<li>Innodb_row_lock_time_avg ：每次等待所花平均时间；（等待平均时长）</li>
+<li>Innodb_row_lock_time_max：从系统启动到现在等待最常的一次所花的时间；</li>
+<li>Innodb_row_lock_waits ：系统启动后到现在总共等待的次数；（等待总次数）</li>
+</ul>
+<p>2、其他监控方法<br>
+mysql5.7及之前：</p>
+<ul>
+<li>information_schema.INNODB_LOCKS：只能看到阻塞事务的锁</li>
+<li>information_schema.INNODB_LOCK_WAITS：查看等待的锁<br>
+mysql8.0</li>
+<li>performance_schema.data_locks：不但可以看到阻塞该事务的锁，还可以看到该事务所持有的锁。</li>
+<li>performance_schema.data_lock_waits：查看等待的锁</li>
+</ul>
+<p>本文转自 <a class="link" href="https://www.cnblogs.com/worldusemycode/p/15976051.html"  target="_blank" rel="noopener"
+    >https://www.cnblogs.com/worldusemycode/p/15976051.html</a>，如有侵权，请联系删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/10mysql%E7%9A%84%E8%B0%83%E4%BC%98.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">10、mysql的调优.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/11%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">11、事务的基础概念.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/12mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">12、mysql的事务日志.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/14%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">14、多版本并发控制.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/15mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%8E%9F%E7%90%86.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">15、mysql主从复制的原理.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

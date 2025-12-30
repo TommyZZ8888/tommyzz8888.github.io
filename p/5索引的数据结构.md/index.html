@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="设计索引 一、页中记录的格式（以compact行格式为列） record_type：记录头信息的一项属性，表示记录的类型，0表示普通记录、1目录项记录、2表示最小记录、3 表示最大记录。 next_record ：记录头信息的一项属性，表示下一条地址相对于本条记录的地址偏移量，我们用箭头来表明下一条记录是谁。 **各个列的值 **：这里只记录在表中的三个列，分别是c1、c2 和c3 。 其他信息 ：除了上述3种信息以外的所有信息，包括其他隐藏列的值以及记录的额外信息。\n二、一个简单的索引设计方案 1、下一个数据页中用户记录的主键值必须大于上一个数据页中用户记录的主键值。\n">
+<title>5、索引的数据结构.md</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/5%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="5、索引的数据结构.md">
+<meta property='og:description' content="设计索引 一、页中记录的格式（以compact行格式为列） record_type：记录头信息的一项属性，表示记录的类型，0表示普通记录、1目录项记录、2表示最小记录、3 表示最大记录。 next_record ：记录头信息的一项属性，表示下一条地址相对于本条记录的地址偏移量，我们用箭头来表明下一条记录是谁。 **各个列的值 **：这里只记录在表中的三个列，分别是c1、c2 和c3 。 其他信息 ：除了上述3种信息以外的所有信息，包括其他隐藏列的值以及记录的额外信息。\n二、一个简单的索引设计方案 1、下一个数据页中用户记录的主键值必须大于上一个数据页中用户记录的主键值。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/5%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="5、索引的数据结构.md">
+<meta name="twitter:description" content="设计索引 一、页中记录的格式（以compact行格式为列） record_type：记录头信息的一项属性，表示记录的类型，0表示普通记录、1目录项记录、2表示最小记录、3 表示最大记录。 next_record ：记录头信息的一项属性，表示下一条地址相对于本条记录的地址偏移量，我们用箭头来表明下一条记录是谁。 **各个列的值 **：这里只记录在表中的三个列，分别是c1、c2 和c3 。 其他信息 ：除了上述3种信息以外的所有信息，包括其他隐藏列的值以及记录的额外信息。\n二、一个简单的索引设计方案 1、下一个数据页中用户记录的主键值必须大于上一个数据页中用户记录的主键值。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一页中记录的格式以compact行格式为列">一、页中记录的格式（以compact行格式为列）</a></li>
+    <li><a href="#二一个简单的索引设计方案">二、一个简单的索引设计方案</a></li>
+    <li><a href="#三常见的索引概念">三、常见的索引概念</a>
+      <ol>
+        <li><a href="#31聚簇索引">3.1聚簇索引</a>
+          <ol>
+            <li><a href="#上图的特点">上图的特点</a></li>
+            <li><a href="#优点">优点</a></li>
+            <li><a href="#缺点">缺点</a></li>
+          </ol>
+        </li>
+        <li><a href="#32非聚簇索引">3.2非聚簇索引</a>
+          <ol>
+            <li><a href="#上图的特点-1">上图的特点</a></li>
+            <li><a href="#非聚簇索引需要进行回表">非聚簇索引需要进行回表</a></li>
+          </ol>
+        </li>
+        <li><a href="#33聚簇索引和非聚簇索引对比">3.3聚簇索引和非聚簇索引对比</a></li>
+      </ol>
+    </li>
+    <li><a href="#四innodb和myisam的数据结构">四、INNODB和MYISAM的数据结构</a>
+      <ol>
+        <li><a href="#41innodb存储引擎">4.1INNODB存储引擎</a></li>
+        <li><a href="#42myisam存储引擎">4.2MYISAM存储引擎</a></li>
+        <li><a href="#43myisam与innodb对比">4.3MyISAM与InnoDB对比</a></li>
+      </ol>
+    </li>
+    <li><a href="#五建立索引的优点和缺点">五、建立索引的优点和缺点</a>
+      <ol>
+        <li><a href="#优点-1">优点</a></li>
+        <li><a href="#缺点-1">缺点</a></li>
+      </ol>
+    </li>
+    <li><a href="#六mysql数据结构的类型">六、mysql数据结构的类型</a>
+      <ol>
+        <li><a href="#61-hash结构">6.1 HASH结构</a>
+          <ol>
+            <li><a href="#hash效率高为什么索引结构还设计成树型">HASH效率高，为什么索引结构还设计成树型</a></li>
+          </ol>
+        </li>
+        <li><a href="#62-b树">6.2 B树</a></li>
+        <li><a href="#63-b树和b树的差异">6.3 B+树和B树的差异：</a>
+          <ol>
+            <li><a href="#b树和b树都可以作为索引的数据结构为什么在mysql中采用的是b树">B树和B+树都可以作为索引的数据结构，为什么在MySQL中采用的是B+树：</a></li>
+            <li><a href="#为了减少io索引树会一次性加载吗">为了减少IO，索引树会一次性加载吗？</a></li>
+            <li><a href="#b树的存储能力如何为何说一般查找行记录最多只需13次磁盘io">B+树的存储能力如何？为何说一般查找行记录，最多只需1~3次磁盘IO</a></li>
+            <li><a href="#hash-索引与-b-树索引是在建索引的时候手动指定的吗">Hash 索引与 B+ 树索引是在建索引的时候手动指定的吗？</a></li>
+            <li><a href="#b树的实际形成过程">B+树的实际形成过程</a></li>
+            <li><a href="#r树">R树</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#七数据页内部的结构">七、数据页内部的结构</a>
+      <ol>
+        <li><a href="#71磁盘与内存的交互基本单位数据页">7.1磁盘与内存的交互基本单位：数据页</a></li>
+        <li><a href="#72页的上层结构">7.2页的上层结构</a>
+          <ol>
+            <li><a href="#为什么要有区">为什么要有区</a></li>
+            <li><a href="#为什么要有段">为什么要有段</a></li>
+            <li><a href="#为什么要有碎片区">为什么要有碎片区</a></li>
+            <li><a href="#区的分类">区的分类</a></li>
+          </ol>
+        </li>
+        <li><a href="#73数据页中的页目录page-directory">7.3数据页中的页目录（Page Directory）</a>
+          <ol>
+            <li><a href="#页目录分组的个数如何确定">页目录分组的个数如何确定</a></li>
+            <li><a href="#页目录结构下如何快速查找记录">页目录结构下如何快速查找记录</a></li>
+          </ol>
+        </li>
+        <li><a href="#74数据页中的用户记录user-records的格式">7.4数据页中的用户记录（User Records）的格式</a>
+          <ol>
+            <li><a href="#741compact行格式mysql57版本之前">7.4.1compact行格式（mysql5.7版本之前）</a></li>
+            <li><a href="#742redundant行格式mysql50以及之前的版本">7.4.2Redundant行格式（mysql5.0以及之前的版本）</a></li>
+            <li><a href="#743dynamic和compressed行格式mysql57之后">7.4.3dynamic和compressed行格式(mysql5.7之后)</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/db/" >
+            DB
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/5%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md/">5、索引的数据结构.md</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 14 分钟
+                
+                
+                , 6942 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="设计索引">设计索引
+</h1><h2 id="一页中记录的格式以compact行格式为列">一、页中记录的格式（以compact行格式为列）
+</h2><p><img src="/img/db/mysql/2345397-20220314103808575-1925835495.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<ul>
+<li><strong>record_type</strong>：记录头信息的一项属性，表示记录的类型，0表示普通记录、1目录项记录、2表示最小记录、3 表示最大记录。</li>
+<li><strong>next_record</strong> ：记录头信息的一项属性，表示下一条地址相对于本条记录的地址偏移量，我们用箭头来表明下一条记录是谁。</li>
+<li>**各个列的值 **：这里只记录在表中的三个列，分别是c1、c2 和c3 。</li>
+<li><strong>其他信息</strong> ：除了上述3种信息以外的所有信息，包括其他隐藏列的值以及记录的额外信息。<br>
+<img src="/img/db/mysql/2345397-20220314103726571-636408513.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h2 id="二一个简单的索引设计方案">二、一个简单的索引设计方案
+</h2><p><strong>1、下一个数据页中用户记录的主键值必须大于上一个数据页中用户记录的主键值。</strong><br>
+<img src="/img/db/mysql/2345397-20220222151528574-1959929270.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p><strong>2、给每个页都建立一个目录项。</strong><br>
+由于数据页在物理存储上是不连续的，如果想从多个数据页中根据该记录的主键值快速定位该记录的所在页，就需要建立一个目录页，每一个数据页对应一个目录项，目录页中存储目录项，每个目录项包括两部分：key（数据页的用户记录中最小的主键值）、page_no（数据页的编号）。<br>
+<img src="/img/db/mysql/2345397-20220222155018098-513584514.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<code>查找主键值为20的记录，分为两步：</code><br>
+<code>第一步（确定页）：先从目录页中根据二分法快速确定出主键值为20的记录在目录项3中（因为 12 &lt; 20 &lt;209），它对应的页是页9。</code><br>
+<code>第二步（确定记录）：在页中使用二分法找到主键值为20的记录。</code></p>
+<p><strong>3、目录项纪录的页</strong><br>
+<img src="/img/db/mysql/2345397-20220313215332303-990258384.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<ul>
+<li>目录项记录的record_type值是1，而普通用户记录的record_type值是0。最小纪录record_type值是2，最大纪录record_type值是3。</li>
+<li>目录项记录只有主键值和页的编号两个列</li>
+</ul>
+<p><strong>4、多个目录项纪录的页</strong><br>
+<img src="/img/db/mysql/2345397-20220313224236885-1887045114.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p><strong>5、目录项记录页的目录页</strong><br>
+<code>数据页之间用双向链表指针连接，数据页中的记录用单向链表指针连接。</code><br>
+<img src="/img/db/mysql/2345397-20220313224617212-1615217655.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h2 id="三常见的索引概念">三、常见的索引概念
+</h2><p>索引按照物理实现方式：</p>
+<ul>
+<li>聚簇索引</li>
+<li>非聚簇索引（二级索引或者辅助索引）</li>
+</ul>
+<h3 id="31聚簇索引">3.1聚簇索引
+</h3><p><strong>聚簇索引是一种数据存储方式(所有的用户记录都存储在了叶子节点)，也就是所谓的索引即数据，数据即索引。</strong><br>
+<img src="/img/db/mysql/2345397-20220314104512713-2097489426.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="上图的特点">上图的特点
+</h4><p>1、使用记录<strong>主键列c1的大小</strong>进行记录和页的排序，这包括三个方面的含义：</p>
+<ul>
+<li>页内的记录是按照主键的大小顺序排成一个单向链表 。</li>
+<li>各个存放用户记录的页也是根据页中用户记录的主键大小顺序排成一个双向链表 。</li>
+<li>存放目录项记录的页分为不同的层次，在同一层次中的页也是根据页中目录项记录的主键大小顺序排成一个双向链表。</li>
+</ul>
+<p>2、B+树的<strong>叶子节点</strong>存储的是<strong>完整的用户记录</strong>（存储了所有列的值（包括隐藏列））。<br>
+3、<strong>目录项记录</strong>中是<strong>主键值+页号</strong>。</p>
+<h4 id="优点">优点
+</h4><ul>
+<li><strong>数据访问更快</strong>：因为聚簇索引将索引和数据保存在同一个B+树中</li>
+<li>聚簇索引对于主键的<strong>排序查找和范围查找</strong>速度非常快：因为索引已经排好序了</li>
+<li><strong>节省了大量的io操作</strong>：按照聚簇索引排列顺序查询显示一定范围数据的时候，由于数据都是紧密相连，数据库不用从多个数据块中提取数据。</li>
+</ul>
+<h4 id="缺点">缺点
+</h4><ul>
+<li><strong>插入速度严重依赖于插入顺序</strong></li>
+<li><strong>更新主键的代价很高</strong></li>
+<li><strong>二级索引访问需要两次索引查找</strong>：第一次找到主键值，第二次根据主键值找到行数据</li>
+</ul>
+<h3 id="32非聚簇索引">3.2非聚簇索引
+</h3><p><strong>非聚簇索引是一种数据存储方式（InnoDB的非聚簇索引data域存储<code>相应记录主键的值</code>，而MyISAM的非聚簇索引data域存储<code>相应记录的地址</code>）</strong><br>
+<img src="/img/db/mysql/2345397-20220314110254749-1426634538.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="上图的特点-1">上图的特点
+</h4><p><strong>这个B+树与上边的聚簇索引存在不同：</strong><br>
+1、使用记录<strong>非主键列c2的大小</strong>进行记录和页的排序，这包括三个方面的含义:</p>
+<ul>
+<li>页内的记录是按照c2列的大小顺序排成一个单向链表。</li>
+<li>各个存放用户记录的页也是根据页中记录的c2列大小顺序排成一个双向链表。</li>
+<li>存放目录项记录的页分为不同的层次，在同一层次中的页也是根据页中目录项记录的c2列大小顺序排成一个双向链表。</li>
+</ul>
+<p>2、B+树的<strong>叶子节点</strong>存储的并不是完整的用户记录，而只是<strong>c2列+主键值</strong>这两个列的值。<br>
+3、<strong>目录项记录</strong>中是<strong>c2列+页号</strong>。（为了保证内节点中目录项记录的唯一性：<strong>c2列+主键值+页号</strong>）</p>
+<h4 id="非聚簇索引需要进行回表">非聚簇索引需要进行回表
+</h4><p>根据c2列的值查找到完整的用户记录：</p>
+<ul>
+<li>根据以c2列大小排序的B+树确定我们要查找记录的<strong>主键值</strong>。</li>
+<li><strong>根据查找的主键值在聚簇索引中查找一下完整的用户记录</strong>，这就叫做回表。</li>
+</ul>
+<h3 id="33聚簇索引和非聚簇索引对比">3.3聚簇索引和非聚簇索引对比
+</h3><ol>
+<li><strong>聚簇索引的叶子节点</strong>存储的是<strong>数据记录</strong>，<strong>非聚簇索引的叶子节点</strong>存储的是<strong>数据位置</strong>。非聚簇索引不会影响数据表的物理存储顺序。</li>
+<li><strong>一个表只能有一个聚簇索引，但可以有多个非聚簇索引</strong></li>
+<li>使用<strong>聚簇索引</strong>的时候，数据的<strong>查询效率高</strong>，但如果对<strong>数据进行插入，删除，更新的效率会比非聚簇索引低</strong>。</li>
+</ol>
+<h2 id="四innodb和myisam的数据结构">四、INNODB和MYISAM的数据结构
+</h2><p><img src="/img/db/mysql/2345397-20220314113151635-1902348017.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<strong>INNODB存储引擎：</strong></p>
+<ul>
+<li>使用B+树的聚簇索引：叶子节点存储的是<strong>完整的用户记录</strong></li>
+<li>使用B+树的非聚簇索引：叶子节点存储的data域存储的是<strong>主键值</strong></li>
+</ul>
+<p><strong>MYISAM存储引擎：(不支持聚簇索引)</strong></p>
+<ul>
+<li>使用B+树的非聚簇索引：叶子节点存储的data域存储的是<strong>主键列或非主键列+数据记录的物理地址</strong></li>
+</ul>
+<h3 id="41innodb存储引擎">4.1INNODB存储引擎
+</h3><p><strong>INNODB中索引和数据存放在一个文件中：</strong></p>
+<ul>
+<li>按照<strong>主键列的大小</strong>在B+树中进行排序是<strong>聚簇索引</strong>，叶子节点存储的是<strong>完整的用户记录</strong></li>
+<li>按照<strong>非主键列的大小</strong>在B+树中进行排序是<strong>非聚簇索引</strong>（查找数据时需要回表），叶子节点存储的data域存储的是<strong>非主键列+主键值</strong></li>
+</ul>
+<p><strong>以主键列c1的大小进行排序</strong><br>
+<img src="/img/db/mysql/2345397-20220314120222616-1854922432.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p><strong>以非主键列c2的大小进行排序</strong><br>
+<img src="/img/db/mysql/2345397-20220314120300460-775662767.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="42myisam存储引擎">4.2MYISAM存储引擎
+</h3><p><strong>MYISAM中索引和数据分开存储：</strong></p>
+<ul>
+<li>按照<strong>主键列或者非主键列的大小</strong>在B+树中进行排序是<strong>非聚簇索引</strong>，叶子节点存储的data域存储的是<strong>主键列或非主键列+数据记录的物理地址</strong></li>
+<li>将表中的记录<strong>按照记录的插入顺序</strong>单独存储在一个数据文件中</li>
+</ul>
+<p><strong>以主键列c1的大小进行排序</strong><br>
+<img src="/img/db/mysql/2345397-20220314120006818-525229687.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p><strong>以非主键列c2的大小进行排序</strong><br>
+<img src="/img/db/mysql/2345397-20220314120039251-1943205965.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="43myisam与innodb对比">4.3MyISAM与InnoDB对比
+</h3><ul>
+<li>在InnoDB存储引擎中需要根据主键值对聚簇索引进行<strong>一次查找</strong>就能找到对应的记录，而在MyISAM中根据主键值对非聚簇索引需要进行<strong>一次回表</strong>操作。</li>
+<li>InnoDB的非聚簇索引data域存储相应记录<strong>主键的值</strong>，而MyISAM非聚簇索引记录的是<strong>数据的地址</strong>。</li>
+<li>InnoDB的数据文件本身就是索引文件；而MyISAM索引文件和数据文件是分离的，索引文件仅保存数据记录的地址。</li>
+<li><strong>MyISAM的回表速度比INNODB的速度快</strong>，因为是拿着地址偏移量直接到文件中取数据的，反观InnoDB是通过获取主键之后再去聚簇索引里找记录。</li>
+<li><strong>InnoDB要求表必须有主键</strong>。如果没有显式指定，则MySQL系统会自动选择一个可以<strong>非空且唯一标识</strong>数据记录的列作为主键。如果不存在这种列，则MySQL自动为InnoDB表生成一个<strong>隐含字段</strong>作为主键，这个字段长度为6个字节，类型为长整型。</li>
+</ul>
+<h2 id="五建立索引的优点和缺点">五、建立索引的优点和缺点
+</h2><h3 id="优点-1">优点
+</h3><ul>
+<li>数据库的IO成本</li>
+<li>数据的唯一性</li>
+<li>对于关联查询提高查询速度</li>
+<li>减少查询中分组和排序的时间</li>
+</ul>
+<h3 id="缺点-1">缺点
+</h3><ul>
+<li>创建索引和维护索引要耗费时间</li>
+<li>索引需要占磁盘空间</li>
+<li>虽然索引大大提高了查询速度，同时却会降低更新表的速度 。</li>
+</ul>
+<h2 id="六mysql数据结构的类型">六、mysql数据结构的类型
+</h2><h3 id="61-hash结构">6.1 HASH结构
+</h3><p><img src="/img/db/mysql/2345397-20220314122451726-1193059730.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="hash效率高为什么索引结构还设计成树型">HASH效率高，为什么索引结构还设计成树型
+</h4><p>树的查询、插入、修改的平均复杂度都是O(log2N)<br>
+哈希的查询、插入、修改的平均复杂度都是O(1)</p>
+<ul>
+<li>hash索引只能满足等值查询（=、&lt;&gt;、IN），<strong>不能满足范围查询</strong>：因为hash存储是无序的。</li>
+<li>在hash索引中<strong>不能使用order by</strong>：因为hash是无序的</li>
+<li>在hash索引中<strong>不能使用联合索引</strong>：因为hash值是将联合索引键合并后一起计算的，无法对联合索引中单独的键进行查询。</li>
+<li><strong>不能使用在重复值多的列上</strong></li>
+</ul>
+<h3 id="62-b树">6.2 B树
+</h3><p><img src="/img/db/mysql/2345397-20220314133035594-359744438.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<ol>
+<li>B树在插入和删除节点的时候如果导致树不平衡，就通过自动调整节点的位置来保持树的自平衡。</li>
+<li>关键字集合分布在整棵树中,即叶子节点和非叶子节点都存放数据。搜索有可能在非叶子节点结束</li>
+<li>其搜索性能等价于在关键字全集内做一次二分查找。</li>
+<li>所有叶子节点位于同一层。</li>
+<li>每个中间节点包含k-1个关键字和k个孩子（孩子节点的数量等于关键字的数量加1）</li>
+</ol>
+<h3 id="63-b树和b树的差异">6.3 B+树和B树的差异：
+</h3><ol>
+<li>B+树有k个孩子的节点就有k个关键字，也就是孩子数量 = 关键字数；而B树中，孩子数量 = 关键字数+1。</li>
+<li>B+树非叶子节点的关键字也会同时存在在子节点中，并且是在子节点中所有关键字的最小值。</li>
+<li>B+树非叶子节点仅用于索引，不保存数据记录，跟记录有关的信息都放在叶子节点中。而B树中，非叶子节点既保存索引，也保存数据记录 。</li>
+<li>B+树所有关键字都在叶子节点出现，叶子节点构成一个有序链表，而且叶子节点本身按照关键字的大小从小到大顺序链接。</li>
+</ol>
+<h4 id="b树和b树都可以作为索引的数据结构为什么在mysql中采用的是b树">B树和B+树都可以作为索引的数据结构，为什么在MySQL中采用的是B+树：
+</h4><ul>
+<li><strong>B+树查询效率更稳定</strong>。因为B+树每次只有访问到叶子节点才能找到对应的数据，而在B树中，非叶子节点也会存储数据，这样就会造成查询效率不稳定的情况，有时候访问到了非叶子节点就可以找到关键字，而有时需要访问到叶子节点才能找到关键字。|</li>
+<li><strong>B+树的查询效率更高</strong>。同样的磁盘页大小，B+树的非叶子节点可以存储更多的节点关键字。因此通常B+树比B树更矮胖（阶数更大，深度更低)，查询所需要的磁盘IO也会更少。</li>
+<li><strong>在查询范围上，B+树的效率也比B树高</strong>。这是因为所有关键字都出现在B+树的叶子节点中，叶子节点之间会有指针，数据又是递增的，这使得我们范围查找可以通过指针连接查找。而在B树中则需要通过中序遍历才能完成查询范围的查找，效率要低很多。</li>
+</ul>
+<h4 id="为了减少io索引树会一次性加载吗">为了减少IO，索引树会一次性加载吗？
+</h4><ol>
+<li>数据库索引是存储在磁盘上的，如果数据量很大，必然导致索引的大小也会很大，超过几个G。</li>
+<li>当我们利用索引查询时候，是不可能将全部几个G的索引都加载进内存的，我们能做的只能是:逐一加载每一个磁盘页，因为磁盘页对应着索引树的节点。</li>
+</ol>
+<h4 id="b树的存储能力如何为何说一般查找行记录最多只需13次磁盘io">B+树的存储能力如何？为何说一般查找行记录，最多只需1~3次磁盘IO
+</h4><p><img src="/img/db/mysql/2345397-20220314135033491-1512361967.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="hash-索引与-b-树索引是在建索引的时候手动指定的吗">Hash 索引与 B+ 树索引是在建索引的时候手动指定的吗？
+</h4><p><img src="/img/db/mysql/2345397-20220314135510740-1572458491.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="b树的实际形成过程">B+树的实际形成过程
+</h4><ul>
+<li>每当为某个表创建一个B+树索引(聚簇索引不是人为创建的，默认就有）的时候，都会为这个索引创建一个根节点页面。最开始表中没有数据的时候，每个B+树索引对应的根节点中既没有用户记录，也没有目录项记录。</li>
+<li>随后向表中插入用户记录时，先把用户记录存储到这个根节点中。</li>
+<li>当根节点中的可用空间用完时继续插入记录，此时会将根节点中的所有记录复制到一个新分配的页，比如页a中，然后对这个新页进行页分裂的操作，得到另一个新页，比如页b。这时新插入的记录根据键值（也就是聚簇索引中的主键值，二级索引中对应的索引列的值）的大小就会被分配到页a或者页b中，而根节点便升级为存储目录项记录的页。</li>
+</ul>
+<blockquote>
+<p><code>这个过程特别注意的是:一个B+树索引的根节点自诞生之日起，便不会再移动。这样只要我们对某个表建立一个索引，那么它的根节点的页号便会被记录到某个地方，然后凡是工nnoDB存储引擎需要用到这个索引的时候，都会从那个固定的地方取出根节点的页号，从而来访问这个索引。</code></p>
+</blockquote>
+<h4 id="r树">R树
+</h4><p><strong>R-Tree在MySQL很少使用，仅支持 geometry数据类型</strong><br>
+<img src="/img/db/mysql/2345397-20220314140214382-1055950811.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h2 id="七数据页内部的结构">七、数据页内部的结构
+</h2><p><img src="/img/db/mysql/2345397-20220314160236958-1671601773.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="71磁盘与内存的交互基本单位数据页">7.1磁盘与内存的交互基本单位：数据页
+</h3><p><strong>以页作为磁盘和内存之间交互的基本单位，也就是一次最少从磁盘中读取16KB的内容到内存中，一次最少把内存中的16KB内容刷新到磁盘中。</strong></p>
+<h3 id="72页的上层结构">7.2页的上层结构
+</h3><p><img src="/img/db/mysql/2345397-20220314161119974-1369504529.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<ul>
+<li>区(Extent)是比页大一级的存储结构，在InnoDB存储引擎中，一个区会分配64个连续的页。因为InnoDB中的页大小默认是16KB，所以一个区的大小是64*16KB= 1MB。</li>
+<li>段(Segment)由一个或多个区组成。段是数据库中的分配单位，不同类型的数据库对象以不同的段形式存在。</li>
+<li>表空间（Tablespace)是一个逻辑容器，表空间存储的对象是段，在一个表空间中可以有一个或多个段，但是一个段只能属于一个表空间。数据库由一个或多个表空间组成，表空间从管理上可以划分为系统表空间、用户表空间、撤销表空间、临时表空间等。</li>
+</ul>
+<h4 id="为什么要有区">为什么要有区
+</h4><p>B+树的每一层中的页都会形成一个双向链表，如果以页为单位来分别存储空间的话，双向链表相邻的两个也之间的物理位置可能离的远，就会导致随机IO，消耗内存。如果数据量大的情况下需要按照区为单位分配存储空间，一个区中就可以有物理位置上连续的64个页，就会是顺序IO。（顺序IO的速度比随机IO快）</p>
+<h4 id="为什么要有段">为什么要有段
+</h4><p>如果把数据页和索引页都放入一个区中，在进行查找的时候还需要区分数据页和索引页，这样效率很低。因此把数据页单独存放一个区，索引页单独存放一个区。存放数据页的区的集合就是一个数据段。存放索引页的区的集合就是一个索引段。<br>
+段是一个逻辑概念，由若干个零散的页面和一些完整的区组成。</p>
+<h4 id="为什么要有碎片区">为什么要有碎片区
+</h4><p>1、一个索引会生成两个段，而段以区为单位申请存储空间时，一个区占用1MB的存储空间，如果只存储少量的数据，就需要2MB的存储空间。如果再添加一个索引还需要申请2MB的存储空间。就会造成空间的浪费。这时提出了碎片区。<br>
+2、碎片区是直属于表空间，如果每个段的数据很少那么该碎片区域对其他的数据段共享，可以存放数据。</p>
+<ul>
+<li>在刚开始向表中插入数据的时候，段是从某个碎片区以单个页面为单位来分配存储空间的。</li>
+<li>当某个段已经占用了32个碎片区页面之后，就会申请以完整的区为单位来分配存储空间。</li>
+</ul>
+<h4 id="区的分类">区的分类
+</h4><p><strong>区的大致分类：</strong></p>
+<ul>
+<li>空闲的区(FREE)：现在还没有用到这个区中的任何页面。</li>
+<li>有剩余空间的碎片区(FREE_FRAG)：表示碎片区中还有可用的页面。</li>
+<li>没有剩余空间的碎片区(FULL_FRAG)：表示碎片区中的所有页面都被使用，没有空闲页面。</li>
+<li>附属于某个段的区(FSEG)：每一个索引都可以分为叶子节点段和非叶子节点段。</li>
+</ul>
+<blockquote>
+<p><code>空闲的区、有剩余空间的碎片区、没有剩余空间的碎片区**都属于表空间**</code><br>
+<code>附属于某个段的区**属于某个端**</code></p>
+</blockquote>
+<h3 id="73数据页中的页目录page-directory">7.3数据页中的页目录（Page Directory）
+</h3><h4 id="页目录分组的个数如何确定">页目录分组的个数如何确定
+</h4><p>1、<strong>记录头信息中的n_owned字段：页目录中每个组中最后一条记录的n_owned字段会表示该组一共有多少条记录。</strong><br>
+2、InnoDB规定:对于最小记录所在的分组只能有1条记录，最大记录所在的分组拥有的记录条数只能在1到8条之间，剩下的分组中记录的条数范围只能在是4到8条之间。</p>
+<ul>
+<li>初始情况下一个数据页里只有最小记录和最大记录两条记录，它们分属于两个分组。</li>
+<li>之后每插入一条记录，都会从页目录中找到主键值比本记录的主键值大并且差值最小的槽，然后把该槽对应的记录的n_owned值加1，表示本组内又添加了一条记录，直到该组中的记录数等于8个。</li>
+<li>在一个组中的记录数等于8个后再插入一条记录时，会将组中的记录拆分成两个组，一个组中4条记录，另一个5条记录。这个过程会在页目录中<strong>新增一个槽来记录这个新增分组中最大的那条记录的地址偏移量</strong></li>
+</ul>
+<p><img src="/img/db/mysql/2345397-20220314190926798-132833972.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p><strong>3、如何查找数据，针对上图</strong><br>
+<img src="/img/db/mysql/2345397-20220314192522713-1178258965.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="页目录结构下如何快速查找记录">页目录结构下如何快速查找记录
+</h4><p>在一个数据页中查找指定主键值的记录：</p>
+<ul>
+<li>通过二分法确定该记录所在的槽，并找到该槽所在分组中主键值最小的那条记录。</li>
+<li>通过记录的next_record属性遍历该槽所在的组中的各个记录。</li>
+</ul>
+<h3 id="74数据页中的用户记录user-records的格式">7.4数据页中的用户记录（User Records）的格式
+</h3><p>用户记录的格式：compact、Redundant、Dynamic、Compressed<br>
+<strong>mysql5.7和8.0的默认格式：Dynamic</strong></p>
+<h4 id="741compact行格式mysql57版本之前">7.4.1compact行格式（mysql5.7版本之前）
+</h4><p><img src="/img/db/mysql/2345397-20220314202621463-690656944.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p><strong>1、变长字段长度列表</strong><br>
+在Compact行格式中，把所有变长字段（varchar、varbinary、text、blob）的真实数据占用的字节长度都存放在记录的开头部位，从而形成一个变长字段长度列表。<br>
+<strong>2、NULL值列表：该值为1时代表为NULL值、该值为0时代表不为NULL值</strong><br>
+<strong>3、记录头信息</strong></p>
+<ul>
+<li>delete_mask：表示该记录是否被删除（0表示未删除、1表示已删除）<br>
+<img src="/img/db/mysql/2345397-20220314201634061-1091381323.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li>min_rec_mask：B+树的每个非叶子结点中的最小记录会把该值标志位1</li>
+<li>record_type：值为0普通记录；值为1目录项记录；值为2最小记录；值为3最大记录</li>
+<li>heap_no：值为0最小记录；值为1最大记录；其他记录依次加1</li>
+<li>n_owned：页目录中每个组中最后一条记录的n_owned字段会记录该组一共有多少条记录</li>
+<li>next_record：下一条记录的真实数据的地址偏移量</li>
+</ul>
+<p><strong>4、记录的真实数据（自己定义的列、三个隐藏列）</strong><br>
+<strong>隐藏列</strong>：<br>
+<img src="/img/db/mysql/2345397-20220314202742103-2127739076.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<blockquote>
+<p><code>一个表没有手动定义主键，则会选取一个Unique键作为主键，如果连Unique键都没有定义的话，则会为表默认添加一个名为row_id的隐藏列作为主键。</code></p>
+</blockquote>
+<h4 id="742redundant行格式mysql50以及之前的版本">7.4.2Redundant行格式（mysql5.0以及之前的版本）
+</h4><p><img src="/img/db/mysql/2345397-20220314203716883-1534418272.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+与compact行格式的记录头信息相比：</p>
+<ul>
+<li>redundant行格式多了n_field和1byte_offs_flaf两个属性</li>
+<li>redundant行格式没有record_type属性</li>
+</ul>
+<h4 id="743dynamic和compressed行格式mysql57之后">7.4.3dynamic和compressed行格式(mysql5.7之后)
+</h4><p><strong>行溢出</strong>：如果一个16KB页中存放一个varchar(65535）的数据可能不够，这时就会出现行溢出。<br>
+<strong>dynamic和compressed</strong>：存放BLOB数据时采用<strong>完全的行溢出</strong>方式（在数据页中只存放20字节的指针指向溢出页的地址），实际的数据都存放在溢出页中。<br>
+<strong>compact和redundant</strong>：<strong>采用部分行溢出</strong>，只会存储该列的一部分数据768个字节，再使用20字节的指针指向溢出页的地址。</p>
+<p>本文转自 <a class="link" href="https://www.cnblogs.com/worldusemycode/p/15923279.html"  target="_blank" rel="noopener"
+    >https://www.cnblogs.com/worldusemycode/p/15923279.html</a>，如有侵权，请联系删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/10mysql%E7%9A%84%E8%B0%83%E4%BC%98.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">10、mysql的调优.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/11%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">11、事务的基础概念.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/12mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">12、mysql的事务日志.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/13mysql%E9%94%81.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">13、mysql锁.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/14%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">14、多版本并发控制.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

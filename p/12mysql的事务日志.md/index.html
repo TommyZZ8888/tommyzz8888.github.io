@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="mysql的事务日志 事务有4种特性：原子性、一致性、隔离性和持久性。那么事务的四种特性到底是基于什么机制实现呢？\n事务的隔离性由锁机制实现。 事务的原子性、一致性和持久性由事务的redo日志和undo日志来保证。\nREDO LOG称为重做日志：提供再写入操作，恢复提交事务修改的页操作，用来保证事务的持久性。\nUNDO LOG称为回滚日志：事务的回滚(undo log记录的是每个修改操作的逆操作)和一致性非锁定读(undo log回滚行记录到某种特定的版本)，用来保证事务的原子性、一致性。 有的同学认为undo log是redo log的逆过程，这种理解是错误的。\n">
+<title>12、mysql的事务日志.md</title>
+
+<link rel='canonical' href='https://tommyzz8888.github.io/p/12mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97.md/'>
+
+<link rel="stylesheet" href="/scss/style.min.1c4e22293ed345b6b1e3d9d23b5179325e75509423f3f38833bc112c169fe4be.css"><meta property='og:title' content="12、mysql的事务日志.md">
+<meta property='og:description' content="mysql的事务日志 事务有4种特性：原子性、一致性、隔离性和持久性。那么事务的四种特性到底是基于什么机制实现呢？\n事务的隔离性由锁机制实现。 事务的原子性、一致性和持久性由事务的redo日志和undo日志来保证。\nREDO LOG称为重做日志：提供再写入操作，恢复提交事务修改的页操作，用来保证事务的持久性。\nUNDO LOG称为回滚日志：事务的回滚(undo log记录的是每个修改操作的逆操作)和一致性非锁定读(undo log回滚行记录到某种特定的版本)，用来保证事务的原子性、一致性。 有的同学认为undo log是redo log的逆过程，这种理解是错误的。\n">
+<meta property='og:url' content='https://tommyzz8888.github.io/p/12mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97.md/'>
+<meta property='og:site_name' content='my note'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-28T09:38:23&#43;08:00'/><meta property='article:modified_time' content='2025-12-28T09:38:23&#43;08:00'/>
+<meta name="twitter:title" content="12、mysql的事务日志.md">
+<meta name="twitter:description" content="mysql的事务日志 事务有4种特性：原子性、一致性、隔离性和持久性。那么事务的四种特性到底是基于什么机制实现呢？\n事务的隔离性由锁机制实现。 事务的原子性、一致性和持久性由事务的redo日志和undo日志来保证。\nREDO LOG称为重做日志：提供再写入操作，恢复提交事务修改的页操作，用来保证事务的持久性。\nUNDO LOG称为回滚日志：事务的回滚(undo log记录的是每个修改操作的逆操作)和一致性非锁定读(undo log回滚行记录到某种特定的版本)，用来保证事务的原子性、一致性。 有的同学认为undo log是redo log的逆过程，这种理解是错误的。\n"><style>
+    :root {
+         
+		 
+		 
+		--sys-font-family: "HarmonyOS_Sans_SC_Medium", Georgia, -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+
+		--code-font-family: "JetBrainsMono Regular", Menlo, Monaco, Consolas, "Courier New";
+		--article-font-family: "HarmonyOS_Sans_SC_Medium", var(--base-font-family);
+    }
+</style>
+
+<script>
+	
+		(function () {
+		    const customFont = document.createElement('link');
+			customFont.href = "https://npm.elemecdn.com/irithys-cdn@1.0.4/font/font.css";
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">my note</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" stroke="currentColor" fill="#BDBDBF"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"/></svg>
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M456 32h-304C121.1 32 96 57.13 96 88v320c0 13.22-10.77 24-24 24S48 421.2 48 408V112c0-13.25-10.75-24-24-24S0 98.75 0 112v296C0 447.7 32.3 480 72 480h352c48.53 0 88-39.47 88-88v-304C512 57.13 486.9 32 456 32zM464 392c0 22.06-17.94 40-40 40H139.9C142.5 424.5 144 416.4 144 408v-320c0-4.406 3.594-8 8-8h304c4.406 0 8 3.594 8 8V392zM264 272h-64C186.8 272 176 282.8 176 296S186.8 320 200 320h64C277.3 320 288 309.3 288 296S277.3 272 264 272zM408 272h-64C330.8 272 320 282.8 320 296S330.8 320 344 320h64c13.25 0 24-10.75 24-24S421.3 272 408 272zM264 352h-64c-13.25 0-24 10.75-24 24s10.75 24 24 24h64c13.25 0 24-10.75 24-24S277.3 352 264 352zM408 352h-64C330.8 352 320 362.8 320 376s10.75 24 24 24h64c13.25 0 24-10.75 24-24S421.3 352 408 352zM400 112h-192c-17.67 0-32 14.33-32 32v64c0 17.67 14.33 32 32 32h192c17.67 0 32-14.33 32-32v-64C432 126.3 417.7 112 400 112z"/></svg>
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M32 432C32 458.5 53.49 480 80 480h352c26.51 0 48-21.49 48-48V160H32V432zM160 236C160 229.4 165.4 224 172 224h168C346.6 224 352 229.4 352 236v8C352 250.6 346.6 256 340 256h-168C165.4 256 160 250.6 160 244V236zM480 32H32C14.31 32 0 46.31 0 64v48C0 120.8 7.188 128 16 128h480C504.8 128 512 120.8 512 112V64C512 46.31 497.7 32 480 32z"/></svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M464 96h-192l-64-64h-160C21.5 32 0 53.5 0 80V160h512V144C512 117.5 490.5 96 464 96zM0 432C0 458.5 21.5 480 48 480h416c26.5 0 48-21.5 48-48V192H0V432z"/></svg>
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/search/" class="search-form widget" >
+        <p>
+            <label>搜索 博客 的一些内容</label>
+            <input name="keyword" required placeholder="输入搜索的关键词..." />
+        
+            <button title="搜索 博客 的一些内容">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#redo日志">redo日志</a>
+      <ol>
+        <li><a href="#11为什么需要redo日志">1.1为什么需要redo日志</a></li>
+        <li><a href="#12redo日志的特点">1.2redo日志的特点</a></li>
+        <li><a href="#13redo的组成">1.3redo的组成</a></li>
+        <li><a href="#14redo的整体流程">1.4redo的整体流程</a></li>
+        <li><a href="#15redo-log刷盘策略">1.5redo log刷盘策略</a></li>
+        <li><a href="#17写入redo-log-buffer中的过程">1.7写入redo log buffer中的过程</a>
+          <ol>
+            <li><a href="#171mini-transaction">1.7.1Mini-Transaction</a></li>
+            <li><a href="#172redo-日志写入redo-log-buffer中">1.7.2redo 日志写入redo log buffer中</a></li>
+            <li><a href="#173redo-log-block的结构">1.7.3redo log block的结构</a></li>
+          </ol>
+        </li>
+        <li><a href="#18-redo-log-file">1.8 redo log file</a>
+          <ol>
+            <li><a href="#182日志文件组">1.8.2日志文件组</a></li>
+            <li><a href="#183-checkpoint">1.8.3 checkpoint</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#undo日志">undo日志</a>
+      <ol>
+        <li><a href="#21undo日志的理解">2.1undo日志的理解</a></li>
+        <li><a href="#22undo日志中存储了哪些数据">2.2undo日志中存储了哪些数据</a></li>
+        <li><a href="#23undo的类型">2.3undo的类型</a></li>
+        <li><a href="#24undo的存储结构">2.4undo的存储结构</a>
+          <ol>
+            <li><a href="#241回滚段与undo页">2.4.1回滚段与undo页</a></li>
+            <li><a href="#242回滚段与事务的关系">2.4.2回滚段与事务的关系</a></li>
+            <li><a href="#243回滚段中的数据分类">2.4.3回滚段中的数据分类</a></li>
+          </ol>
+        </li>
+        <li><a href="#25undo日志的作用">2.5undo日志的作用</a></li>
+        <li><a href="#26undo日志是如何生成的">2.6undo日志是如何生成的</a></li>
+      </ol>
+    </li>
+    <li><a href="#当事务使用undo日志和redo日志的示意图">当事务使用undo日志和redo日志的示意图</a>
+      <ol>
+        <li><a href="#总结">总结</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+            
+                <section class="widget tagCloud">
+    <div class="widget-icon">
+
+    </div>
+    <h2 class="widget-title section-title">分类</h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
+            <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
+                中间件
+            </a>
+        
+            <a href="/categories/java-%E5%9F%BA%E7%A1%80/" class="font_size_7">
+                Java 基础
+            </a>
+        
+            <a href="/categories/spring/" class="font_size_7">
+                Spring
+            </a>
+        
+            <a href="/categories/tool/" class="font_size_7">
+                Tool
+            </a>
+        
+            <a href="/categories/%E9%83%A8%E7%BD%B2/" class="font_size_7">
+                部署
+            </a>
+        
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
+            </a>
+        
+            <a href="/categories/nio/" class="font_size_5">
+                Nio
+            </a>
+        
+            <a href="/categories/java-base/" class="font_size_4">
+                Java Base
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    
+
+<div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/db/" >
+            DB
+        </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/12mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97.md/">12、mysql的事务日志.md</a>
+        </h2>
+
+        
+    </div>
+
+    
+     
+    
+    
+    
+    <footer class="article-time">
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  stroke="currentColor" fill="#BDBDBF"><path d="M326.1 160l127.4-127.4C451.7 32.39 449.9 32 448 32h-86.06l-128 128H326.1zM166.1 160l128-128H201.9l-128 128H166.1zM497.7 56.19L393.9 160H512V96C512 80.87 506.5 67.15 497.7 56.19zM134.1 32H64C28.65 32 0 60.65 0 96v64h6.062L134.1 32zM0 416c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V192H0V416z"/></svg>
+            <time class="article-time--published">12月28日, 2025年</time>
+        </div>
+        
+
+        
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" stroke="currentColor" fill="#BDBDBF"><path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+            <time class="article-time--reading">
+                阅读时长: 15 分钟
+                
+                
+                , 7063 字
+                
+            </time>
+        </div>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="mysql的事务日志">mysql的事务日志
+</h1><p><strong>事务有4种特性：原子性、一致性、隔离性和持久性。那么事务的四种特性到底是基于什么机制实现呢？</strong></p>
+<ul>
+<li>事务的隔离性由<strong>锁机制</strong>实现。</li>
+<li>事务的原子性、一致性和持久性由事务的<strong>redo日志和undo日志</strong>来保证。<br>
+<code>REDO LOG称为重做日志：提供再写入操作，恢复提交事务修改的页操作，用来保证事务的持久性。</code><br>
+<code>UNDO LOG称为回滚日志：事务的回滚(undo log记录的是每个修改操作的逆操作)和一致性非锁定读(undo log回滚行记录到某种特定的版本)，用来保证事务的原子性、一致性。</code></li>
+</ul>
+<p><strong>有的同学认为undo log是redo log的逆过程，这种理解是错误的。</strong></p>
+<ul>
+<li>redo log：是存储引擎层(innodb)生成的日志，记录的是&quot;物理级别&quot;上的页修改操作，比如页号、偏移量、数据，主要为了保证数据的可靠性</li>
+<li>undo log：是存储引擎层(innodb)生成的日志，记录的是逻辑操作日志，并不是真正回滚到执行该事务之前的物理状态，比如对某一行数据进行了INSERT语句操作，那么undo log就记录一条与之相反的DELETE操作，</li>
+</ul>
+<h2 id="redo日志">redo日志
+</h2><h3 id="11为什么需要redo日志">1.1为什么需要redo日志
+</h3><p><strong>1、在传统的情况下</strong>：把更改的数据写到缓冲池，当执行提交事务操作后，数据库宕机了，缓冲池中的数据就会丢失、无法把数据刷入到磁盘上，违反了事务的持久性。<br>
+<code>事务的持久性：一个事务一旦被提交，它对数据库中数据的改变就是永久性的，接下来的其他操作和数据库故障不应该对其有任何影响。</code><br>
+<img src="/img/db/mysql/2345397-20220304231750490-563015138.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<strong>2、如何保证事务的持久性（两种方式）：</strong><br>
+<strong>方式一（简单的方式）</strong>：在事务提交完成之前把该事务所修改的所有页面都刷新到磁盘，这样就可以保持事务的持久性。但是存在问题：<br>
+<code>1、innodb是以页作为磁盘和内存交互的基本单位，当仅仅修改某个页面中的一个字节时，就需要将整个页面刷新到磁盘当中，这样会增加磁盘IO的时间，使服务器性能降低。</code><br>
+<code>2、当执行一条sql语句时可能会修改很多页面，这些页面可能是不相邻的，在将缓冲池中修改过的页面刷新到磁盘上时，需要进行随机IO，随机IO比顺序IO慢。</code></p>
+<p><strong>方式二（使用redo日志）</strong>：<strong>我们只是想让已经提交了的事务对数据库中数据所做的修改永久生效</strong>，即使后来系统崩溃，在重启后也能把这种修改恢复出来。所以我们其实没有必要在每次事务提交时就把该事务在内存中修改过的全部页面刷新到磁盘，只需要使用redo日志把修改的数据记录下来，当系统重启后直接使用redo日志重新执行。</p>
+<h3 id="12redo日志的特点">1.2redo日志的特点
+</h3><ul>
+<li>redo日志降低了刷盘频率</li>
+<li>redo日志占用的空间非常小：<br>
+<code>存储表空间ID、页号、偏移量、需要更新的值，因此使用的存储空间小</code></li>
+<li>redo日志是顺序写入磁盘的：<br>
+<code>在执行事务的过程中，每执行一条语句，就可能产生若干条redo日志，这些日志是按照产生的顺序写入到磁盘中，也就是使用顺序IO写入</code></li>
+<li>事务执行过程中，redo log不断记录：<br>
+<code>在事务执行过程中redo log可以不断写入redo log file文件中，而binlog只有在提交事务时才可以写入bin log file文件中，所以redo log与binlog的写入时机不一样。</code></li>
+</ul>
+<h3 id="13redo的组成">1.3redo的组成
+</h3><p><strong>redo log可以分为两个部分：</strong></p>
+<ul>
+<li>
+<p>重做日志缓冲（redo log buffer）：保存在内存中，容易丢失。<br>
+<code>默认大小是16M，最大值是4096M，最小值为1M</code><br>
+<img src="/img/db/mysql/2345397-20220305010921603-296008198.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+</li>
+<li>
+<p>重做日志文件（redo log file）：保存在硬盘中，是持久的。<br>
+<code>在/var/lib/mysql目录下可以查看到ib_logfile0和ib_logfile1日志文件</code><br>
+<img src="/img/db/mysql/2345397-20220305011410267-1776523466.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+</li>
+</ul>
+<h3 id="14redo的整体流程">1.4redo的整体流程
+</h3><p><img src="/img/db/mysql/2345397-20220305012619815-985895468.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<ul>
+<li>第1步：先将原始数据从磁盘中读入内存中来，修改数据的内存拷贝</li>
+<li>第2步：生成一条redo log重做日志并写入redo log buffer，记录的是数据被修改后的值</li>
+<li>第3步：当事务commit时，将redo log buffer中的内容刷盘到 redo log file，对 redo log file采用追加写的方式</li>
+<li>第4步：定期将内存中修改的数据刷新到磁盘中。当发生宕机且数据未刷到磁盘的时候，可以使用redo log来恢复，保证ACID的持久性。</li>
+</ul>
+<h3 id="15redo-log刷盘策略">1.5redo log刷盘策略
+</h3><p><strong>1、redo log的写入并不是直接写入磁盘的，InnoDB引擎会在写redo log的时候先写入redo log buffer缓冲区，之后按照刷盘策略（innodb_flush_log_at_trx_commit）刷入到真正的redo log file中。</strong></p>
+<blockquote>
+<p>redo log buffer刷盘到redo log file的过程并不是真正的刷到磁盘中去，只是写入到文件系统缓存（page cache）中去，真正的刷盘到redo log file中会交给系统自己来决定</p>
+</blockquote>
+<p><strong>innodb_flush_log_at_trx_commit （默认值为1）</strong>：表示何时将缓冲区的数据写入日志文件，并且将日志文件写入磁盘中。该参数对于innoDB引擎非常重要。<strong>（系统默认master thread每隔1秒会将数据写入日志文件并将日志文件写入磁盘）</strong></p>
+<ul>
+<li>
+<p><strong>值为 0 时</strong>，表示<strong>每隔1秒</strong>将<code>数据写入日志文件（把redo log buffer中的redo日志写入到page cache，再将page cache中的redo日志刷盘到redo log file日志文件中）</code>并将<code>日志文件写入磁盘</code>。该模式速度最快，但不太安全，<strong>在mysqld进程的崩溃或者操作系统宕机情况下会导致redo logo buffer中所有已提交事务的数据丢失，违反了事务的持久性</strong>。<br>
+<img src="/img/db/mysql/2345397-20220305120734445-1549959344.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+</li>
+<li>
+<p><strong>值为 1 时</strong>，表示<strong>每次提交事务时</strong>将<code>数据写入日志文件（把redo log buffer中的redo日志写入到page cache，再将page cache中的redo日志刷盘到redo log file日志文件中）</code>并将<code>日志文件写入磁盘</code>。该模式是最安全的，但也是最慢的一种方式。<br>
+<img src="/img/db/mysql/2345397-20220305122450318-1794178965.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+</li>
+<li>
+<p><strong>值为 2 时</strong>，表示<strong>每次提交事务时</strong>将<code>数据写入日志文件（只是把redo log buffer中的redo日志写入到page cache；并不会把page cache中的redo日志刷盘到redo log file日志文件，该操作交给系统默认的master thread去执行）</code>，<strong>每隔1秒</strong>将<code>日志文件写入磁盘</code>。该模式速度较快，也比0安全一点，<strong>在操作系统宕机的情况下会导致page cache中上一秒钟所有已提交事务的数据丢失，违反了事务的持久性</strong>。<br>
+<img src="/img/db/mysql/2345397-20220305123737346-656901832.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+</li>
+</ul>
+<h3 id="17写入redo-log-buffer中的过程">1.7写入redo log buffer中的过程
+</h3><h4 id="171mini-transaction">1.7.1Mini-Transaction
+</h4><p>MysQL把对底层页面中的一次原子访问的过程称之为一个Mini-Transaction，简称mtr。一个事务可以包含若干条语句，每一条语句可能操作若干个页面，每个页面对应一个mtr，一个mtr可以包含一组redo日志，在进行崩溃恢复时这一组redo日志作为一个不可分割的整体。<br>
+<img src="/img/db/mysql/2345397-20220305125331323-1226600094.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="172redo-日志写入redo-log-buffer中">1.7.2redo 日志写入redo log buffer中
+</h4><p><code>1、一个mtr执行过程中可能产生若干条redo日志，这些redo日志是一个不可分割的组，所以其实并不是每生成一条redo日志，就将其插入到log buffer中，而是每个mtr运行过程中产生的日志先暂时存到一个地方，当该mtr结束的时候，将过程中产生的一组redo日志再全部复制到log buffer中。</code></p>
+<p><code>2、向redo log buffer中写入每组redo日志的过程是顺序的，也就是先往前边的block中写，当该block的空闲空间用完之后再往下一个block中写。buf_free全局变量指明后续写入的redo日志应该写入到redo log buffer中的哪个位置，如图所示:</code><br>
+<img src="/img/db/mysql/2345397-20220305130256353-127583212.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h4 id="173redo-log-block的结构">1.7.3redo log block的结构
+</h4><p><strong>一个redo log block是由日志头、日志体、日志尾组成</strong>。日志头占用12字节，日志尾占用8字节，日志体来真正存储的数据占用512-12-8=492字节。<br>
+<img src="/img/db/mysql/2345397-20220305130711160-1748996978.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+><br>
+<strong>为什么将redo log block设置为512字节</strong></p>
+<blockquote>
+<p>这个和磁盘的扇区有关，机械磁盘默认的扇区就是512字节，如果你要写入的数据大于512字节，那么要写入的扇区肯定不止一个，这时就要涉及到盘片的转动，找到下一个扇区，假设现在需要写入两个扇区A和B，如果扇区A写入成功，而扇区B写入失败，那么就会出现非原子性的写入，而如果每次只写入和扇区的大小一样的512字节，那么每次的写入都是原子性的。</p>
+</blockquote>
+<h3 id="18-redo-log-file">1.8 redo log file
+</h3><p>1.8.1 参数设置</p>
+<ul>
+<li>innodb_log_group_home_dir ：指定 redo log 文件组所在的路径，默认值为 ./ ，表示在数据库的数据目录下。MySQL的默认数据目录（ var/lib/mysql ）下默认有两个名为 ib_logfile0 和ib_logfile1 的文件，log buffer中的日志默认情况下就是刷新到这两个磁盘文件中。此redo日志文件位置还可以修改。</li>
+<li>innodb_log_files_in_group：指明redo log file的个数，命名方式如：ib_logfile0，iblogfile1&hellip;iblogfilen。默认2个，最大100个。<br>
+<img src="/img/db/mysql/2345397-20220305131233059-1475738030.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+<li>innodb_log_file_size：单个 redo log 文件设置大小，默认值为 48M 。最大值为512G，注意最大值指的是整个 redo log 系列文件之和，即（innodb_log_files_in_group *innodb_log_file_size ）不能大于最大值512G。<br>
+<img src="/img/db/mysql/2345397-20220305131347840-74695278.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h4 id="182日志文件组">1.8.2日志文件组
+</h4><ul>
+<li>总共的redo日志文件大小其实就是: innodb_log_file_size x innodb_log_files_in_group。</li>
+<li>采用循环使用的方式向redo日志文件组里写数据<br>
+<img src="/img/db/mysql/2345397-20220305131630451-2013426184.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></li>
+</ul>
+<h4 id="183-checkpoint">1.8.3 checkpoint
+</h4><p>1、checkpoint的作用：当采用循环使用的方式向redo日志文件组里写数据，保证不会覆盖以前写入的redo日志。<br>
+2、每次刷盘redo log记录到日志文件组中，write pos位置就会后移更新。每次MySQL加载日志文件组恢复数据时，会清空加载过的redo log记录，并把checkpoint后移更新。write pos和checkpoint之间的还空着的部分可以用来写入新的redo log记录。<br>
+3、当write pos追上checkpoint，表示日志文件组满了，这时候不能再写入新的redo log记录，需要等待mysql清空一些redo log记录，把check point往后移动。<br>
+<img src="/img/db/mysql/2345397-20220305132204665-996825363.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h2 id="undo日志">undo日志
+</h2><p>redo log是事务持久性的保证，undo log是事务原子性的保证。<strong>在事务中更新数据之前先把旧的数据写入一个undo log。</strong></p>
+<h3 id="21undo日志的理解">2.1undo日志的理解
+</h3><p><strong>1、在事务执行到一半的时候，当出现服务器本身的错误、操作系统错误、断电、程序员手动输入rollback情况时，需要使用undo 日志进行回滚操作，来保证事务的原子性，从逻辑上看该事务什么也没有做。</strong></p>
+<h3 id="22undo日志中存储了哪些数据">2.2undo日志中存储了哪些数据
+</h3><p><strong>当我们要对一条记录做改动时(这里的改动可以指INSERT、DELETE、UPDATE)需要往redo日志中记录一些数据：</strong> <code>undo log的产生会伴随着redo log的产生，这是因为undo log也需要持久性的保护，在 重启之后还可以使用undo log进行回滚操作。</code></p>
+<ul>
+<li>你插入了一条记录时，至少要把这条记录的主键值记录下来，之后回滚的时候只需要把这个主键值对应的记录删掉就好了。(对于每个INSERT，lnnoDB存储引擎会完成一个DELETE)</li>
+<li>你删除了一条记录时，至少要把这条记录中的内容都记录下来，这样之后回滚时再把由这些内容组成的记录插入到表中就好了。(对于每个DELETE，InnoDB存储引擎会执行一个INSERT)</li>
+<li>你更新了一条记录时，至少要把修改这条记录前的旧值都记录下来，这样之后回滚时再把这条记录更新为旧值就好了。(对于每个UPDATE，InnoDB存储引擎会执行一个相反的UPDATE，将修改前的行放回去)</li>
+</ul>
+<blockquote>
+<p>注意，由于查询操作( SELECT ）并不会修改任何用户记录，所以在查询操作执行时，并不需要记录相应的undo日志。</p>
+</blockquote>
+<h3 id="23undo的类型">2.3undo的类型
+</h3><p><strong>在InnoDB存储引擎中,undo log分为:</strong></p>
+<ul>
+<li><strong>insert undo log是指在insert操作中产生的undo log</strong>。因为insert操作的记录，只对事务本身可见，对其他事务不可见(这是事务隔离性的要求)，<strong>故该undo log可以在事务提交时直接删除</strong>。不需要purge线程删除。</li>
+<li><strong>update undo log记录的是对delete和update操作产生的undo log</strong>。<strong>该undo log可能需要提供MVCC机制，因此不能在事务提交时就进行删除</strong>。提交事务时<strong>放入undo log链表</strong>，等待purge线程进行最后的删除。</li>
+</ul>
+<h3 id="24undo的存储结构">2.4undo的存储结构
+</h3><h4 id="241回滚段与undo页">2.4.1回滚段与undo页
+</h4><h5 id="回滚段">回滚段
+</h5><p><strong>InnoDB对undo log的管理采用段的方式，也就是回滚段（rollback segment）</strong>。每个回滚段记录了1024个undo log segment ，而在每个undo log segment段中进行undo页的申请。</p>
+<ul>
+<li>在 InnoDB1.1版本之前（不包括1.1版本），只有一个rollback segment，因此支持同时在线的事务限制为1024。虽然对绝大多数的应用来说都已经够用。</li>
+<li>从1.1版本开始InnoDB支持最大128个rollback segment，故其支持同时在线的事务限制提高到了 128*1024 。</li>
+</ul>
+<p>虽然InnoDB1.1版本支持了128个rollback segment，但是这些rollback segment都存储于共享表空间ibdata中。从lnnoDB1.2版本开始，可通过参数对rollback segment做进一步的设置。这些参数包括:</p>
+<ul>
+<li>innodb_undo_directory :设置rollback segment文件所在的路径。这意味着rollback segment可以可以自己设置独立表空间。该参数的默认值为“./&quot;，表示当前InnoDB存储引擎的目录。</li>
+<li>innodb_undo_logs :设置rollback segment的个数，默认值为128。在InnoDB1.2版本中，该参数用来替换之前版本的参数innodb_rollback_segments。</li>
+<li>innodb_undo_tablespaces:设置存储rollback segment的文件数量，这样rollback segment可以较为平均地分布在多个文件中。设置该参数后，会在路径innodb_undo_directory看到undo为前缀的文件，该文件就代表存储rollback segment的文件。</li>
+</ul>
+<h5 id="undo页的重用">undo页的重用
+</h5><p><strong>前提：当我们开启一个事务需要写undo log的时候，就得先去undo log segment中去找到一个空闲的位置，有空位时就申请undo页，把undo log的写入到申请到的undo页。我们知道mysql默认一页的大小是16k。为每一个事务分配一个页，是非常浪费的（除非你的事务非常长)。</strong><br>
+<code>于是undo页就被设计的可以重用了，当事务提交时，并不会立刻删除undo页。因为重用，所以这个undo页可能混杂着其他事务的undo log。undo log在事务commit时，会被放到一个undo log链表中，然后判断undo页的使用空间是否小于3 /4，如果小于3/4的话，则表示当前的undo页可以被重用，分配给其他事务使用，其他事务的undo log可以记录在当前undo页的后面。由于undo log是离散的，所以清理对应的磁盘空间时，效率不高。</code></p>
+<h4 id="242回滚段与事务的关系">2.4.2回滚段与事务的关系
+</h4><ol>
+<li>每个事务只会使用一个回滚段，一个回滚段在同一时刻可能会服务于多个事务。</li>
+<li>当一个事务开始的时候，会制定一个回滚段，在事务进行的过程中，当数据被修改时，原始的数据会被复制到回滚段。</li>
+<li>在回滚段中，事务会不断填充盘区，直到事务结束或所有的空间被用完。如果当前的盘区不够用，事务会在段中请求扩展下一个盘区，如果所有已分配的盘区都被用完，事务会覆盖最初的盘区或者在回滚段允许的情况下扩展新的盘区来使用。</li>
+<li>回滚段存在于undo表空间中，在数据库中可以存在多个undo表空间，但同一时刻只能使用一个undo表空间。</li>
+<li>当事务提交时，InnoDB存储引擎会做以下两件事情：<br>
+<code>将undo log放入undo log链表中，可以提供MVCC，等待purge线程进行最后的删除</code><br>
+<code>判断undo log所在的页是否可以重用，若可以分配给下个事务使用</code></li>
+</ol>
+<h4 id="243回滚段中的数据分类">2.4.3回滚段中的数据分类
+</h4><ul>
+<li><code>未提交事务的回滚数据(uncommitted undo information)</code>：该数据所关联的事务并未提交，用于实现读一致性，所以该数据不能被其他事务的数据覆盖。</li>
+<li><code>已经提交事务但未过期的回滚数据(committed undo information)相当于是undo log链表中未过期的数据</code>：该数据关联的事务已经提交，但是仍受到undo retention参数的保持时间的影响。</li>
+<li><code>已经提交事务并过期的数据(expired undo information)相当于是undo log链表中已经过期的数据</code>：事务已经提交，而且数据保存时间已经超过undo retention参数指定的时间，属于已经过期的数据。当回滚段满了之后，会优先覆盖&quot;事务已经提交并过期的数据&quot;。</li>
+</ul>
+<h3 id="25undo日志的作用">2.5undo日志的作用
+</h3><ul>
+<li>回滚数据<br>
+<code>undo是逻辑日志，因此只是将数据库逻辑地恢复到原来的样子，所有修改都被逻辑地取消了，数据结构和页本身在回滚之后可能和执行该事务开始的状态存在差异。逻辑上不能将一个页回滚到事务开始的样子，因为这样会影响其他事务正在进行的工作。</code></li>
+<li>MVCC<br>
+<code>在InnoDB存储引擎中MVCC的实现是通过undo日志来完成。当用户读取一行记录时，若该记录已经被其他未提交的事务正在占用，当前事务可以通过undo读取之前已经提交事务的行版本信息，以此实现非锁定读取。</code></li>
+</ul>
+<h3 id="26undo日志是如何生成的">2.6undo日志是如何生成的
+</h3><p><strong>通过回滚指针DB_ROLL_PTR指向每次更改前的数据，形成一条undo log日志记录</strong><br>
+<img src="/img/db/mysql/2345397-20220305221904047-75385510.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h2 id="当事务使用undo日志和redo日志的示意图">当事务使用undo日志和redo日志的示意图
+</h2><p><strong>undo日志用于保证原子性，redo日志保证持久性</strong><br>
+<img src="/img/db/mysql/2345397-20220305221054382-1885532325.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<h3 id="总结">总结
+</h3><p><code>undo log是逻辑日志，对事务回滚时，只是将数据库逻辑地恢复到原来的样子。</code><br>
+<code>redo log是物理日志，记录的是数据页的物理变化，undo log不是redo log的逆过程。</code><br>
+<img src="/img/db/mysql/2345397-20220305222606448-914790459.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image"
+	
+	
+></p>
+<p>本文转自 <a class="link" href="https://www.cnblogs.com/worldusemycode/p/15966502.html"  target="_blank" rel="noopener"
+    >https://www.cnblogs.com/worldusemycode/p/15966502.html</a>，如有侵权，请联系删除。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/10mysql%E7%9A%84%E8%B0%83%E4%BC%98.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">10、mysql的调优.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/11%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">11、事务的基础概念.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/13mysql%E9%94%81.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">13、mysql锁.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/14%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">14、多版本并发控制.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/15mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%8E%9F%E7%90%86.md/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">15、mysql主从复制的原理.md</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <section class="copyright">
+        &copy;
+        
+        
+        2025 <a href="#这里是博客链接">博客标题</a>·<i class="fas fa-bell"></i> <a id="days">0</a>天<br>
+
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.17.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+
+    <script>
+        
+        var s1 = '2025-12-28';
+        s1 = new Date(s1.replace(/-/g, "/"));
+        s2 = new Date();
+        var days = s2.getTime() - s1.getTime();
+        var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerHTML = number_of_days;
+        </script>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+        
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "79e3b15f-05e7-4a9d-822d-22f26c66a912"
+  });
+</script>
+
+
+<script type="text/javascript" src="https://博客链接/js/dzj.js"></script>
+<script>
+    (function(u, c) {
+      var d = document, t = 'script', o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function(e) { c(e); }); }
+      s.parentNode.insertBefore(o, s);
+    })('//cdn.bootcss.com/pangu/4.0.7/pangu.min.js', function() {
+      pangu.spacingPage();
+    });
+</script>
+
+
+    </body>
+</html>

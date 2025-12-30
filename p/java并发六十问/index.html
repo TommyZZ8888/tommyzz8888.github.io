@@ -319,6 +319,14 @@
 
     <div class="tagCloud-tags">
         
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
             <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
                 中间件
             </a>
@@ -339,12 +347,8 @@
                 部署
             </a>
         
-            <a href="/categories/concurrency/" class="font_size_6">
-                Concurrency
-            </a>
-        
-            <a href="/categories/juc/" class="font_size_5">
-                Juc
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
             </a>
         
             <a href="/categories/nio/" class="font_size_5">
@@ -353,10 +357,6 @@
         
             <a href="/categories/java-base/" class="font_size_4">
                 Java Base
-            </a>
-        
-            <a href="/categories/jvm/" class="font_size_4">
-                Jvm
             </a>
         
     </div>
@@ -437,7 +437,7 @@
 <li>并行就是同一时刻，两个线程都在执行。这就要求有两个CPU去分别执行两个线程。</li>
 <li>并发就是同一时刻，只有一个执行，但是一个时间段内，两个线程都执行了。并发的实现依赖于CPU切换线程，因为切换的时间特别短，所以基本对于用户是无感知的。</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101201712.png"
+<p><img src="/img/juc/juc/20220101201712.png"
 	
 	
 	
@@ -448,7 +448,7 @@
 	
 ></p>
 <p>就好像我们去食堂打饭，并行就是我们在多个窗口排队，几个阿姨同时打菜；并发就是我们挤在一个窗口，阿姨给这个打一勺，又手忙脚乱地给那个打一勺。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101203921.png"
+<p><img src="/img/juc/juc/20220101203921.png"
 	
 	
 	
@@ -466,7 +466,7 @@
 </ul>
 <p>操作系统在分配资源时是把资源分配给进程的， 但是 CPU 资源比较特殊，它是被分配到线程的，因为真正要占用CPU运行的是线程，所以也说线程是 CPU分配的基本单位。</p>
 <p>比如在Java中，当我们启动 main 函数其实就启动了一个JVM进程，而 main 函数在的线程就是这个进程中的一个线程，也称主线程。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101204622.png"
+<p><img src="/img/juc/juc/20220101204622.png"
 	
 	
 	
@@ -479,7 +479,7 @@
 <p>一个进程中有多个线程，多个线程共用进程的堆和方法区资源，但是每个线程有自己的程序计数器和栈。</p>
 <h2 id="3说说线程有几种创建方式">3.说说线程有几种创建方式？
 </h2><p>Java中创建线程主要有三种方式，分别为继承Thread类、实现Runnable接口、实现Callable接口。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101205015.png"
+<p><img src="/img/juc/juc/20220101205015.png"
 	
 	
 	
@@ -615,7 +615,7 @@
 </div>
 </div><h2 id="4为什么调用start方法时会执行run方法那怎么不直接调用run方法">4.为什么调用start()方法时会执行run()方法，那怎么不直接调用run()方法？
 </h2><p>JVM执行start方法，会先创建一条线程，由创建出来的新线程去执行thread的run方法，这才起到多线程的效果。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101220405.png"
+<p><img src="/img/juc/juc/20220101220405.png"
 	
 	
 	
@@ -627,7 +627,7 @@
 ></p>
 <p>**为什么我们不能直接调用run()方法？**也很清楚， 如果直接调用Thread的run()方法，那么run方法还是运行在主线程中，相当于顺序执行，就起不到多线程的效果。</p>
 <h2 id="5线程有哪些常用的调度方法">5.线程有哪些常用的调度方法？
-</h2><p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101220815.png"
+</h2><p><img src="/img/juc/juc/20220101220815.png"
 	
 	
 	
@@ -722,7 +722,7 @@
   </tbody>
 </table></div>
 <p>线程在自身的生命周期中， 并不是固定地处于某个状态，而是随着代码的执行在不同的状态之间进行切换，Java线程状态变化如图示：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101232116.png"
+<p><img src="/img/juc/juc/20220101232116.png"
 	
 	
 	
@@ -734,7 +734,7 @@
 ></p>
 <h2 id="7什么是线程上下文切换">7.什么是线程上下文切换？
 </h2><p>使用多线程的目的是为了充分利用CPU，但是我们知道，并发其实是一个CPU来应付多个线程。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20210812171435.png"
+<p><img src="/img/juc/juc/20210812171435.png"
 	
 	
 	
@@ -745,7 +745,7 @@
 	
 ></p>
 <p>为了让用户感觉多个线程是在同时执行的， CPU 资源的分配采用了时间片轮转也就是给每个线程分配一个时间片，线程在时间片内占用 CPU 执行任务。当线程使用完时间片后，就会处于就绪状态并让出 CPU 让其他线程占用，这就是上下文切换。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101233532.png"
+<p><img src="/img/juc/juc/20220101233532.png"
 	
 	
 	
@@ -760,7 +760,7 @@
 <p>在JVM 启动时会调用 main 函数，main函数所在的钱程就是一个用户线程。其实在 JVM 内部同时还启动了很多守护线程， 比如垃圾回收线程。</p>
 <p>那么守护线程和用户线程有什么区别呢？区别之一是当最后一个非守护线程束时， JVM会正常退出，而不管当前是否存在守护线程，也就是说守护线程是否结束并不影响 JVM退出。换而言之，只要有一个用户线程还没结束，正常情况下JVM就不会退出。</p>
 <h2 id="9线程间有哪些通信方式">9.线程间有哪些通信方式？
-</h2><p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220101234324.png"
+</h2><p><img src="/img/juc/juc/20220101234324.png"
 	
 	
 	
@@ -800,7 +800,7 @@
 </h1><p>ThreadLocal其实应用场景不是很多，但却是被炸了千百遍的面试老油条，涉及到多线程、数据结构、JVM，可问的点比较多，一定要拿下。</p>
 <h2 id="10threadlocal是什么">10.ThreadLocal是什么？
 </h2><p>ThreadLocal，也就是线程本地变量。如果你创建了一个ThreadLocal变量，那么访问这个变量的每个线程都会有这个变量的一个本地拷贝，多个线程操作这个变量的时候，实际是操作自己本地内存里面的变量，从而起到线程隔离的作用，避免了线程安全问题。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220102114145.png"
+<p><img src="/img/juc/juc/20220102114145.png"
 	
 	
 	
@@ -853,7 +853,7 @@
 <p>我们的系统应用是一个典型的MVC架构，登录后的用户每次访问接口，都会在请求头中携带一个token，在控制层可以根据这个token，解析出用户的基本信息。那么问题来了，假如在服务层和持久层都要用到用户信息，比如rpc调用、更新用户获取等等，那应该怎么办呢？</p>
 <p>一种办法是显式定义用户相关的参数，比如账号、用户名……这样一来，我们可能需要大面积地修改代码，多少有点瓜皮，那该怎么办呢？</p>
 <p>这时候我们就可以用到ThreadLocal，在控制层拦截请求把用户信息存入ThreadLocal，这样我们在任何一个地方，都可以取出ThreadLocal中存的用户数据。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220102124335.png"
+<p><img src="/img/juc/juc/20220102124335.png"
 	
 	
 	
@@ -958,7 +958,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>key的赋值，使用的是WeakReference的赋值。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103134732.png"
+<p><img src="/img/juc/juc/20220103134732.png"
 	
 	
 	
@@ -980,7 +980,7 @@
 <h2 id="13threadlocal-内存泄露是怎么回事">13.ThreadLocal 内存泄露是怎么回事？
 </h2><p>我们先来分析一下使用ThreadLocal时的内存，我们都知道，在JVM中，栈内存线程私有，存储了对象的引用，堆内存线程共享，存储了对象实例。</p>
 <p>所以呢，栈中存储了ThreadLocal、Thread的引用，堆中存储了它们的具体实例。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103151823.png"
+<p><img src="/img/juc/juc/20220103151823.png"
 	
 	
 	
@@ -1026,7 +1026,7 @@
 <p>假如key被设计成强引用，如果ThreadLocal Reference被销毁，此时它指向ThreadLoca的强引用就没有了，但是此时key还强引用指向ThreadLoca，就会导致ThreadLocal不能被回收，这时候就发生了内存泄漏的问题。</p>
 <h2 id="14threadlocalmap的结构了解吗">14.ThreadLocalMap的结构了解吗？
 </h2><p>ThreadLocalMap虽然被叫做Map，其实它是没有实现Map接口的，但是结构还是和HashMap比较类似的，主要关注的是两个要素：<code>元素数组</code>和<code>散列方法</code>。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103180633.png"
+<p><img src="/img/juc/juc/20220103180633.png"
 	
 	
 	
@@ -1084,7 +1084,7 @@
 </div><h2 id="15threadlocalmap怎么解决hash冲突的">15.ThreadLocalMap怎么解决Hash冲突的？
 </h2><p>我们可能都知道HashMap使用了链表来解决冲突，也就是所谓的链地址法。</p>
 <p>ThreadLocalMap没有使用链表，自然也不是用链地址法来解决冲突了，它用的是另外一种方式——<strong>开放定址法</strong>。开放定址法是什么意思呢？简单来说，就是这个坑被人占了，那就接着去找空着的坑。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103183659.png"
+<p><img src="/img/juc/juc/20220103183659.png"
 	
 	
 	
@@ -1154,7 +1154,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>接着看看具体的<code>resize()</code>方法，扩容后的<code>newTab</code>的大小为老数组的两倍，然后遍历老的table数组，散列方法重新计算位置，开放地址解决冲突，然后放到新的<code>newTab</code>，遍历完成之后，<code>oldTab</code>中所有的<code>entry</code>数据都已经放入到<code>newTab</code>中了，然后table引用指向<code>newTab</code></p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103190721.png"
+<p><img src="/img/juc/juc/20220103190721.png"
 	
 	
 	
@@ -1165,7 +1165,7 @@
 	
 ></p>
 <p>具体代码：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/514c092ea646f816e86ac24fb81e1787fd666d38/20220112205218.png"
+<p><img src="/img/juc/juc/20220112205218.png"
 	
 	
 	
@@ -1249,7 +1249,7 @@
 </h2><p>Java内存模型（Java Memory Model，JMM），是一种抽象的模型，被定义出来屏蔽各种硬件和操作系统的内存访问差异。</p>
 <p>JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在<code>主内存</code>（Main Memory）中，每个线程都有一个私有的<code>本地内存</code>（Local Memory），本地内存中存储了该线程以读/写共享变量的副本。</p>
 <p>Java内存模型的抽象图：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103213408.png"
+<p><img src="/img/juc/juc/20220103213408.png"
 	
 	
 	
@@ -1260,7 +1260,7 @@
 	
 ></p>
 <p>本地内存是JMM的 一个抽象概念，并不真实存在。它其实涵盖了缓存、写缓冲区、寄存器以及其他的硬件和编译器优化。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103213951.png"
+<p><img src="/img/juc/juc/20220103213951.png"
 	
 	
 	
@@ -1316,7 +1316,7 @@
 <li>内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是在乱序执行。</li>
 </ol>
 <p>从Java源代码到最终实际执行的指令序列，会分别经历下面3种重排序，如图：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103222557.png"
+<p><img src="/img/juc/juc/20220103222557.png"
 	
 	
 	
@@ -1327,7 +1327,7 @@
 	
 ></p>
 <p>我们比较熟悉的双重校验单例模式就是一个经典的指令重排的例子，<code>Singleton instance=new Singleton()；</code>对应的JVM指令分为三步：分配内存空间&ndash;&gt;初始化对象&mdash;&gt;对象指向分配的内存空间，但是经过了编译器的指令重排序，第二步和第三步就可能会重排序。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220103225216.png"
+<p><img src="/img/juc/juc/20220103225216.png"
 	
 	
 	
@@ -1346,7 +1346,7 @@
 <li>两个操作之间存在happens-before关系，并不意味着Java平台的具体实现必须要按照 happens-before关系指定的顺序来执行。如果重排序之后的执行结果，与按happens-before关系来执行的结果一致，那么这种重排序并不非法</li>
 </ul>
 <p>happens-before和我们息息相关的有六大规则：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220106094851.png"
+<p><img src="/img/juc/juc/20220106094851.png"
 	
 	
 	
@@ -1380,7 +1380,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>上面3个操作的数据依赖关系：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220106095612.png"
+<p><img src="/img/juc/juc/20220106095612.png"
 	
 	
 	
@@ -1392,7 +1392,7 @@
 ></p>
 <p>A和C之间存在数据依赖关系，同时B和C之间也存在数据依赖关系。因此在最终执行的指令序列中，C不能被重排序到A和B的前面（C排到A和B的前面，程序的结果将会被改变）。但A和B之间没有数据依赖关系，编译器和处理器可以重排序A和B之间的执行顺序。</p>
 <p>所以最终，程序可能会有两种执行顺序：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220108094902.png"
+<p><img src="/img/juc/juc/20220108094902.png"
 	
 	
 	
@@ -1411,7 +1411,7 @@
 <p>相比synchronized的加锁方式来解决共享变量的内存可见性问题，volatile就是更轻量的选择，它没有上下文切换的额外开销成本。</p>
 <p>volatile可以确保对某个变量的更新对其他线程马上可见，一个变量被声明为volatile 时，线程在写入变量时不会把值缓存在寄存器或者其他地方，而是会把值刷新回主内存 当其它线程读取该共享变量 ，会从主内存重新获取最新值，而不是使用当前线程的本地内存中的值。</p>
 <p>例如，我们声明一个 volatile 变量 volatile int x = 0，线程A修改x=1，修改完之后就会把新的值刷新回主内存，线程B读取x的时候，就会清空本地内存变量，然后再从主内存获取最新值。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220108093913.png"
+<p><img src="/img/juc/juc/20220108093913.png"
 	
 	
 	
@@ -1425,7 +1425,7 @@
 <p>volatile怎么保证有序性的呢？</p>
 </blockquote>
 <p>重排序可以分为编译器重排序和处理器重排序，valatile保证有序性，就是通过分别限制这两种类型的重排序。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220108101045.png"
+<p><img src="/img/juc/juc/20220108101045.png"
 	
 	
 	
@@ -1442,7 +1442,7 @@
 <li>在每个volatile读操作的后面插入一个<code>LoadLoad</code>屏障</li>
 <li>在每个volatile读操作的后面插入一个<code>LoadStore</code>屏障</li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220108225419.png"
+<p><img src="/img/juc/juc/20220108225419.png"
 	
 	
 	
@@ -1452,7 +1452,7 @@
 	
 	
 ></p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220108225511.png"
+<p><img src="/img/juc/juc/20220108225511.png"
 	
 	
 	
@@ -1525,7 +1525,7 @@
 <p>反编译一段synchronized修饰代码块代码，<code>javap -c -s -v -l SynchronizedDemo.class</code>，可以看到相应的字节码指令。</p>
 </li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109090334.png"
+<p><img src="/img/juc/juc/20220109090334.png"
 	
 	
 	
@@ -1541,7 +1541,7 @@
 <p>同样可以写段代码反编译看一下。</p>
 </li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109090817.png"
+<p><img src="/img/juc/juc/20220109090817.png"
 	
 	
 	
@@ -1621,7 +1621,7 @@
 <p>就诊结束后，<strong>走出就诊室</strong>，候诊室的<strong>下一位候诊患者</strong>进入就诊室。</p>
 </li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109093812.png"
+<p><img src="/img/juc/juc/20220109093812.png"
 	
 	
 	
@@ -1637,7 +1637,7 @@
 <li><strong>就诊室</strong>：就诊室**_Owner**里里只能有一个线程就诊，就诊完线程就自行离开</li>
 <li><strong>候诊室</strong>：就诊室繁忙时，进入<strong>等待区（Wait Set）</strong>，就诊室空闲的时候就从**等待区（Wait Set）**叫新的线程</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109101336.png"
+<p><img src="/img/juc/juc/20220109101336.png"
 	
 	
 	
@@ -1677,7 +1677,7 @@
 </h2><p>了解锁升级，得先知道，不同锁的状态是什么样的。这个状态指的是什么呢？</p>
 <p>Java对象头里，有一块结构，叫<code>Mark Word</code>标记字段，这块结构会随着锁的状态变化而变化。</p>
 <p>64 位虚拟机 Mark Word 是 64bit，我们来看看它的状态变化：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109124057.png"
+<p><img src="/img/juc/juc/20220109124057.png"
 	
 	
 	
@@ -1713,7 +1713,7 @@
 <p>锁升级的过程是什么样的？</p>
 </blockquote>
 <p>锁升级方向：无锁&ndash;&gt;偏向锁&mdash;&gt; 轻量级锁&mdash;-&gt;重量级锁，这个方向基本上是不可逆的。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109122556.png"
+<p><img src="/img/juc/juc/20220109122556.png"
 	
 	
 	
@@ -1750,7 +1750,7 @@
 <li>表示该锁对象已经被其他线程抢占，则进行<strong>自旋等待</strong>（默认10次），等待次数达到阈值仍未获取到锁，则<strong>升级为重量级锁</strong></li>
 </ol>
 <p>大体上省简的升级过程：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109130727.png"
+<p><img src="/img/juc/juc/20220109130727.png"
 	
 	
 	
@@ -1761,7 +1761,7 @@
 	
 ></p>
 <p>完整的升级过程：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109130210.png"
+<p><img src="/img/juc/juc/20220109130210.png"
 	
 	
 	
@@ -1786,7 +1786,7 @@
 </li>
 </ul>
 <p>下面的表格列出出了两种锁之间的区别：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109180608.png"
+<p><img src="/img/juc/juc/20220109180608.png"
 	
 	
 	
@@ -1804,7 +1804,7 @@
 <li>获取state的方式分为两种，独占方式和共享方式，一个线程使用独占方式获取了资源，其它线程就会在获取失败后被阻塞。一个线程使用共享方式获取了资源，另外一个线程还可以通过CAS的方式进行获取。</li>
 <li>如果共享资源被占用，需要一定的阻塞等待唤醒机制来保证锁的分配，AQS 中会将竞争共享资源失败的线程添加到一个变体的 CLH 队列中。</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109192924.png"
+<p><img src="/img/juc/juc/20220109192924.png"
 	
 	
 	
@@ -1814,7 +1814,7 @@
 	
 	
 >先简单了解一下CLH：Craig、Landin and Hagersten 队列，是 <strong>单向链表实现的队列</strong>。申请线程只在本地变量上自旋，<strong>它不断轮询前驱的状态</strong>，如果发现 <strong>前驱节点释放了锁就结束自旋</strong></p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109195240.png"
+<p><img src="/img/juc/juc/20220109195240.png"
 	
 	
 	
@@ -1825,7 +1825,7 @@
 	
 ></p>
 <p>AQS 中的队列是 CLH 变体的虚拟双向队列，通过将每条请求共享资源的线程封装成一个节点来实现锁的分配：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109200945.png"
+<p><img src="/img/juc/juc/20220109200945.png"
 	
 	
 	
@@ -1892,7 +1892,7 @@
 <li>如果锁当前没有被其它线程占用，并且当前线程之前没有获取过该锁，则当前线程会获取到该锁，然后设置当前锁的拥有者为当前线程，并设置 AQS 的状态值为1 ，然后直接返回。如果当前线程之前己经获取过该锁，则这次只是简单地把 AQS 的状态值加1后返回。</li>
 <li>如果该锁己经被其他线程持有，非公平锁会尝试去获取锁，获取失败的话，则调用该方法线程会被放入 AQS 队列阻塞挂起。</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109203623.png"
+<p><img src="/img/juc/juc/20220109203623.png"
 	
 	
 	
@@ -1941,7 +1941,7 @@
 <li>非公平锁在调用 lock 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。</li>
 <li>非公平锁在 CAS 失败后，和公平锁一样都会进入到 tryAcquire 方法，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state == 0），非公平锁会直接 CAS 抢锁，但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109205004.png"
+<p><img src="/img/juc/juc/20220109205004.png"
 	
 	
 	
@@ -1958,7 +1958,7 @@
 <p>只有当内存中地址 A 处的值等于 B 时，才能将内存中地址 A 处的值更新为新值 C。作为一条 CPU 指令，CAS 指令本身是能够保证原子性的 。</p>
 <h2 id="33cas-有什么问题如何解决">33.CAS 有什么问题？如何解决？
 </h2><p>CAS的经典三大问题：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109210519.png"
+<p><img src="/img/juc/juc/20220109210519.png"
 	
 	
 	
@@ -1994,7 +1994,7 @@
 <li>可以考虑合并多个变量，将多个变量封装成一个对象，通过AtomicReference来保证原子性。</li>
 </ul>
 <h2 id="34java有哪些保证原子性的方法如何保证多线程下i-结果正确">34.Java有哪些保证原子性的方法？如何保证多线程下i++ 结果正确？
-</h2><p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109212412.png"
+</h2><p><img src="/img/juc/juc/20220109212412.png"
 	
 	
 	
@@ -2013,7 +2013,7 @@
 </h2><p>当程序更新一个变量时，如果多线程同时更新这个变量，可能得到期望之外的值，比如变量i=1，A线程更新i+1，B线程也更新i+1，经过两个线程操作之后可能i不等于3，而是等于2。因为A和B线程在更新变量i的时候拿到的i都是1，这就是线程不安全的更新操作，一般我们会使用synchronized来解决这个问题，synchronized会保证多线程不会同时更新变量i。</p>
 <p>其实除此之外，还有更轻量级的选择，Java从JDK 1.5开始提供了java.util.concurrent.atomic包，这个包中的原子操作类提供了一种用法简单、性能高效、线程安全地更新一个变量的方式。</p>
 <p>因为变量的类型有很多种，所以在Atomic包里一共提供了13个类，属于4种类型的原子更新方式，分别是原子更新基本类型、原子更新数组、原子更新引用和原子更新属性（字段）。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109214722.png"
+<p><img src="/img/juc/juc/20220109214722.png"
 	
 	
 	
@@ -2110,7 +2110,7 @@
 </div><p>compareAndSwapInt 是一个native方法，基于CAS来操作int类型变量。其它的原子操作类基本都是大同小异。</p>
 <h2 id="37线程死锁了解吗该如何避免">37.线程死锁了解吗？该如何避免？
 </h2><p>死锁是指两个或两个以上的线程在执行过程中，因争夺资源而造成的互相等待的现象，在无外力作用的情况下，这些线程会一直相互等待而无法继续运行下去。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109222419.png"
+<p><img src="/img/juc/juc/20220109222419.png"
 	
 	
 	
@@ -2121,7 +2121,7 @@
 	
 ></p>
 <p>那么为什么会产生死锁呢？ 死锁的产生必须具备以下四个条件：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109221900.png"
+<p><img src="/img/juc/juc/20220109221900.png"
 	
 	
 	
@@ -2160,7 +2160,7 @@
 </ol>
 <p>基本就可以看到死锁的信息。</p>
 <p>还可以利用图形化工具，比如JConsole。出现线程死锁以后，点击JConsole线程面板的<code>检测到死锁</code>按钮，将会看到线程的死锁信息。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109222827.png"
+<p><img src="/img/juc/juc/20220109222827.png"
 	
 	
 	
@@ -2176,7 +2176,7 @@
 <p><strong>场景1：协调子线程结束动作：等待所有子线程运行结束</strong></p>
 <p>CountDownLatch允许一个或多个线程等待其他线程完成操作。</p>
 <p>例如，我们很多人喜欢玩的王者荣耀，开黑的时候，得等所有人都上线之后，才能开打。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109225315.jpeg"
+<p><img src="/img/juc/juc/20220109225315.jpeg"
 	
 	
 	
@@ -2244,7 +2244,7 @@
 </div><p><strong>场景2. 协调子线程开始动作：统一各线程动作开始的时机</strong></p>
 <p>王者游戏中也有类似的场景，游戏开始时，各玩家的初始状态必须一致。不能有的玩家都出完装了，有的才降生。</p>
 <p>所以大家得一块出生，在</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109230436.jpeg"
+<p><img src="/img/juc/juc/20220109230436.jpeg"
 	
 	
 	
@@ -2326,7 +2326,7 @@
 </h2><p>CyclicBarrier的字面意思是可循环使用（Cyclic）的屏障（Barrier）。它要做的事情是，让一 组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续运行。</p>
 <p>它和CountDownLatch类似，都可以协调多线程的结束动作，在它们结束后都可以执行特定动作，但是为什么要有CyclicBarrier，自然是它有和CountDownLatch不同的地方。</p>
 <p>不知道你听没听过一个新人UP主小约翰可汗，小约翰生平有两大恨——“想结衣结衣不依,迷爱理爱理不理。”我们来还原一下事情的经过：小约翰在亲政后认识了新垣结衣，于是决定第一次选妃，向结衣表白，等待回应。然而新垣结衣回应嫁给了星野源，小约翰伤心欲绝，发誓生平不娶，突然发现了铃木爱理，于是小约翰决定第二次选妃，求爱理搭理，等待回应。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220111230311.png"
+<p><img src="/img/juc/juc/20220111230311.png"
 	
 	
 	
@@ -2337,7 +2337,7 @@
 	
 ></p>
 <p>我们拿代码模拟这一场景，发现CountDownLatch无能为力了，因为CountDownLatch的使用是一次性的，无法重复利用，而这里等待了两次。此时，我们用CyclicBarrier就可以实现，因为它可以重复利用。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220111231120.png"
+<p><img src="/img/juc/juc/20220111231120.png"
 	
 	
 	
@@ -2348,7 +2348,7 @@
 	
 ></p>
 <p>运行结果：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220111231241.png"
+<p><img src="/img/juc/juc/20220111231241.png"
 	
 	
 	
@@ -2363,7 +2363,7 @@
 <li>如果当前线程不是第一个到达屏障的话，它将会进入等待，直到其他线程都到达，除非发生<strong>被中断</strong>、<strong>屏障被拆除</strong>、<strong>屏障被重设</strong>等情况；</li>
 </ul>
 <p>上面的例子抽象一下，本质上它的流程就是这样就是这样：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220111233820.png"
+<p><img src="/img/juc/juc/20220111233820.png"
 	
 	
 	
@@ -2413,7 +2413,7 @@
 <h2 id="42semaphore信号量了解吗">42.Semaphore（信号量）了解吗？
 </h2><p>Semaphore（信号量）是用来控制同时访问特定资源的线程数量，它通过协调各个线程，以保证合理的使用公共资源。</p>
 <p>听起来似乎很抽象，现在汽车多了，开车出门在外的一个老大难问题就是停车 。停车场的车位是有限的，只能允许若干车辆停泊，如果停车场还有空位，那么显示牌显示的就是绿灯和剩余的车位，车辆就可以驶入；如果停车场没位了，那么显示牌显示的就是绿灯和数字0，车辆就得等待。如果满了的停车场有车离开，那么显示牌就又变绿，显示空车位数量，等待的车辆就能进停车场。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220111235512.jpeg"
+<p><img src="/img/juc/juc/20220111235512.jpeg"
 	
 	
 	
@@ -2424,7 +2424,7 @@
 	
 ></p>
 <p>我们把这个例子类比一下，车辆就是线程，进入停车场就是线程在执行，离开停车场就是线程执行完毕，看见红灯就表示线程被阻塞，不能执行，Semaphore的本质就是<strong>协调多个线程对共享资源的获取</strong>。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112000430.jpeg"
+<p><img src="/img/juc/juc/20220112000430.jpeg"
 	
 	
 	
@@ -2489,7 +2489,7 @@
 </div><p>在代码中，虽然有30个线程在执行，但是只允许10个并发执行。Semaphore的构造方法 <code>Semaphore（int permits</code>）接受一个整型的数字，表示可用的许可证数量。<code>Semaphore（10）</code>表示允许10个线程获取许可证，也就是最大并发数是10。Semaphore的用法也很简单，首先线程使用 Semaphore的acquire()方法获取一个许可证，使用完之后调用release()方法归还许可证。还可以用tryAcquire()方法尝试获取许可证。</p>
 <h2 id="43exchanger-了解吗">43.Exchanger 了解吗？
 </h2><p>Exchanger（交换者）是一个用于线程间协作的工具类。Exchanger用于进行线程间的数据交换。它提供一个同步点，在这个同步点，两个线程可以交换彼此的数据。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112000755.jpeg"
+<p><img src="/img/juc/juc/20220112000755.jpeg"
 	
 	
 	
@@ -2571,7 +2571,7 @@
 <h1 id="线程池">线程池
 </h1><h2 id="44什么是线程池">44.什么是线程池？
 </h2><p><strong>线程池：</strong> 简单理解，它就是一个管理线程的池子。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112001644.png"
+<p><img src="/img/juc/juc/20220112001644.png"
 	
 	
 	
@@ -2588,7 +2588,7 @@
 </ul>
 <h2 id="45能说说工作中线程池的应用吗">45.能说说工作中线程池的应用吗？
 </h2><p>之前我们有一个和第三方对接的需求，需要向第三方推送数据，引入了多线程来提升数据推送的效率，其中用到了线程池来管理线程。</p>
-<p><img src="https://gitee.com/sanfene/picgo2/raw/master/20210814111809.png"
+<p><img src="/img/juc/juc/20210814111809.png"
 	
 	
 	
@@ -2599,7 +2599,7 @@
 	
 ></p>
 <p>主要代码如下：</p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/403638bae95da94ca86812c4a2eb6065.png"
+<p><img src="/img/juc/juc/403638bae95da94ca86812c4a2eb6065.png"
 	
 	
 	
@@ -2646,7 +2646,7 @@
 <ol>
 <li>老三发现有空间的在营业的窗口，直接去办理业务。</li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo2/raw/master/20210814111942.png"
+<p><img src="/img/juc/juc/20210814111942.png"
 	
 	
 	
@@ -2659,7 +2659,7 @@
 <ol start="2">
 <li>老三发现没有空闲的窗口，就在排队区排队等。</li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo2/raw/master/20210814013559.png"
+<p><img src="/img/juc/juc/20210814013559.png"
 	
 	
 	
@@ -2672,7 +2672,7 @@
 <ol start="3">
 <li>老三发现没有空闲的窗口，等待区也满了，蚌埠住了，经理一看，就让休息的小姐姐赶紧回来上班，等待区号靠前的赶紧去新窗口办，老三去排队区排队。小姐姐比较辛苦，假如一段时间发现他们可以不用接着营业，经理就让她们接着休息。</li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo2/raw/master/20210814014742.png"
+<p><img src="/img/juc/juc/20210814014742.png"
 	
 	
 	
@@ -2685,7 +2685,7 @@
 <ol start="4">
 <li>老三一看，六个窗口都满了，等待区也没位置了。老三急了，要闹，经理赶紧出来了，经理该怎么办呢？</li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo2/raw/master/20210814015130.png"
+<p><img src="/img/juc/juc/20210814015130.png"
 	
 	
 	
@@ -2733,7 +2733,7 @@
 <li>如果这时候队列满了，而且正在运行的线程数量小于 maximumPoolSize，那么还是要创建非核心线程立刻运行这个任务；</li>
 <li>如果队列满了，而且正在运行的线程数量大于或等于 maximumPoolSize，那么线程池会根据拒绝策略来对应处理。</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo2/raw/master/20210814020611.png"
+<p><img src="/img/juc/juc/20210814020611.png"
 	
 	
 	
@@ -2752,7 +2752,7 @@
 </li>
 </ol>
 <h2 id="47线程池主要参数有哪些">47.线程池主要参数有哪些？
-</h2><p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112002548.png"
+</h2><p><img src="/img/juc/juc/20220112002548.png"
 	
 	
 	
@@ -2802,7 +2802,7 @@
 <p><code>corePoolSize</code>、<code>workQueue</code>、<code>maximumPoolSize</code>都不可用的时候执行的饱和策略。</p>
 <h2 id="48线程池的拒绝策略有哪些">48.线程池的拒绝策略有哪些？
 </h2><p>类比前面的例子，无法办理业务时的处理方式，帮助记忆：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113111843.png"
+<p><img src="/img/juc/juc/20211113111843.png"
 	
 	
 	
@@ -2821,7 +2821,7 @@
 <p>想实现自己的拒绝策略，实现RejectedExecutionHandler接口即可。</p>
 <h2 id="49线程池有哪几种工作队列">49.线程池有哪几种工作队列？
 </h2><p>常用的阻塞队列主要有以下几种：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112003422.png"
+<p><img src="/img/juc/juc/20220112003422.png"
 	
 	
 	
@@ -2907,7 +2907,7 @@
 <li>计算密集型：大部分都在用CPU跟内存，加密，逻辑操作业务处理等。</li>
 <li>IO密集型：数据库链接，网络通讯传输等。</li>
 </ol>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112003817.png"
+<p><img src="/img/juc/juc/20220112003817.png"
 	
 	
 	
@@ -2936,7 +2936,7 @@
 <p>当然，实际应用中没有固定的公式，需要结合测试和监控来进行调整。</p>
 <h2 id="53有哪几种常见的线程池">53.有哪几种常见的线程池？
 </h2><p>面试常问，主要有四种，都是通过工具类Excutors创建出来的，需要注意，阿里巴巴《Java开发手册》里禁止使用这种方式来创建线程池。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112004603.png"
+<p><img src="/img/juc/juc/20220112004603.png"
 	
 	
 	
@@ -2990,7 +2990,7 @@
 <li>阻塞队列是无界队列LinkedBlockingQueue，可能会导致OOM</li>
 <li>keepAliveTime为0</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113103243.png"
+<p><img src="/img/juc/juc/20211113103243.png"
 	
 	
 	
@@ -3034,7 +3034,7 @@
 <li>没有所谓的非空闲时间，即keepAliveTime为0</li>
 <li>阻塞队列为无界队列LinkedBlockingQueue，可能会导致OOM</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113185036.png"
+<p><img src="/img/juc/juc/20211113185036.png"
 	
 	
 	
@@ -3080,7 +3080,7 @@
 <li>非核心线程空闲存活时间为60秒</li>
 </ul>
 <p>当提交任务的速度大于处理任务的速度时，每次提交一个任务，就必然会创建一个线程。极端情况下会创建过多的线程，耗尽 CPU 和内存资源。由于空闲 60 秒的线程会被终止，长时间保持空闲的 CachedThreadPool 不会占用任何资源。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113103357.png"
+<p><img src="/img/juc/juc/20211113103357.png"
 	
 	
 	
@@ -3123,7 +3123,7 @@
 <li>scheduleAtFixedRate() ：按某种速率周期执行</li>
 <li>scheduleWithFixedDelay()：在某个延迟后执行</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113103418.png"
+<p><img src="/img/juc/juc/20211113103418.png"
 	
 	
 	
@@ -3140,7 +3140,7 @@
 <li>线程修改ScheduledFutureTask的time变量为下次将要被执行的时间。</li>
 <li>线程把这个修改time之后的ScheduledFutureTask放回DelayQueue中（DelayQueue.add()）。</li>
 </ul>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113103434.png"
+<p><img src="/img/juc/juc/20211113103434.png"
 	
 	
 	
@@ -3159,7 +3159,7 @@
 <h2 id="55线程池异常怎么处理知道吗">55.线程池异常怎么处理知道吗？
 </h2><p>在使用线程池处理任务的时候，任务代码可能抛出RuntimeException，抛出异常后，线程池可能捕获它，也可能创建一个新的线程来代替异常的线程，我们可能无法感知任务出现了异常，因此我们需要考虑线程池异常情况。</p>
 <p>常见的异常处理方式：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211116084302.png"
+<p><img src="/img/juc/juc/20211116084302.png"
 	
 	
 	
@@ -3190,7 +3190,7 @@
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>线程池各个状态切换图：</p>
-<p><img src="https://gitee.com/sanfene/picgo2/raw/master/20210814022044.png"
+<p><img src="/img/juc/juc/20210814022044.png"
 	
 	
 	
@@ -3227,7 +3227,7 @@
 </ul>
 <h2 id="57线程池如何实现参数的动态修改">57.线程池如何实现参数的动态修改？
 </h2><p>线程池提供了几个 setter方法来设置线程池的参数。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113112839.png"
+<p><img src="/img/juc/juc/20211113112839.png"
 	
 	
 	
@@ -3238,7 +3238,7 @@
 	
 ></p>
 <p>这里主要有两个思路：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211116084703.png"
+<p><img src="/img/juc/juc/20211116084703.png"
 	
 	
 	
@@ -3258,7 +3258,7 @@
 </ul>
 <h2 id="线程池调优了解吗">线程池调优了解吗？
 </h2><p>线程池配置没有固定的公式，通常事前会对线程池进行一定评估，常见的评估方案如下：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113115512.png"
+<p><img src="/img/juc/juc/20211113115512.png"
 	
 	
 	
@@ -3271,7 +3271,7 @@
 <p>上线之前也要进行充分的测试，上线之后要建立完善的线程池监控机制。</p>
 <p>事中结合监控告警机制，分析线程池的问题，或者可优化点，结合线程池动态参数配置机制来调整配置。</p>
 <p>事后要注意仔细观察，随时调整。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113121006.png"
+<p><img src="/img/juc/juc/20211113121006.png"
 	
 	
 	
@@ -3286,7 +3286,7 @@
 </h2><p>⭐这道题在阿里的面试中出现频率比较高</p>
 <p>线程池实现原理可以查看 <a class="link" href="https://mp.weixin.qq.com/s/Exy7pRGND9TCjRd9TZK4jg"  target="_blank" rel="noopener"
     >要是以前有人这么讲线程池，我早就该明白了！</a> ，当然，我们自己实现， 只需要抓住线程池的核心流程-参考[6]：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20211113122637.png"
+<p><img src="/img/juc/juc/20211113122637.png"
 	
 	
 	
@@ -3304,7 +3304,7 @@
 <li>最后当有空闲时，获取队列中任务来执行</li>
 </ul>
 <p>实现代码[6]：</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220109181931.png"
+<p><img src="/img/juc/juc/20220109181931.png"
 	
 	
 	
@@ -3326,7 +3326,7 @@
 <p>要想掌握Fork/Join框架，首先需要理解两个点，<strong>分而治之</strong>和<strong>工作窃取算法</strong>。</p>
 <p><strong>分而治之</strong></p>
 <p>Fork/Join框架的定义，其实就体现了分治思想：将一个规模为N的问题分解为K个规模较小的子问题，这些子问题相互独立且与原问题性质相同。求出子问题的解，就可得到原问题的解。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112033733.png"
+<p><img src="/img/juc/juc/20220112033733.png"
 	
 	
 	
@@ -3340,7 +3340,7 @@
 <p>大任务拆成了若干个小任务，把这些小任务放到不同的队列里，各自创建单独线程来执行队列里的任务。</p>
 <p>那么问题来了，有的线程干活块，有的线程干活慢。干完活的线程不能让它空下来，得让它去帮没干完活的线程干活。它去其它线程的队列里窃取一个任务来执行，这就是所谓的<strong>工作窃取</strong>。</p>
 <p>工作窃取发生的时候，它们会访问同一个队列，为了减少窃取任务线程和被窃取任务线程之间的竞争，通常任务会使用双端队列，被窃取任务线程永远从双端队列的头部拿，而窃取任务的线程永远从双端队列的尾部拿任务执行。</p>
-<p><img src="https://gitee.com/sanfene/picgo3/raw/master/20220112035709.png"
+<p><img src="/img/juc/juc/20220112035709.png"
 	
 	
 	
@@ -3488,7 +3488,7 @@
 <p>[19]. synchronized锁升级详细过程:<a class="link" href="https://www.cnblogs.com/suixing123/p/13996479.html"  target="_blank" rel="noopener"
     >https://www.cnblogs.com/suixing123/p/13996479.html</a></p>
 <hr>
-<p><img src="https://img-blog.csdnimg.cn/1136185996ca4349ae24d1d985828a1c.png"
+<p><img src="/img/juc/juc/1136185996ca4349ae24d1d985828a1c.png"
 	
 	
 	
@@ -3601,6 +3601,19 @@
 
         <div class="article-details">
             <h2 class="article-title">threadpool</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E4%B8%80%E8%A1%8C%E4%B8%80%E8%A1%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E6%B8%85%E6%A5%9Aabstractqueuedsynchronizer/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">一行一行源码分析清楚AbstractQueuedSynchronizer</h2>
         </div>
     </a>
 </article>

@@ -226,6 +226,14 @@
 
     <div class="tagCloud-tags">
         
+            <a href="/categories/db/" class="font_size_17">
+                DB
+            </a>
+        
+            <a href="/categories/juc/" class="font_size_16">
+                Juc
+            </a>
+        
             <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="font_size_10">
                 中间件
             </a>
@@ -246,12 +254,8 @@
                 部署
             </a>
         
-            <a href="/categories/concurrency/" class="font_size_6">
-                Concurrency
-            </a>
-        
-            <a href="/categories/juc/" class="font_size_5">
-                Juc
+            <a href="/categories/jvm/" class="font_size_6">
+                Jvm
             </a>
         
             <a href="/categories/nio/" class="font_size_5">
@@ -260,10 +264,6 @@
         
             <a href="/categories/java-base/" class="font_size_4">
                 Java Base
-            </a>
-        
-            <a href="/categories/jvm/" class="font_size_4">
-                Jvm
             </a>
         
     </div>
@@ -281,6 +281,14 @@
     
 
 <div class="article-details">
+    
+    <header class="article-category">
+        
+        <a href="/categories/juc/" >
+            Juc
+        </a>
+        
+    </header>
     
 
     <div class="article-title-wrapper">
@@ -414,7 +422,7 @@
 <h2 id="reentrantreadwritelock-总览">ReentrantReadWriteLock 总览
 </h2><p>这一节比较重要，我们要先看清楚 ReentrantReadWriteLock 的大框架，然后再到源码细节。</p>
 <p>首先，我们来看下 ReentrantReadWriteLock 的结构，它有好些嵌套类：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c11.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/11.png"
 	
 	
 	
@@ -425,7 +433,7 @@
 	
 ></p>
 <p>大家先仔细看看这张图中的信息。然后我们把 ReadLock 和 WriteLock 的代码提出来一起看，清晰一些：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c12.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/12.png"
 	
 	
 	
@@ -439,7 +447,7 @@
 <p>从它们调用的 Sync 方法，我们可以看到： <strong>ReadLock 使用了共享模式，WriteLock 使用了独占模式</strong>。</p>
 <p>等等，<strong>同一个 AQS 实例怎么可以同时使用共享模式和独占模式</strong>？？？</p>
 <p>这里给大家回顾下 AQS，我们横向对比下 AQS 的共享模式和独占模式：</p>
-<p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c13.png"
+<p><img src="/img/juc/%e6%ba%90%e7%a0%81/13.png"
 	
 	
 	
@@ -1312,7 +1320,7 @@
 </div>
 </div><p>仔细想想，如果线程 a 先获取了读锁，然后获取写锁，那么线程 a 就到阻塞队列休眠了，自己把自己弄休眠了，而且可能之后就没人去唤醒它了。</p>
 <h2 id="总结">总结
-</h2><p><img src="/..%5c..%5c..%5cnotes%5cimg%5cjuc%5c%e6%ba%90%e7%a0%81%5c14.png"
+</h2><p><img src="/img/juc/%e6%ba%90%e7%a0%81/14.png"
 	
 	
 	
@@ -1371,6 +1379,80 @@
     
 
     
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">还有这些文章：</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/concurrent/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CONCURRENT</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/java%E5%B9%B6%E5%8F%91%E5%85%AD%E5%8D%81%E9%97%AE/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Java并发六十问</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/juc/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">juc</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/juc%E5%85%A5%E9%97%A8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">juc入门</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/threadpool/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">threadpool</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
 
      
     
